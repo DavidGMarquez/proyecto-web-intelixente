@@ -1,0 +1,75 @@
+html
+{
+    margin: 0%;
+    padding: 0;
+    height: auto;
+
+}
+
+
+body
+{
+    font: 10pt verdana, sans-serif;
+    line-height: 1.7;
+    color: rgb(76,76,76);
+    background-color: #EEEEEE;
+    margin: 0;
+    padding: 0;
+    height: auto;
+
+}
+
+
+/*Generales*/
+
+h1
+{
+    font-variant: small-caps;
+    font-weight: normal;
+}
+
+a
+{
+    text-decoration: none;
+    text-transform: uppercase;
+    margin: 10px 10px 10px 10px;
+}
+
+td
+{
+    width: 130px;
+    text-align: center;
+}
+
+img
+{
+    position: relative;
+    top: 4px;
+    margin-left: 4px;
+    margin-right: 4px;
+    border:0px;
+}
+
+/*.*/
+.resaltado
+{
+    font-weight: bold;
+}
+
+.cantidades
+{
+
+}
+
+
+#album
+{
+    width: 180px;
+}
+
+
+
+
+
+
+

@@ -1,0 +1,134 @@
+/* 
+    Document   : administracion
+    Created on : 29-mar-2011, 12:52:11
+    Author     : Vanesa
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+html
+{
+    margin: 0%;
+    padding: 0;
+    height: auto;
+
+}
+body{
+    font: 9pt verdana, sans-serif;
+    line-height: 1.7;
+    color: rgb(76,76,76);
+    background-color: #EEEEEE;
+    margin-left: 100px;
+    margin-right: 100px;
+    padding: 0;
+    height: auto;
+}
+
+a{
+    text-decoration: none;
+    font-weight: bold;
+    color: #5179c9;
+}
+
+a:hover{
+    text-decoration: none;
+    font-weight: bold;
+    color: #314E89;
+}
+
+#titulo{
+    padding:4px;
+    padding-left: 10px;
+    border-left: 10px solid rgb(76,76,76);
+    border-bottom:1px solid rgb(76,76,76);
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#menu{
+    width: 300px;
+    float:right;
+    text-align: right;
+    font-size: 14px;
+}
+
+#indice {
+
+}
+
+/*indesUsuarios.js*/
+
+#usuarios{
+    /*border:1px solid red;*/
+}
+
+#comentario{
+    text-align: center;
+    font-size: 14px;
+    color: #314E89;
+    margin-top:40px;
+}
+
+/*#comentario span{
+    border:2px solid #314E89;
+    padding:10px;
+}*/
+/*listaUsuarios.js*/
+#lista{
+    text-align:center;
+}
+
+#centrar{
+    margin:0px auto;
+}
+
+.resaltarCelda{
+    background-color:#ddd;
+}
+
+#lista table{
+    width:80%;
+    margin:0px auto;
+    margin-top:10px;
+}
+
+#lista th{
+    width:10%;
+    border-bottom:1px solid rgb(76,76,76);
+    
+}
+
+#lista th.text{
+    width:25%;
+    border-bottom:1px solid rgb(76,76,76);
+    
+}
+
+#lista td{
+    width:10%;
+    border-bottom:1px solid rgb(76,76,76);
+}
+
+/*editUsuario.jsp*/
+#edit{
+    width:80%;
+    border:2px solid #314E89;
+    text-align: left;
+}
+
+#edit td.cab{
+    width: 200px;
+    text-align: right;
+    padding-right: 3px;
+    font-weight: bold;
+}
+
+.size{
+    width: 300px;
+}
+
+

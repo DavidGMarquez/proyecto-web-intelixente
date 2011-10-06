@@ -1,0 +1,15 @@
+Datos de conexión a la bd:
+
+   host="127.0.0.1:3306"
+   bd="dawa"
+   usuario="dawa"
+   pass="dawa"
+
+Usuarios de la aplicación:
+   Usuario administrador:
+      log:admin@tiendadawa.com   pass: admin1
+   Otros usuarios:   
+      log: proba@proba.com  pass: proba1
+      log: vanesa@vanesa.com	pass:12345678
+
+
