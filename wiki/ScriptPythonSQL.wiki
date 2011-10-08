@@ -1,4 +1,5 @@
-Script para generáción de las tablas del dataset de movielens. --
+Script para generáción de las tablas del dataset de movielens. 
+
 La variable {{{path}}} indica el directorio en el que están los {{{.dat}}} relativo al directorio en el que se encuentra el script.
 
 
