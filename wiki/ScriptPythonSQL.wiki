@@ -1,3 +1,12 @@
+Script para generáción de las tablas del dataset de movielens.
+
+Uso: 
+*python data2Sql.py*
+
+Para generar un número de concreto de registros:
+*python data2Sql.py numero*
+
+
 
 {{{
 import sys,os 
