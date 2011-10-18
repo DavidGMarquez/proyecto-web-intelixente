@@ -12,10 +12,10 @@
 						<div class="caratula">
 							<c:choose>
 								<c:when test="${empty i.pelicula.imagen}">
-									<img src="img/caratula.png" class="cover" name="${i.codigoArticulo}" width="160px"/>
+									<img src="img/caratula.png" class="cover" name="${i.codigoArticulo}"/>
 								</c:when>
 								<c:otherwise>
-									<img src="${i.pelicula.imagen}" class="cover" name="${i.codigoArticulo}" width="160px"/>
+									<img src="${i.pelicula.imagen}" class="cover" name="${i.codigoArticulo}"/>
 								</c:otherwise>
 							</c:choose>
 							<img class="activar comprar" src="img/compra.png" width="32px" name="page=${param.page}&action=up&codigo=${i.codigoArticulo}"/>
