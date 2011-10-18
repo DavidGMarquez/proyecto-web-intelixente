@@ -39,15 +39,14 @@
         <div id="articulo" class="borde cuerpo">
             <c:choose>
                 <c:when test="${empty articulo.pelicula.imagen}">
-                    <img src="img/caratula.png"  width="256px" height="256"/>
+                    <img class="cover" src="img/caratula.png"/>
                 </c:when>
                 <c:otherwise>
-                    <img src="${articulo.pelicula.imagen}"  width="256px" height="256"/>
+                    <img class="cover" src="${articulo.pelicula.imagen}"/>
                 </c:otherwise>
             </c:choose>
             <div class="datos">
-	            <p class="title"><span>Titulo</span><span>${articulo.pelicula.titulo}</span></p>
-	            <p><span>Pais: </span><span>${articulo.pelicula.pais}</span></p>
+	            <p class="title"><span>Titulo: </span><span>${articulo.pelicula.titulo}</span></p>
 	            <p><span>Año: </span><span>${articulo.pelicula.anho}</span></p>
 	            <p><span>Precio: </span><span><fmt:formatNumber pattern="$0.00" value="${articulo.precio}"/></span></p>
                     <p><span>Puntuación general: </span><span>${valoracionGeneral}</span></p>
