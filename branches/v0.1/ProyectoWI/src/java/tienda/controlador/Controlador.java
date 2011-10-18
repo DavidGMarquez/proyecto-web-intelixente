@@ -23,7 +23,7 @@ import tienda.Helpers.TiendaHelper;
 import tienda.Helpers.UsuarioHelper;
 import tienda.modelo.Articulo;
 import tienda.modelo.Direccion;
-import tienda.modelo.ArticuloPedido;
+import tienda.modelo.Pedido;
 import tienda.modelo.Comentarios;
 import tienda.modelo.ShoppingCart;
 import tienda.modelo.Usuario;
@@ -181,8 +181,8 @@ public class Controlador extends HttpServlet {
                         d.setCp(request.getParameter("cp"));
                     }
                     if (codigo != null) {
-                        ArticuloPedido dp = new ArticuloPedido();
-                        dp.setCodigoArticulo(codigo);
+                        Pedido dp = new Pedido();
+                        dp.getArticulo().setCodigoArticulo(codigo);
                         if ("up".equalsIgnoreCase(action)) {
                             for (int i = 0; i < catalogo.size(); i++) {
                                 if (catalogo.get(i).getCodigoArticulo().equalsIgnoreCase(codigo)) {
