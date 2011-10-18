@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
 <%-- 
-    Document   : disco
+    Document   : articulo
     Created on : 01-abr-2011, 16:04:11
     Author     : harry
 --%>
@@ -37,31 +37,30 @@
 		<%@ include file="partes/menuTienda.jsp"%>
 
         <div id="articulo" class="borde cuerpo">
-            <!--img src="/${articulo.imagen}" width="256px" height="256"/-->
             <c:choose>
-                <c:when test="${empty articulo.imagen}">
+                <c:when test="${empty articulo.pelicula.imagen}">
                     <img src="img/caratula.png"  width="256px" height="256"/>
                 </c:when>
                 <c:otherwise>
-                    <img src="caratulas/${articulo.imagen}"  width="256px" height="256"/>
+                    <img src="${articulo.pelicula.imagen}"  width="256px" height="256"/>
                 </c:otherwise>
             </c:choose>
             <div class="datos">
-	            <p class="title"><span>Album:</span><span>${articulo.album}</span></p>
-	            <p><span>Artista: </span><span>${articulo.grupo}</span></p>
-	            <p><span>Pais: </span><span>${articulo.pais}</span></p>
-	            <p><span>Año: </span><span>${articulo.anho}</span></p>
+	            <p class="title"><span>Titulo</span><span>${articulo.pelicula.titulo}</span></p>
+	            <p><span>Pais: </span><span>${articulo.pelicula.pais}</span></p>
+	            <p><span>Año: </span><span>${articulo.pelicula.anho}</span></p>
 	            <p><span>Precio: </span><span><fmt:formatNumber pattern="$0.00" value="${articulo.precio}"/></span></p>
+                    <p><span>Puntuación general: </span><span>${valoracionGeneral}</span></p>
 	            <c:choose>
 		            <c:when test="${not empty usuario}">
-		                <%-- <p>Puntúe el disco, introduzca un valor entre 0 y 9: 
-		                <form name="formulario" method="POST" action="controlador?page=disco&action=valorar&usuario=${usuario.idUsuario}&codigo=${articulo.codigoArticulo}">
+		                <%-- <p>Puntúe el articulo, introduzca un valor entre 0 y 9: 
+		                <form name="formulario" method="POST" action="controlador?page=articulo&action=valorar&usuario=${usuario.idUsuario}&codigo=${articulo.codigoArticulo}">
 		                    <input type="text" value="${valoracionUsuario}" name="valoracion"/>
 		                    <input type="button" value="Puntuar" onclick="compruebaPuntuacion();"/>
 		                </form>
 		                </p>--%>
 		                <div id="ratingdiv">
-							<form id="rating" action="controlador?page=disco&action=valorar&usuario=${usuario.idUsuario}&codigo=${articulo.codigoArticulo}" method="post" title="Average: 3.4">
+							<form id="rating" action="controlador?page=articulo&action=valorar&usuario=${usuario.idUsuario}&codigo=${articulo.codigoArticulo}" method="post" title="Average: 3.4">
 								<label for="id_rating">Valoración:</label>
 								<select name="valoracion" id="id_rating">
 									<option value="1">1 - Mala</option>
@@ -74,9 +73,6 @@
 							</form>
 						</div>
 		        	</c:when>
-		        	<c:otherwise>
-		        		<p><span>Puntuación general: </span><span>${valoracionGeneral}</span></p>
-		        	</c:otherwise>
 	        	</c:choose>
 	        </div>
 	    </div>
@@ -95,7 +91,7 @@
         	</c:choose>
         	<c:choose>
                 <c:when test="${not empty usuario}">
-		            <form action="controlador?page=disco&action=comentar&codigo=${articulo.codigoArticulo}" method="POST">
+		            <form action="controlador?page=articulo&action=comentar&codigo=${articulo.codigoArticulo}" method="POST">
 		                <!-- <label for="comentario">Comenta: </label> -->
 		                <!-- <input name="comentario" type="text"/> -->
 		                <textarea name="comentario" rows="3" cols="15"></textarea>

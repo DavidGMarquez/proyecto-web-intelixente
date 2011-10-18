@@ -11,7 +11,7 @@
 	    		<p class="boton"><img class="activar" src="img/-.png" name="page=${param.page}&action=down&codigo=${i.codigoArticulo}"/></p>
 	    		<p class="cantidad"><c:out value="${i.cantidad}"/></p>
 	    		<p class="boton"><img class="activar" src="img/+.png" name="page=${param.page}&action=up&codigo=${i.codigoArticulo}"/></p>
-	    		<p class="album"><c:out value="${i.album}"/></p>
+	    		<p class="album"><c:out value="${i.pelicula.titulo}"/></p>
 	    		<p class="precio"><fmt:formatNumber pattern="$0.00" value="${i.precio}"/>/unidad</p>
     		</li>
    		</c:forEach>

@@ -46,16 +46,16 @@ function ejecutarAccion(boton, pagina){
         }else{
             if (boton.name=="modificar"){
                 //alert('modificar');
-                document.formulario.action="controladorAdmin?action=modificarDisco";
+                document.formulario.action="controladorAdmin?action=modificarArticulo";
             }else if (boton.name=="insertar"){
                 //alert('insertar');
-                document.formulario.action="controladorAdmin?action=insertarDisco";
+                document.formulario.action="controladorAdmin?action=insertarArticulo";
             }
             document.formulario.submit();
         }
     }else{       
         if (boton.name=="cancelar"){
-            window.location.href = "controladorAdmin?action=discosIndex&pagina="+pagina;
+            window.location.href = "controladorAdmin?action=articulosIndex&pagina="+pagina;
         }
     }
 }
