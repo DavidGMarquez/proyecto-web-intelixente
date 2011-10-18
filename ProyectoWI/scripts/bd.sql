@@ -1,13 +1,20 @@
 -- phpMyAdmin SQL Dump
--- version 3.2.0.1
+-- version 3.4.5
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 07-04-2011 a las 17:45:23
--- Versión del servidor: 5.1.36
--- Versión de PHP: 5.3.0
+-- Tiempo de generación: 18-10-2011 a las 21:19:19
+-- Versión del servidor: 5.5.16
+-- Versión de PHP: 5.3.8
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
 
 --
 -- Base de datos: `dawa`
@@ -22,34 +29,26 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 CREATE TABLE IF NOT EXISTS `articulos` (
   `idArticulo` int(10) NOT NULL AUTO_INCREMENT,
   `codigoArticulo` varchar(15) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `grupo` varchar(100) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `album` varchar(100) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `pais` varchar(100) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `precio` decimal(10,2) NOT NULL,
   `unidades` int(11) NOT NULL,
   `activo` tinyint(1) NOT NULL,
-  `imagen` varchar(500) NOT NULL,
-  `anho` int(11) NOT NULL,
+  `idPelicula` int(11) NOT NULL,
   PRIMARY KEY (`idArticulo`),
   UNIQUE KEY `codigo` (`codigoArticulo`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;
 
 --
--- Volcar la base de datos para la tabla `articulos`
+-- Volcado de datos para la tabla `articulos`
 --
 
-INSERT INTO `articulos` (`idArticulo`, `codigoArticulo`, `grupo`, `album`, `pais`, `precio`, `unidades`, `activo`, `imagen`, `anho`) VALUES
-(1, 'd01', 'The Guo Brothers', 'Yuan', 'China', '14.95', 3, 1, '', 0),
-(2, 'd02', 'Babatunde Olatunji', 'Drums of Passion', 'Nigeria', '16.95', 0, 1, '', 1982),
-(3, 'd03', 'Tounami Diabate', 'Kaira', 'Mali', '16.95', 6, 1, '', 1975),
-(4, 'd04', 'Eliades Ochoa', 'The Lion is Loose', 'Cuba', '13.95', 1, 1, '', 0),
-(5, 'd05', 'Outback', 'Dance the Devil Away', 'Australia', '14.95', 1, 1, 'Beatles.jpg', 0),
-(6, 'd06', 'Samulnori', 'Record of Changes', 'Korea', '12.95', 1, 1, '', 0),
-(7, 'd07', 'Tounami Diabate', 'Djelika', 'Mali', '14.95', 1, 1, '', 0),
-(8, 'd08', 'Nusrat Fateh Ali Khan', 'Rapture', 'Pakistan', '12.95', 1, 1, '', 0),
-(9, 'd09', 'Cesaria Evora', 'Cesaria Evora', 'Cape Verde', '16.95', 7, 1, 'Sabina.jpg', 1954),
-(10, 'd10', 'GSTIC', 'DAA', 'Spain', '50.00', 1, 1, '', 0),
-(20, 'd11', 'ddd', 'dd', 'ddd', '12.34', 3, 0, '', 1964);
+INSERT INTO `articulos` (`idArticulo`, `codigoArticulo`, `precio`, `unidades`, `activo`, `idPelicula`) VALUES
+(1, 'pel103d', 25.30, 23, 1, 2),
+(21, 'pel2bc', 32.10, 32, 1, 3),
+(22, 'pel4bc', 32.10, 32, 1, 4),
+(23, 'pel5bc', 32.10, 32, 1, 5),
+(24, 'pel6bc', 32.10, 32, 1, 6),
+(25, 'pel7bc', 36.10, 32, 1, 7),
+(26, 'pel8bc', 32.17, 32, 1, 8);
 
 -- --------------------------------------------------------
 
@@ -64,11 +63,14 @@ CREATE TABLE IF NOT EXISTS `articulovendido` (
   `unidades` int(11) NOT NULL,
   `costeUnidad` decimal(10,2) NOT NULL,
   PRIMARY KEY (`idArtVendido`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=41 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
--- Volcar la base de datos para la tabla `articulovendido`
+-- Volcado de datos para la tabla `articulovendido`
 --
+
+INSERT INTO `articulovendido` (`idArtVendido`, `idVenta`, `codigo`, `unidades`, `costeUnidad`) VALUES
+(1, 1, 'pel103d', 2, 25.30);
 
 -- --------------------------------------------------------
 
@@ -82,20 +84,14 @@ CREATE TABLE IF NOT EXISTS `comentarios` (
   `codigoArticulo` varchar(20) NOT NULL,
   `comentario` text NOT NULL,
   PRIMARY KEY (`idComentario`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
--- Volcar la base de datos para la tabla `comentarios`
+-- Volcado de datos para la tabla `comentarios`
 --
 
 INSERT INTO `comentarios` (`idComentario`, `idUsuario`, `codigoArticulo`, `comentario`) VALUES
-(1, 3, 'd05', 'este es el comentario 1'),
-(2, 3, 'd03', 'kaira 1'),
-(3, 3, 'd02', 'drums1'),
-(4, 4, 'd05', 'este es el comentario2'),
-(10, 6, 'd04', 'comentario de dani');
-
-
+(1, 18, 'pel103d', 'Jumanjiiii');
 
 -- --------------------------------------------------------
 
@@ -110,16 +106,16 @@ CREATE TABLE IF NOT EXISTS `direcciones` (
   `provincia` varchar(100) NOT NULL,
   `cp` varchar(5) NOT NULL,
   PRIMARY KEY (`idDireccion`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=48 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=49 ;
 
 --
--- Volcar la base de datos para la tabla `direcciones`
+-- Volcado de datos para la tabla `direcciones`
 --
 
 INSERT INTO `direcciones` (`idDireccion`, `direccion`, `localidad`, `provincia`, `cp`) VALUES
 (1, 'calle costa ', 'milladoiro', 'Pontevedra', '15895'),
-(2, 'calle', 'localidad', 'provincia', '12345');
-
+(2, 'calle', 'localidad', 'provincia', '12345'),
+(48, 'calle costa ', 'milladoiro', 'Pontevedra', '15895');
 
 -- --------------------------------------------------------
 
@@ -134,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `tipousuario` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
--- Volcar la base de datos para la tabla `tipousuario`
+-- Volcado de datos para la tabla `tipousuario`
 --
 
 INSERT INTO `tipousuario` (`idTipoUsuario`, `tipo`) VALUES
@@ -162,7 +158,7 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=22 ;
 
 --
--- Volcar la base de datos para la tabla `usuarios`
+-- Volcado de datos para la tabla `usuarios`
 --
 
 INSERT INTO `usuarios` (`idUsuario`, `nombre`, `password`, `telefono`, `email`, `activo`, `idTipoUsuario`, `idDireccion`, `totalCompra`) VALUES
@@ -172,7 +168,7 @@ INSERT INTO `usuarios` (`idUsuario`, `nombre`, `password`, `telefono`, `email`, 
 (6, 'dani', 'dani11', '981292929', 'dani@dani.com', 1, 2, 1, 0),
 (10, 'tomas', 'tomas1', '987232323', 'tomas@tomas.com', 1, 2, 1, 0),
 (21, 'maria', 'maria1', '981292929', 'maria@maria.com', 0, 2, 2, 0),
-(18, 'admin', 'admin1', '---', 'admin@tiendadawa.com', 1, 1, 1, 0),
+(18, 'admin', 'admin1', '---', 'admin@tiendadawa.com', 1, 1, 1, 50.6),
 (19, 'pepe', 'pepe11', '981292929', 'pepe@pepe.com', 1, 2, 1, 15),
 (20, 'manuel', 'manuel', '981292929', 'manuel@manuel.com', 1, 2, 1, 0);
 
@@ -188,15 +184,14 @@ CREATE TABLE IF NOT EXISTS `valoraciones` (
   `codigoArticulo` varchar(20) NOT NULL,
   `valoracion` int(11) NOT NULL,
   PRIMARY KEY (`idValoracion`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
--- Volcar la base de datos para la tabla `valoraciones`
+-- Volcado de datos para la tabla `valoraciones`
 --
 
 INSERT INTO `valoraciones` (`idValoracion`, `idUsuario`, `codigoArticulo`, `valoracion`) VALUES
-(1, 4, 'd05', 8),
-(6, 6, 'd04', 5);
+(1, 18, 'pel103d', 3);
 
 -- --------------------------------------------------------
 
@@ -210,9 +205,15 @@ CREATE TABLE IF NOT EXISTS `vender` (
   `fecha` datetime NOT NULL,
   `idDireccion` int(11) NOT NULL,
   PRIMARY KEY (`idVenta`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=26 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
--- Volcar la base de datos para la tabla `vender`
+-- Volcado de datos para la tabla `vender`
 --
 
+INSERT INTO `vender` (`idVenta`, `idUsuario`, `fecha`, `idDireccion`) VALUES
+(1, '18', '2011-10-18 20:03:15', 48);
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
