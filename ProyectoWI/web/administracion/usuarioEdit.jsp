@@ -13,7 +13,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="../css/administracion/administracion.css" media="screen" rel="stylesheet" type="text/css">
         <script type="application/x-javascript" src="../script/administracion/editarUsuario.js"></script>
-        <title>Administracion: EditarUsuario</title>
+        <title>Administracion: Editar Usuario</title>
     </head>
     <body>
         <div id="titulo">Administración: Usuarios</div>

@@ -13,10 +13,10 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="../css/administracion/administracion.css" media="screen" rel="stylesheet" type="text/css">
         <script type="application/x-javascript" src="../script/administracion/editarUsuario.js"></script>
-        <title>Administracion de discos</title>
+        <title>Administracion de usuarios</title>
     </head>
     <body>
-        <div id="titulo">Administración: Discos</div>
+        <div id="titulo">Administración: Usuarios</div>
         <%@ include file="menu.jsp"%>
          <div id="lista">
 

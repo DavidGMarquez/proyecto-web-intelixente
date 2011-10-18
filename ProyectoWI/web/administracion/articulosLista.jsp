@@ -11,7 +11,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Lista de discos</title>
+        <title>Lista de artículos</title>
     </head>
     <body>
 
@@ -31,18 +31,16 @@
                                 <c:out value="${p}"/> |
                             </c:when>
                             <c:otherwise>
-                                <a href="#" onclick="recuperaDiscos(<c:out value="${p}"/>)" ><c:out value="${p}"/></a> |
+                                <a href="#" onclick="recuperaArticulos(<c:out value="${p}"/>)" ><c:out value="${p}"/></a> |
                             </c:otherwise>
                         </c:choose>
                     </c:forEach>
-                    <form action="controladorAdmin?action=insertarDiscoForm" method="post">
-                        <input type="submit" name="insertar" value="Añadir nuevo disco"/>
+                    <form action="controladorAdmin?action=insertarArticuloForm" method="post">
+                        <input type="submit" name="insertar" value="Añadir nuevo articulo"/>
                     </form>
                     <table>
                         <tr>
                             <th class="resaltarCelda">Código</th>
-                            <th class="text resaltarCelda">Grupo</th>
-                            <th class="text resaltarCelda">Álbum</th>
                             <th class="resaltarCelda">Precio</th>
                             <th class="resaltarCelda">Activar</th>
                             <th class="resaltarCelda">Editar</th>
@@ -55,22 +53,19 @@
                         <c:forEach items="${articulos}" var="item" begin="${inicio}" end="${fin-1}" step="1">
                             <tr>
                                 <td><c:out value="${item.codigoArticulo}"/></td>
-                            <td><c:out value="${item.grupo}"/></td>
-                            <td><c:out value="${item.album}"/></td>
-                            <td><c:out value="${item.precio}"/></td>
-                            <td>
-                            <c:choose>
-                                <c:when test="${item.activo==false}">
-                                    <a href="controladorAdmin?action=activarDisco&pagina=<c:out value='${pagina}'/>&idDisco=<c:out value='${item.codigoArticulo}'/>">activar</a>
-                                </c:when>
-                                <c:otherwise>
-                                    <a href="controladorAdmin?action=desactivarDisco&pagina=<c:out value='${pagina}'/>&idDisco=<c:out value='${item.codigoArticulo}'/>">desactivar</a>
-                                </c:otherwise>
-                            </c:choose>
-                            </td>
-
-                            <td><a href="controladorAdmin?action=editarDisco&pagina=<c:out value='${pagina}'/>&idDisco=<c:out value='${item.codigoArticulo}'/>">editar</a></td>
-                            <td><a href="controladorAdmin?action=borrarDisco&pagina=<c:out value='${pagina}'/>&idDisco=<c:out value='${item.codigoArticulo}'/>">borrar</a></td>
+                                <td><c:out value="${item.precio}"/></td>
+                                <td>
+                                <c:choose>
+                                    <c:when test="${item.activo==false}">
+                                        <a href="controladorAdmin?action=activarArticulo&pagina=<c:out value='${pagina}'/>&idArticulo=<c:out value='${item.codigoArticulo}'/>">activar</a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a href="controladorAdmin?action=desactivarArticulo&pagina=<c:out value='${pagina}'/>&idArticulo=<c:out value='${item.codigoArticulo}'/>">desactivar</a>
+                                    </c:otherwise>
+                                </c:choose>
+                                </td>
+                                <td><a href="controladorAdmin?action=editarArticulo&pagina=<c:out value='${pagina}'/>&idArticulo=<c:out value='${item.codigoArticulo}'/>">editar</a></td>
+                                <td><a href="controladorAdmin?action=borrarArticulo&pagina=<c:out value='${pagina}'/>&idArticulo=<c:out value='${item.codigoArticulo}'/>">borrar</a></td>
                             </tr>
 
                         </c:forEach>

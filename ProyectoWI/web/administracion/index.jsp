@@ -22,7 +22,7 @@
                 <a href="administracion/controladorAdmin?action=usuariosIndex">Administrar usuarios</a>
             </li>
             <li>
-                <a href="administracion/controladorAdmin?action=discosIndex">Administrar discos</a>
+                <a href="administracion/controladorAdmin?action=articulosIndex">Administrar artículos</a>
             </li>
         </ul>
     </body>
