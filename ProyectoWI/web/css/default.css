@@ -109,6 +109,10 @@ ul
 	font-size: 150%;
 }
 
+#articulo .cover
+{
+    height: 245px;
+}
 
 
 /* BUSCA
@@ -228,6 +232,10 @@ ul
 	position: relative;
 	margin-bottom: 3px;
 	width: 160px;
+        height: 160px;
+        text-align: center;
+}
+#catalogo .caratula img.cover{
     height: 160px;
 }
 
@@ -242,9 +250,10 @@ ul
 #catalogo .info
 {
     height: 90px;
-    width: 160px;
+    width: 140px;
     overflow:hidden;
     vertical-align: top;
+    padding: 0 10px;
 }
 
 
