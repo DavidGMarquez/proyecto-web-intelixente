@@ -12,13 +12,13 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="../css/administracion/administracion.css" media="screen" rel="stylesheet" type="text/css">
-        <script type="application/x-javascript" src="../script/administracion/editarDisco.js"></script>
-        <title>Administracion: Editar Disco</title>
+        <script type="application/x-javascript" src="../script/administracion/editarArticulo.js"></script>
+        <title>Administracion: Editar Artículo</title>
     </head>
     <body>
-        <div id="titulo">Administración: Discos</div>
+        <div id="titulo">Administración: Articulos</div>
         <%@ include file="menu.jsp"%>
-        <h2>Administración: Editar Disco</h2>
+        <h2>Administración: Editar Articulo</h2>
         <div id="lista">
 
             <div id="centrar">
@@ -27,7 +27,7 @@
                     <table id="edit">
                         <c:choose>
                             <c:when test="${acc==1}">
-                                <input type="hidden" name="idDisco" value="${articulo.codigoArticulo}"/>
+                                <input type="hidden" name="idArticulo" value="${articulo.codigoArticulo}"/>
                             </c:when>
                             <c:otherwise>
                                 <tr>
@@ -38,22 +38,6 @@
                         </c:choose>
 
                         <tr>
-                            <td class="resaltarCelda cab">Grupo:</td>
-                            <td><input class="size" type="text" name="grupo" value="${articulo.grupo}">*</td>
-                        </tr>
-                        <tr>
-                            <td class="resaltarCelda cab">Album:</td>
-                            <td><input class="size" type="text" name="album" value="${articulo.album}">*</td>
-                        </tr>
-                        <tr>
-                            <td class="resaltarCelda cab">País:</td>
-                            <td><input class="size" type="text" name="pais" value="${articulo.pais}">*</td>
-                        </tr>
-                        <tr>
-                            <td class="resaltarCelda cab">Año:</td>
-                            <td><input class="size" type="text" name="anho" value="${articulo.anho}">*</td>
-                        </tr>
-                        <tr>
                             <td class="resaltarCelda cab">Precio:</td>
                             <td><input class="size" type="text" name="precio" value="${articulo.precio}">*</td>
                         </tr>
@@ -61,10 +45,7 @@
                             <td class="resaltarCelda cab">Unidades:</td>
                             <td><input class="size" type="text" name="unidades" value="${articulo.unidades}">*</td>
                         </tr>
-                        <tr>
-                            <td class="resaltarCelda cab">Imagen:</td>
-                            <td><input class="size" type="text" name="imagen" value="${articulo.imagen}"></td>
-                        </tr>
+                        
                         <tr>
                             <td class="resaltarCelda cab">Activo:</td>
                             <td >
@@ -78,10 +59,19 @@
                                 </c:choose>
                             </td>
                         </tr>
-
+                    </table>
+                    <table>
                         <tr>
-                            <td></td>
-
+                            <td class="resaltarCelda cab">Año:</td>
+                            <td><input class="size" type="text" name="anho" value="${articulo.pelicula.anho}">*</td>
+                        </tr>
+                        <tr>
+                            <td class="resaltarCelda cab">Imagen:</td>
+                            <td><input class="size" type="text" name="imagen" value="${articulo.pelicula.imagen}"></td>
+                        </tr>
+                    </table>
+                    <table>
+                        <tr>
                             <td>
                                 <input type="button" value="Cancelar" name="cancelar" onclick="ejecutarAccion(this,<c:out value='${pagina}'/>)">
 
