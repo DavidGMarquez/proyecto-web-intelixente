@@ -64,7 +64,7 @@ public class Controlador extends HttpServlet {
             codigo = request.getParameter("codigo");
 
             th = new TiendaHelper(session);
-            catalogo = th.obtenerDiscos(usuario);
+            catalogo = th.obtenerArticulos(usuario);
 
             dispatcher = getServletContext().getRequestDispatcher("/index.jsp");
 
@@ -72,13 +72,13 @@ public class Controlador extends HttpServlet {
                 session.invalidate();
                 usuario = null;
 
-            } else // Información de un disco, con comentarios y valoraciones
-            if ("disco".equalsIgnoreCase(page) && codigo != null) {
+            } else // Información de un articulo, con comentarios y valoraciones
+            if ("articulo".equalsIgnoreCase(page) && codigo != null) {
                 if ("valorar".equalsIgnoreCase(action)) {
                     ValoracionesDAO vd = new ValoracionesDAO();
                     vd.insertar(usuario.getIdUsuario(), codigo, Integer.parseInt(request.getParameter("valoracion")));
                 }
-                dispatcher = getServletContext().getRequestDispatcher("/disco.jsp");
+                dispatcher = getServletContext().getRequestDispatcher("/articulo.jsp");
                 Articulo articulo = null;
                 ComentariosDAO cd = new ComentariosDAO();
                 for (int i = 0; i < catalogo.size(); i++) {
