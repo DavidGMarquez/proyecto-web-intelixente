@@ -5,20 +5,20 @@ import java.util.*;
 public class ShoppingCart
 {
 
-    private ArrayList<ArticuloPedido> cesta;
+    private ArrayList<Pedido> cesta;
     private double precioTotal;
 
     public ShoppingCart()
     {
-        cesta = new ArrayList<ArticuloPedido>();
+        cesta = new ArrayList<Pedido>();
     }
 
     public synchronized boolean up(Articulo pedido)
     {
-        ArticuloPedido dp = new ArticuloPedido(pedido);
+        Pedido dp = new Pedido(pedido);
         for (int i = 0; i < cesta.size(); i++)
         {
-            if (cesta.get(i).getCodigoArticulo().equalsIgnoreCase(pedido.getCodigoArticulo()))
+            if (cesta.get(i).getArticulo().getCodigoArticulo().equalsIgnoreCase(pedido.getCodigoArticulo()))
             {
                 if (pedido.getUnidades() > cesta.get(i).getCantidad())
                 {   
@@ -41,7 +41,7 @@ public class ShoppingCart
         //ArticuloPedido dp = new ArticuloPedido(pedido);
         for (int i = 0; i < cesta.size(); i++)
         {
-            if (cesta.get(i).getCodigoArticulo().equalsIgnoreCase(pedido.getCodigoArticulo()))
+            if (cesta.get(i).getArticulo().getCodigoArticulo().equalsIgnoreCase(pedido.getCodigoArticulo()))
             {
                 cesta.get(i).setCantidad(cesta.get(i).getCantidad() - 1);
                 if (cesta.get(i).getCantidad() < 1)
@@ -54,7 +54,7 @@ public class ShoppingCart
 
     }
 
-    public synchronized void delete(ArticuloPedido dp)
+    public synchronized void delete(Pedido dp)
     {
         cesta.remove(dp);
 
@@ -72,7 +72,7 @@ public class ShoppingCart
 
     }
 
-    public ArrayList<ArticuloPedido> getCesta()
+    public ArrayList<Pedido> getCesta()
     {
         return cesta;
     }
