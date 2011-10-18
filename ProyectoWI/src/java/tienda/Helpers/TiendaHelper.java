@@ -38,7 +38,7 @@ public class TiendaHelper {
         listaArticulos = new ArrayList<Articulo>();
     }
 
-	public List<Articulo> obtenerDiscos(Usuario u) {
+	public List<Articulo> obtenerArticulos(Usuario u) {
         try {
             listaArticulos = ad.findArticulos(true, "");
             for (int i = 0; i < listaArticulos.size(); i++) {
