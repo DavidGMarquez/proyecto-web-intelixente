@@ -14,30 +14,32 @@ public class Articulo implements Serializable{
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 8038336055575115281L;
-	private String codigoArticulo;
-    private String grupo;
-    private String album;
-    private String pais;
+    private static final long serialVersionUID = 8038336055575115281L;
+    private String codigoArticulo;
     private float precio;
     private Boolean activo;
     private Integer unidades;
-    private String imagen;
-    private Integer anho;
+    private Pelicula pelicula;
 
-    public Articulo(String codigoArticulo, String grupo, String album, String pais, float precio, Boolean activo, Integer unidades, String imagen,Integer anho) {
+    public Articulo(){}
+    
+    public Articulo(String codigoArticulo, float precio, Boolean activo, Integer unidades) {
+        this();
         this.codigoArticulo = codigoArticulo;
-        this.grupo = grupo;
-        this.album = album;
-        this.pais = pais;
         this.precio = precio;
         this.activo = activo;
         this.unidades = unidades;
-        this.imagen = imagen;
-        this.anho=anho;
+    }
+    
+    public Articulo(String codigoArticulo, float precio, Boolean activo, Integer unidades, Pelicula pelicula) {
+        this(codigoArticulo, precio, activo, unidades);
+        this.pelicula = pelicula;
     }
 
-    public Articulo(){}
+    public Integer getIdPelicula(){
+        return pelicula.getId();
+    }
+    
 
     public Integer getUnidades() {
         return unidades;
@@ -63,38 +65,6 @@ public class Articulo implements Serializable{
         this.codigoArticulo = codigoArticulo;
     }
 
-    public String getImagen() {
-        return imagen;
-    }
-
-    public void setImagen(String imagen) {
-        this.imagen = imagen;
-    }
-
-    public String getAlbum() {
-        return album;
-    }
-
-    public void setAlbum(String album) {
-        this.album = album;
-    }
-
-    public String getGrupo() {
-        return grupo;
-    }
-
-    public void setGrupo(String grupo) {
-        this.grupo = grupo;
-    }
-
-    public String getPais() {
-        return pais;
-    }
-
-    public void setPais(String pais) {
-        this.pais = pais;
-    }
-
     public float getPrecio() {
         return precio;
     }
@@ -102,13 +72,14 @@ public class Articulo implements Serializable{
     public void setPrecio(float precio) {
         this.precio = precio;
     }
-
-    public Integer getAnho() {
-        return anho;
+    
+    public Pelicula getPelicula(){
+        return pelicula;
+    }
+    
+    public void setPelicula(Pelicula p){
+        this.pelicula = p;
     }
 
-    public void setAnho(Integer anho) {
-        this.anho = anho;
-    }
-
+    
 }
