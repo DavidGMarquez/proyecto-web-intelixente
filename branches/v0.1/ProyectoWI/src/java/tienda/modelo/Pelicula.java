@@ -1,12 +1,13 @@
 package tienda.modelo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author nessa
  */
-public class Pelicula {
+public class Pelicula implements Serializable{
     
     /* Atributos
      * ---------------------------------- */
