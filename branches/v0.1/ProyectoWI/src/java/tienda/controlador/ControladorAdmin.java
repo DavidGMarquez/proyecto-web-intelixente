@@ -195,7 +195,7 @@ public class ControladorAdmin extends HttpServlet {
                     ArticuloHelper ah = new ArticuloHelper();
                     Articulo a = ah.findArticuloById(idArticulo);
                     session.setAttribute("articulo", a);
-                    session.setAttribute("acc", "1");
+                    session.setAttribute("acc", "modificar");
                     dispatcher = getServletContext().getRequestDispatcher("/administracion/articuloEdit.jsp");
                 } else if ("modificarArticulo".equalsIgnoreCase(action)) {
                     ArticuloHelper ah = new ArticuloHelper();
@@ -212,8 +212,9 @@ public class ControladorAdmin extends HttpServlet {
                         dispatcher = getServletContext().getRequestDispatcher("/administracion/error.jsp");
                     }
                 } else if ("insertarArticuloForm".equalsIgnoreCase(action)) {
-                    session.setAttribute("acc", "2");
+                    session.setAttribute("acc", "insertar");
                     session.removeAttribute("articulo");
+                    
                     dispatcher = getServletContext().getRequestDispatcher("/administracion/articuloEdit.jsp");
                 } else if ("insertarArticulo".equalsIgnoreCase(action)) {
                     ArticuloHelper ah = new ArticuloHelper();
