@@ -36,13 +36,14 @@ public class ArticuloDAO {
             sentenciaSQL = conexion.createStatement();
             // TODO : PROBAR consulta
             if(condicion == null) condicion = "";
-            condicion += (condicion.isEmpty()? " WHERE ": " AND ") + "WHERE a.idPelicula = m.id ";
+            condicion += (condicion.isEmpty()? " WHERE ": " AND ") + " a.idPelicula = m.id ";
             if(filtrarActivos){
                 condicion += " AND a.activo = 1 AND a.unidades > 0";
             }
             query = "SELECT a.codigoArticulo, a.precio, a.unidades, a.activo, a.idPelicula, title as titulo, imdbPictureURL as imagen, year as anho "
                     + "FROM `articulos` a,`movies` m "
                     + condicion;
+            System.out.println("ArticuloDAO:" + query);
             consulta = sentenciaSQL.executeQuery(query);
             while (consulta.next()) {
                 // TODO: obtener otros datos de la película si es necesario en la pagina web
