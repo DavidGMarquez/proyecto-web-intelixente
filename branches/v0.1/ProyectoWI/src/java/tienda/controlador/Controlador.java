@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
+import tienda.DAO.ArticuloDAO;
 import tienda.DAO.ComentariosDAO;
 import tienda.DAO.ValoracionesDAO;
 import tienda.Helpers.ArticuloHelper;
@@ -92,6 +93,11 @@ public class Controlador extends HttpServlet {
                         break;
                     }
                 }
+                // Obtener dos artículos parecidos
+                ArticuloDAO aDAO = new ArticuloDAO();
+                List<Articulo> recomendaciones = aDAO.findArticulosByCluster(articulo.getCluster(), articulo.getCodigoArticulo(), 2, true, null);
+                request.setAttribute("recomendaciones", recomendaciones);
+                
                 if ("comentar".equalsIgnoreCase(action) && request.getParameter("comentario") != null) {
                     Comentarios c = new Comentarios();
                     c.setCodigoArticulo(articulo.getCodigoArticulo());
@@ -124,7 +130,7 @@ public class Controlador extends HttpServlet {
                             dispatcher = getServletContext().getRequestDispatcher("/usuario.jsp?action=ver");
                         }
                     } else {
-                        session.setAttribute("mensaje", new String("El usuario que ha introducido no existe."));
+                        session.setAttribute("mensaje", "El usuario que ha introducido no existe.");
                         dispatcher = getServletContext().getRequestDispatcher("/usuario.jsp?action=logueo");
                     }
                 } else if ("registro".equalsIgnoreCase(action)) {
@@ -152,7 +158,7 @@ public class Controlador extends HttpServlet {
             }
             if (("tienda".equalsIgnoreCase(page)) || ("busca".equalsIgnoreCase(page))) {
                 if ("pagar".equalsIgnoreCase(action)) {
-                    TiendaHelper th = new TiendaHelper(session);
+                    //TiendaHelper th = new TiendaHelper(session);
                     Direccion d = new Direccion();
                     d.setDireccion(request.getParameter("calle"));
                     d.setLocalidad(request.getParameter("localidad"));
