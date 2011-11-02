@@ -40,7 +40,7 @@ public class ArticuloDAO {
             if(filtrarActivos){
                 condicion += " AND a.activo = 1 AND a.unidades > 0";
             }
-            query = "SELECT a.codigoArticulo, a.precio, a.unidades, a.activo, a.idPelicula, title as titulo, imdbPictureURL as imagen, year as anho "
+            query = "SELECT a.codigoArticulo, a.precio, a.unidades, a.activo, a.idPelicula, idCluster, title as titulo, imdbPictureURL as imagen, year as anho "
                     + "FROM `articulos` a,`movies` m "
                     + condicion;
             System.out.println("ArticuloDAO:" + query);
@@ -53,7 +53,58 @@ public class ArticuloDAO {
                         consulta.getString("imagen"));
                 Articulo a = new Articulo(consulta.getString("codigoArticulo"), 
                         consulta.getFloat("precio"), consulta.getBoolean("activo"), 
-                        consulta.getInt("unidades"),p);
+                        consulta.getInt("unidades"), consulta.getInt("idCluster"), p);
+                l.add(a);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(ArticuloDAO.class.getName()).log(Level.SEVERE, null, ex);
+            
+        } finally {
+            m.cerrarConexion(conexion);
+        }
+        return l;
+    }
+    
+    /**
+     * Crea una lista aleatoria de elementos del mismo cluster
+     * @param clusterId - identificador del cluster
+     * @param codigoArticulo - código que no se incluirá en la lista
+     * @param maxElementos - número máximo de elementos que se incluirán. Si es null no hay límite.
+     * @param filtrarActivos - si es true sólo se incluyen artículos activos
+     * @param condicion - código SQL de una condición
+     * @return 
+     */
+    public List<Articulo> findArticulosByCluster(int clusterId, String codigoArticulo, Integer maxElementos, boolean filtrarActivos, String condicion){
+        List<Articulo> l = new ArrayList<Articulo>();
+        try {
+            conexion = m.obtenerConexionDAWA();
+            sentenciaSQL = conexion.createStatement();
+            if(condicion == null) condicion = "";
+            condicion += (condicion.isEmpty()? " WHERE ": " AND ") + " a.idPelicula = m.id ";
+            if(codigoArticulo != null && !codigoArticulo.isEmpty()){
+                condicion += " AND a.codigoArticulo NOT LIKE '" + codigoArticulo + "' ";
+            }
+            if(filtrarActivos){
+                condicion += " AND a.activo = 1 AND a.unidades > 0";
+            }
+            condicion += " ORDER BY rand() ";
+            if(maxElementos != null && maxElementos>0){
+                condicion += " LIMIT 0 , " + maxElementos;
+            }
+            query = "SELECT a.codigoArticulo, a.precio, a.unidades, a.activo, a.idPelicula, idCluster, title as titulo, imdbPictureURL as imagen, year as anho "
+                    + "FROM `articulos` a,`movies` m "
+                    + condicion;
+            System.out.println("ArticuloDAO:" + query);
+            consulta = sentenciaSQL.executeQuery(query);
+            while (consulta.next()) {
+                // TODO: obtener otros datos de la película si es necesario en la pagina web
+                Pelicula p = new Pelicula(consulta.getInt("idPelicula"),
+                        consulta.getString("titulo"),
+                        consulta.getInt("anho"),
+                        consulta.getString("imagen"));
+                Articulo a = new Articulo(consulta.getString("codigoArticulo"), 
+                        consulta.getFloat("precio"), consulta.getBoolean("activo"), 
+                        consulta.getInt("unidades"), consulta.getInt("idCluster"), p);
                 l.add(a);
             }
         } catch (Exception ex) {
@@ -73,7 +124,7 @@ public class ArticuloDAO {
             //Obtengo la lista de Articulos
             // TODO : probar consulta
             //query = "SELECT * FROM articulos where codigoArticulo='" + idArticulo + "'";
-            query = "SELECT a.codigoArticulo, a.precio, a.unidades, a.activo, a.idPelicula, title as titulo, imdbPictureURL as imagen, year as anho "
+            query = "SELECT a.codigoArticulo, a.precio, a.unidades, a.activo, a.idPelicula, idCluster, title as titulo, imdbPictureURL as imagen, year as anho "
                     + "FROM `articulos` a,`movies` m WHERE codigoArticulo ='" + idArticulo + "' AND a.idPelicula = m.id";
             consulta = sentenciaSQL.executeQuery(query);
             Articulo u = null;
@@ -87,7 +138,7 @@ public class ArticuloDAO {
                 u = new Articulo(consulta.getString("codigoArticulo"),
                         consulta.getFloat("precio"),
                         consulta.getBoolean("activo"),
-                        consulta.getInt("unidades"), p);
+                        consulta.getInt("unidades"), consulta.getInt("idCluster"),  p);
             }
             return u;
         } catch (Exception ex) {
