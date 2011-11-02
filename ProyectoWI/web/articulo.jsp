@@ -93,7 +93,20 @@
                                         <span><c:out value="${i.pelicula.titulo}"/></span>
                                         </li>
                                     </c:forEach>
-                                </ul>        
+                                </ul>  
+                                <div class="oferta">
+                                    <h4>Oferta especial 3x2</h4>
+                                    <p>Lleve tres películas y pague dos*</p> 
+                                    <form>
+                                        <input type="hidden" name="accion" value="oferta3x2" />
+                                        <input type="hidden" name="page" value="articulo" />
+                                        <%--<input type="hidden" name="articulo1" value="${articulo.codigoArticulo}" />
+                                        <input type="hidden" name="articulo2" value="${recomendaciones[0].codigoArticulo}" />
+                                        <input type="hidden" name="articulo3" value="${recomendaciones[1].codigoArticulo}" />--%>
+                                        <input type="submit" value="Comprar" />
+                                    </form>
+                                    <p class="nota">*La película gratuita será la de menor precio</p>
+                                </div>
                             </c:when>
                             <c:otherwise>
                                 <p>No hay recomendaciones</p>
