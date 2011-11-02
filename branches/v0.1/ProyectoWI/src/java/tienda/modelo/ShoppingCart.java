@@ -18,7 +18,8 @@ public class ShoppingCart
         Pedido dp = new Pedido(pedido);
         for (int i = 0; i < cesta.size(); i++)
         {
-            if (cesta.get(i).getArticulo().getCodigoArticulo().equalsIgnoreCase(pedido.getCodigoArticulo()))
+            if (cesta.get(i).getArticulo().getCodigoArticulo().equalsIgnoreCase(pedido.getCodigoArticulo()) &&
+                    cesta.get(i).getArticulo().getPrecio()==pedido.getPrecio())
             {
                 if (pedido.getUnidades() > cesta.get(i).getCantidad())
                 {   
