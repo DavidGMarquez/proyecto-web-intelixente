@@ -20,6 +20,7 @@ public class Articulo implements Serializable{
     private Boolean activo;
     private Integer unidades;
     private Pelicula pelicula;
+    private Integer cluster;
 
     public Articulo(){}
     
@@ -31,8 +32,22 @@ public class Articulo implements Serializable{
         this.unidades = unidades;
     }
     
-    public Articulo(String codigoArticulo, float precio, Boolean activo, Integer unidades, Pelicula pelicula) {
+    public Articulo(String codigoArticulo, float precio, Boolean activo, Integer unidades, Integer cluster) {
         this(codigoArticulo, precio, activo, unidades);
+        this.cluster = cluster;
+    }
+    
+    /*public Articulo(String codigoArticulo, float precio, Boolean activo, Integer unidades, Integer cluster) {
+        this();
+        this.codigoArticulo = codigoArticulo;
+        this.precio = precio;
+        this.activo = activo;
+        this.unidades = unidades;
+    }*/
+    
+    public Articulo(String codigoArticulo, float precio, Boolean activo, 
+            Integer unidades, Integer cluster, Pelicula pelicula) {
+        this(codigoArticulo, precio, activo, unidades, cluster);
         this.pelicula = pelicula;
     }
 
@@ -81,5 +96,12 @@ public class Articulo implements Serializable{
         this.pelicula = p;
     }
 
+     public Integer getCluster() {
+        return cluster;
+    }
+
+    public void setCluster(Integer cluster) {
+        this.cluster = cluster;
+    }
     
 }
