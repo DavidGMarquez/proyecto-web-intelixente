@@ -33,9 +33,11 @@ CREATE TABLE IF NOT EXISTS `articulos` (
   `unidades` int(11) NOT NULL,
   `activo` tinyint(1) NOT NULL,
   `idPelicula` int(11) NOT NULL,
+  `idCluster` MEDIUMINT(5) NOT NULL DEFAULT '0',
   PRIMARY KEY (`idArticulo`),
-  UNIQUE KEY `codigo` (`codigoArticulo`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;
+  UNIQUE KEY `codigo` (`codigoArticulo`),
+  UNIQUE KEY `idPelicula` (`idPelicula`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 --
 -- Volcado de datos para la tabla `articulos`
@@ -43,12 +45,12 @@ CREATE TABLE IF NOT EXISTS `articulos` (
 
 INSERT INTO `articulos` (`idArticulo`, `codigoArticulo`, `precio`, `unidades`, `activo`, `idPelicula`) VALUES
 (1, 'pel103d', 25.30, 23, 1, 2),
-(21, 'pel2bc', 32.10, 32, 1, 3),
-(22, 'pel4bc', 32.10, 32, 1, 4),
-(23, 'pel5bc', 32.10, 32, 1, 5),
-(24, 'pel6bc', 32.10, 32, 1, 6),
-(25, 'pel7bc', 36.10, 32, 1, 7),
-(26, 'pel8bc', 32.17, 32, 1, 8);
+(2, 'pel2bc', 32.10, 32, 1, 3),
+(3, 'pel4bc', 32.10, 32, 1, 4),
+(4, 'pel5bc', 32.10, 32, 1, 5),
+(5, 'pel6bc', 32.10, 32, 1, 6),
+(6, 'pel7bc', 36.10, 32, 1, 7),
+(7, 'pel8bc', 32.17, 32, 1, 8);
 
 -- --------------------------------------------------------
 
@@ -63,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `articulovendido` (
   `unidades` int(11) NOT NULL,
   `costeUnidad` decimal(10,2) NOT NULL,
   PRIMARY KEY (`idArtVendido`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
 -- Volcado de datos para la tabla `articulovendido`
@@ -84,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `comentarios` (
   `codigoArticulo` varchar(20) NOT NULL,
   `comentario` text NOT NULL,
   PRIMARY KEY (`idComentario`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
 -- Volcado de datos para la tabla `comentarios`
@@ -106,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `direcciones` (
   `provincia` varchar(100) NOT NULL,
   `cp` varchar(5) NOT NULL,
   PRIMARY KEY (`idDireccion`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=49 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Volcado de datos para la tabla `direcciones`
@@ -115,7 +117,7 @@ CREATE TABLE IF NOT EXISTS `direcciones` (
 INSERT INTO `direcciones` (`idDireccion`, `direccion`, `localidad`, `provincia`, `cp`) VALUES
 (1, 'calle costa ', 'milladoiro', 'Pontevedra', '15895'),
 (2, 'calle', 'localidad', 'provincia', '12345'),
-(48, 'calle costa ', 'milladoiro', 'Pontevedra', '15895');
+(3, 'calle costa ', 'milladoiro', 'Pontevedra', '15895');
 
 -- --------------------------------------------------------
 
@@ -127,7 +129,7 @@ CREATE TABLE IF NOT EXISTS `tipousuario` (
   `idTipoUsuario` int(11) NOT NULL AUTO_INCREMENT,
   `tipo` varchar(50) NOT NULL,
   PRIMARY KEY (`idTipoUsuario`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Volcado de datos para la tabla `tipousuario`
@@ -155,7 +157,7 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `idDireccion` int(11) NOT NULL,
   `totalCompra` float NOT NULL,
   PRIMARY KEY (`idUsuario`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=22 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 --
 -- Volcado de datos para la tabla `usuarios`
@@ -163,14 +165,14 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
 
 INSERT INTO `usuarios` (`idUsuario`, `nombre`, `password`, `telefono`, `email`, `activo`, `idTipoUsuario`, `idDireccion`, `totalCompra`) VALUES
 (1, 'Vanesa Garcia2', 'patata', '9818989892', 'vanesagt@info.com', 0, 3, 1, 0),
-(3, 'proba', 'proba1', '987656765', 'proba@proba.com', 1, 2, 1, 0),
-(4, 'vanesa', '12345678', 'm', 'vanesa@vanesa.com', 1, 3, 1, 246.598),
-(6, 'dani', 'dani11', '981292929', 'dani@dani.com', 1, 2, 1, 0),
-(10, 'tomas', 'tomas1', '987232323', 'tomas@tomas.com', 1, 2, 1, 0),
-(21, 'maria', 'maria1', '981292929', 'maria@maria.com', 0, 2, 2, 0),
-(18, 'admin', 'admin1', '---', 'admin@tiendadawa.com', 1, 1, 1, 50.6),
-(19, 'pepe', 'pepe11', '981292929', 'pepe@pepe.com', 1, 2, 1, 15),
-(20, 'manuel', 'manuel', '981292929', 'manuel@manuel.com', 1, 2, 1, 0);
+(2, 'proba', 'proba1', '987656765', 'proba@proba.com', 1, 2, 1, 0),
+(3, 'vanesa', '12345678', 'm', 'vanesa@vanesa.com', 1, 3, 1, 246.598),
+(4, 'dani', 'dani11', '981292929', 'dani@dani.com', 1, 2, 1, 0),
+(5, 'tomas', 'tomas1', '987232323', 'tomas@tomas.com', 1, 2, 1, 0),
+(6, 'maria', 'maria1', '981292929', 'maria@maria.com', 0, 2, 2, 0),
+(7, 'admin', 'admin1', '---', 'admin@tiendadawa.com', 1, 1, 1, 50.6),
+(8, 'pepe', 'pepe11', '981292929', 'pepe@pepe.com', 1, 2, 1, 15),
+(9, 'manuel', 'manuel', '981292929', 'manuel@manuel.com', 1, 2, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -184,7 +186,7 @@ CREATE TABLE IF NOT EXISTS `valoraciones` (
   `codigoArticulo` varchar(20) NOT NULL,
   `valoracion` int(11) NOT NULL,
   PRIMARY KEY (`idValoracion`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
 -- Volcado de datos para la tabla `valoraciones`
@@ -205,7 +207,7 @@ CREATE TABLE IF NOT EXISTS `vender` (
   `fecha` datetime NOT NULL,
   `idDireccion` int(11) NOT NULL,
   PRIMARY KEY (`idVenta`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
 -- Volcado de datos para la tabla `vender`
