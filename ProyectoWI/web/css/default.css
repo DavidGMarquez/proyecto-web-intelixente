@@ -343,7 +343,7 @@ ul
 
 #comentarios
 {
-    width: 364px;
+    width: 360px;
     float: left;
     margin-left: 5px;
     text-align: left;
@@ -383,6 +383,15 @@ ul
 
 #recomendaciones .cover:hover{
     cursor: pointer;
+}
+
+#recomendaciones .oferta p, #recomendaciones .oferta h4 {
+    display:block;
+    clear: left;
+}
+
+#recomendaciones .nota{
+    font-size: 75%;
 }
 
 /* CRITERIOS
