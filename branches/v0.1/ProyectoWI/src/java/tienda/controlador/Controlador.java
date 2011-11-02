@@ -96,7 +96,7 @@ public class Controlador extends HttpServlet {
                 // Obtener dos artículos parecidos
                 ArticuloDAO aDAO = new ArticuloDAO();
                 List<Articulo> recomendaciones = aDAO.findArticulosByCluster(articulo.getCluster(), articulo.getCodigoArticulo(), 2, true, null);
-                request.setAttribute("recomendaciones", recomendaciones);
+                session.setAttribute("recomendaciones", recomendaciones);
                 
                 if ("comentar".equalsIgnoreCase(action) && request.getParameter("comentario") != null) {
                     Comentarios c = new Comentarios();
@@ -106,11 +106,35 @@ public class Controlador extends HttpServlet {
                     c.setNombreUsuario(usuario.getNombre());
                     cd.insertarComentario(c);
                 }
-
+                
 
                 ArrayList<Comentarios> comentarios = cd.findComentariosByCodigoArticulo(codigo);
                 if (comentarios != null) {
                     request.setAttribute("comentarios", comentarios);
+                }
+                if ("oferta3x2".equalsIgnoreCase(action)){
+                    List<Articulo> articulos = (List<Articulo>)session.getAttribute("recomendaciones");
+                    articulos.add((Articulo)session.getAttribute("articulo"));
+                    float precio=articulos.get(0).getPrecio(); int indice=0;
+                    for(int i=1; i<articulos.size(); i++){
+                        if(articulos.get(i).getPrecio()<precio){
+                            indice=i;
+                            precio=articulos.get(i).getPrecio();
+                        }
+                    }
+                    //El de menor precio sale gratis
+                    //TODO: que se añadan los 3 o ninguno
+                    articulos.get(indice).setPrecio(0);
+                    String mensaje="";
+                    for(int i=0; i<articulos.size(); i++){
+                        if(!cart.up(articulos.get(i))){ //añadir al carrito
+                            mensaje += "<br>El producto con código " + articulos.get(i).getCodigoArticulo() + " no se ha podido añadir al carrito por falta de stock.";
+                        }
+                    }
+                    if(!mensaje.isEmpty())
+                        request.setAttribute("mensaje", mensaje.substring(4));
+                    session.setAttribute("cart", cart);
+                    
                 }
             } // Identigicación de usuario
             else if ("usuario".equalsIgnoreCase(page)) {
@@ -193,7 +217,7 @@ public class Controlador extends HttpServlet {
                             for (int i = 0; i < catalogo.size(); i++) {
                                 if (catalogo.get(i).getCodigoArticulo().equalsIgnoreCase(codigo)) {
                                     if (!cart.up(catalogo.get(i))) {
-                                        request.setAttribute("mensaje", "No se pueden añadir más undiades de este producto por falta de stock.");
+                                        request.setAttribute("mensaje", "No se pueden añadir más unidades de este producto por falta de stock.");
                                     }
                                     session.setAttribute("cart", cart);
                                     break;
