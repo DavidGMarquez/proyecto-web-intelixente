@@ -15,6 +15,7 @@ import tienda.DAO.DireccionDAO;
 import tienda.DAO.UsuarioDAO;
 import tienda.DAO.VenderDAO;
 import tienda.modelo.Articulo;
+import tienda.modelo.descuentos.DescuentoCestaPorcentaje;
 import tienda.modelo.Direccion;
 import tienda.modelo.Pedido;
 import tienda.modelo.ShoppingCart;
@@ -38,7 +39,7 @@ public class TiendaHelper {
         listaArticulos = new ArrayList<Articulo>();
     }
 
-	public List<Articulo> obtenerArticulos(Usuario u) {
+    public List<Articulo> obtenerArticulos(Usuario u) {
         try {
             listaArticulos = ad.findArticulos(true, "");
             for (int i = 0; i < listaArticulos.size(); i++) {
@@ -61,36 +62,31 @@ public class TiendaHelper {
             DireccionDAO dd = new DireccionDAO();
             int idDireccion = dd.insertarDireccion(d);
             String textoEmail = "Se confirma su compra:\n";
+            
+            if ("VIP".equalsIgnoreCase(u.getTipo())) {
+                cart.getDescuentos().add(new DescuentoCestaPorcentaje(cart,0.8));
+            }
 
             //Compruebo si hay stock
-            Boolean seguir = true;
-            for (int i = 0; i < cesta.size(); i++) {
+            /*for (int i = 0; i < cesta.size(); i++) {
                 if (!ad.compruebaStock(cesta.get(i))) {
-                    seguir = false;
+                    return false;
                 }
-            }
-            if (seguir) {
-                // Insertar venta
-                VenderDAO vd = new VenderDAO();
-                int idVenta = vd.insertar(u.getIdUsuario(), idDireccion);
+            }*/
+            
+            // Insertar venta
+            /*VenderDAO vd = new VenderDAO();
+            int idVenta = vd.insertar(u.getIdUsuario(), idDireccion);*/
 
-                // Insertar artículos vendidos
-                ArticuloVendidoDAO avd = new ArticuloVendidoDAO();
-                ad = new ArticuloDAO();
-                float total = 0;
+            // Insertar artículos vendidos
+            ArticuloVendidoDAO avd = new ArticuloVendidoDAO();
+            ad = new ArticuloDAO();
+            if(avd.insertarCompra(cart, u, idDireccion)){
                 for (int i = 0; i < cesta.size(); i++) {
-                    if ("VIP".equalsIgnoreCase(u.getTipo())) {
-                        cesta.get(i).getArticulo().
-                                setPrecio((float) (cesta.get(i).getArticulo().getPrecio() * 0.8));
-                    }
-                    avd.insertarArticulo(cesta.get(i), idVenta);
-                    total += cesta.get(i).getTotal();
-                    Articulo a = cesta.get(i).getArticulo();
-                    a.setUnidades(a.getUnidades() - cesta.get(i).getCantidad());
-                    ad.modificarUnidades(a);
                     textoEmail = textoEmail + "\t " + cesta.get(i).getArticulo().getPelicula().getTitulo()
-                            + "\tunidades:" + cesta.get(i).getCantidad() + "\n";
+                                + "\tunidades:" + cesta.get(i).getCantidad() + "\n";
                 }
+                double total = cart.getPrecioTotal();
                 u.setTotalCompra(u.getTotalCompra() + total);
                 textoEmail = textoEmail + "\nEl total de la compra es: " + total + "\n";
                 if (u.getIdTipoUsuario() == 2 && u.getTotalCompra() > 100) {
@@ -102,12 +98,11 @@ public class TiendaHelper {
                 new UsuarioDAO().actualizarEstadoUsuario(u);
                 textoEmail = textoEmail + "\nGracias por su compra";
                 Email e = new Email();
-
                 e.enviaMail(u.getEmail(), textoEmail, "Compra confirmada");
                 return true;
-            } else {
-                return false;
             }
+            return false;
+
         } catch (Exception ex) {
             Logger.getLogger(TiendaHelper.class.getName()).log(Level.SEVERE, null, ex);
             return false;
