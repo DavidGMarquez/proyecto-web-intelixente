@@ -26,6 +26,7 @@ import tienda.modelo.Articulo;
 import tienda.modelo.Direccion;
 import tienda.modelo.Pedido;
 import tienda.modelo.Comentarios;
+import tienda.modelo.descuentos.DescuentoCesta3x2;
 import tienda.modelo.ShoppingCart;
 import tienda.modelo.Usuario;
 
@@ -113,27 +114,14 @@ public class Controlador extends HttpServlet {
                     request.setAttribute("comentarios", comentarios);
                 }
                 if ("oferta3x2".equalsIgnoreCase(action)){
-                    List<Articulo> articulos = (List<Articulo>)session.getAttribute("recomendaciones");
+                    ArrayList<Articulo> articulos = (ArrayList<Articulo>)session.getAttribute("recomendaciones");
                     articulos.add((Articulo)session.getAttribute("articulo"));
-                    float precio=articulos.get(0).getPrecio(); int indice=0;
-                    for(int i=1; i<articulos.size(); i++){
-                        if(articulos.get(i).getPrecio()<precio){
-                            indice=i;
-                            precio=articulos.get(i).getPrecio();
-                        }
+                    if(!cart.up(articulos)){
+                        request.setAttribute("mensaje", "No se han podido añadir los artículos por falta de stock");
+                    }else{
+                        cart.getDescuentos().add(new DescuentoCesta3x2(cart, articulos));
+                        session.setAttribute("cart", cart);
                     }
-                    //El de menor precio sale gratis
-                    //TODO: que se añadan los 3 o ninguno
-                    articulos.get(indice).setPrecio(0);
-                    String mensaje="";
-                    for(int i=0; i<articulos.size(); i++){
-                        if(!cart.up(articulos.get(i))){ //añadir al carrito
-                            mensaje += "<br>El producto con código " + articulos.get(i).getCodigoArticulo() + " no se ha podido añadir al carrito por falta de stock.";
-                        }
-                    }
-                    if(!mensaje.isEmpty())
-                        request.setAttribute("mensaje", mensaje.substring(4));
-                    session.setAttribute("cart", cart);
                     
                 }
             } // Identigicación de usuario
