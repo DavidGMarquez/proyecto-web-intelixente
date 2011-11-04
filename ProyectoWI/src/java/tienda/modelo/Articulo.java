@@ -16,7 +16,7 @@ public class Articulo implements Serializable{
 	 */
     private static final long serialVersionUID = 8038336055575115281L;
     private String codigoArticulo;
-    private float precio;
+    private double precio;
     private Boolean activo;
     private Integer unidades;
     private Pelicula pelicula;
@@ -24,7 +24,7 @@ public class Articulo implements Serializable{
 
     public Articulo(){}
     
-    public Articulo(String codigoArticulo, float precio, Boolean activo, Integer unidades) {
+    public Articulo(String codigoArticulo, double precio, Boolean activo, Integer unidades) {
         this();
         this.codigoArticulo = codigoArticulo;
         this.precio = precio;
@@ -32,7 +32,7 @@ public class Articulo implements Serializable{
         this.unidades = unidades;
     }
     
-    public Articulo(String codigoArticulo, float precio, Boolean activo, Integer unidades, Integer cluster) {
+    public Articulo(String codigoArticulo, double precio, Boolean activo, Integer unidades, Integer cluster) {
         this(codigoArticulo, precio, activo, unidades);
         this.cluster = cluster;
     }
@@ -45,7 +45,7 @@ public class Articulo implements Serializable{
         this.unidades = unidades;
     }*/
     
-    public Articulo(String codigoArticulo, float precio, Boolean activo, 
+    public Articulo(String codigoArticulo, double precio, Boolean activo, 
             Integer unidades, Integer cluster, Pelicula pelicula) {
         this(codigoArticulo, precio, activo, unidades, cluster);
         this.pelicula = pelicula;
@@ -80,11 +80,11 @@ public class Articulo implements Serializable{
         this.codigoArticulo = codigoArticulo;
     }
 
-    public float getPrecio() {
+    public double getPrecio() {
         return precio;
     }
 
-    public void setPrecio(float precio) {
+    public void setPrecio(double precio) {
         this.precio = precio;
     }
     
@@ -103,5 +103,10 @@ public class Articulo implements Serializable{
     public void setCluster(Integer cluster) {
         this.cluster = cluster;
     }
-    
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return new Articulo(codigoArticulo.toString(), precio, activo.booleanValue(), 
+                unidades.intValue(), cluster.intValue(), pelicula);
+    }
 }
