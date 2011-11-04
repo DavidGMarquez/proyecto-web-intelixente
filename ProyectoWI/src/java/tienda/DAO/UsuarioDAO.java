@@ -36,11 +36,11 @@ public class UsuarioDAO
             sentenciaSQL = conexion.createStatement();
             //Obtengo la lista de usuarios
             query = "SELECT * FROM usuarios where idTipoUsuario>1";
-            ResultSet consulta = sentenciaSQL.executeQuery(query);
+            consulta = sentenciaSQL.executeQuery(query);
             do
             {
                 consulta.next();
-                Usuario u = new Usuario(consulta.getInt("idUsuario"), consulta.getString("nombre"), consulta.getString("password"), consulta.getString("telefono"), consulta.getString("email"), consulta.getBoolean("activo"), consulta.getInt("idTipoUsuario"), consulta.getFloat("totalCompra"));
+                Usuario u = new Usuario(consulta.getInt("idUsuario"), consulta.getString("nombre"), consulta.getString("password"), consulta.getString("telefono"), consulta.getString("email"), consulta.getBoolean("activo"), consulta.getInt("idTipoUsuario"), consulta.getDouble("totalCompra"));
                 u.setDireccion(new DireccionDAO().findDireccionById(consulta.getInt("idDireccion")));
                 u.setTipo(this.findTiposUsuario(u.getIdTipoUsuario()).getTipoUsuario());
 
@@ -68,10 +68,10 @@ public class UsuarioDAO
             conexion = m.obtenerConexionDAWA();
             sentenciaSQL = conexion.createStatement();
             //Obtengo la lista de usuarios
-            String query = "SELECT * FROM usuarios where idUsuario=" + idUsuario;
+            query = "SELECT * FROM usuarios where idUsuario=" + idUsuario;
             consulta = sentenciaSQL.executeQuery(query);
             consulta.next();
-            Usuario u = new Usuario(consulta.getInt("idUsuario"), consulta.getString("nombre"), null, consulta.getString("telefono"), consulta.getString("email"), consulta.getBoolean("activo"), consulta.getInt("idTipoUsuario"), consulta.getFloat("totalCompra"));
+            Usuario u = new Usuario(consulta.getInt("idUsuario"), consulta.getString("nombre"), null, consulta.getString("telefono"), consulta.getString("email"), consulta.getBoolean("activo"), consulta.getInt("idTipoUsuario"), consulta.getDouble("totalCompra"));
             //Obtengo la dirección
             Integer idDireccion = consulta.getInt("idDireccion");
             sentenciaSQL = conexion.createStatement();
@@ -100,7 +100,7 @@ public class UsuarioDAO
             conexion = m.obtenerConexionDAWA();
             sentenciaSQL = conexion.createStatement();
             //Compruebo si el artículos existe en la bd
-            String query = "SELECT idUsuario FROM usuarios where email='" + email+ "' and password='" + pass + "' and activo=1";
+            query = "SELECT idUsuario FROM usuarios where email='" + email+ "' and password='" + pass + "' and activo=1";
             consulta = sentenciaSQL.executeQuery(query);
             if (consulta.next()){
                 return consulta.getInt("idUsuario");
@@ -227,7 +227,7 @@ public class UsuarioDAO
             conexion = m.obtenerConexionDAWA();
             sentenciaSQL = conexion.createStatement();
             //Obtengo la lista de usuarios
-            String query = "SELECT * FROM tipousuario where idTipoUsuario>1";
+            query = "SELECT * FROM tipousuario where idTipoUsuario>1";
             consulta = sentenciaSQL.executeQuery(query);
             while (consulta.next())
             {
