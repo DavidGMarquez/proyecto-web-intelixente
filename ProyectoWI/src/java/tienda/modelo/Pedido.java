@@ -7,11 +7,14 @@ package tienda.modelo;
 
 //import java.util.StringTokenizer;
 
+import java.util.Collections;
+
+
 /**
  *
  * @author Vanesa
  */
-public class Pedido
+public class Pedido extends Compra
 {
     /**
 	 * 
@@ -31,8 +34,9 @@ public class Pedido
         this.cantidad = 1;
         this.articulo = a;
     }
-
-    public Float getTotal(){
+   
+    @Override
+    public double getPrecioSinDescuento(){
         return cantidad*articulo.getPrecio();
     }
 
@@ -50,5 +54,21 @@ public class Pedido
     
     public Articulo getArticulo(){
         return articulo;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        Pedido clon = new Pedido();
+        clon.setCantidad(cantidad.intValue());
+        clon.setArticulo((Articulo)articulo.clone());
+        return clon;
+    }
+
+    @Override
+    public void integrarDescuentos() throws CloneNotSupportedException {
+        Collections.sort(descuentos);
+        for(int i=0; i<descuentos.size(); i++){
+            descuentos.get(i).integrarDescuento();
+        }
     }
 }
