@@ -1,0 +1,587 @@
+html
+{
+    margin: 0%;
+    padding: 0;
+    height: auto;
+
+}
+
+
+body
+{
+    font: 9pt verdana, sans-serif;
+    line-height: 1.7;
+    color: rgb(76,76,76);
+    background-color: #EEEEEE;
+    margin: 0;
+    padding: 0;
+    height: auto;
+    width: 930px;
+    margin: 0 auto;
+    position: relative;
+}
+
+a
+{
+    text-decoration: none;
+    color: #5179c9;
+}
+
+input
+{
+    width: 60px;
+    text-align: center;
+}
+
+tr
+{
+    vertical-align: middle;
+    text-align: left;
+}
+
+li
+{
+	list-style:none;
+    padding:0;
+    margin:0;
+}
+
+ul
+{
+  	padding:0;
+    margin:0;
+}
+
+.cuerpo
+{
+	width: 400px;
+    height: 400px;
+    text-align: center;
+    vertical-align: middle;
+    margin: 0 auto;
+}
+
+#cntItems{
+        	width: 550px;
+        	height: 565px;
+        	float: left;
+}
+
+.activar
+{
+	cursor: pointer;	
+}
+
+
+.cuadro{
+	position: relative;
+	float: right;
+	width: 320px;
+	text-align: center;
+	padding: 20px;
+	display: block;
+	margin: 0 0 10px 0;
+}
+
+/* ARTICULO
+*********************************************/
+
+#articulo
+{
+    height: 256px;
+    width: 600px;
+    vertical-align: middle;
+    padding: 10px;
+    text-align: left;
+}
+
+#articulo img
+{
+    float: left;
+    margin-right: 20px;
+}
+
+#articulo .datos{
+	float: left;
+}
+
+#articulo .title{
+	font-size: 150%;
+}
+
+#articulo .cover
+{
+    height: 245px;
+}
+
+
+/* BUSCA
+*********************************************/
+
+#busca input
+{
+    text-align: center;
+    width: 80px;
+}
+
+/* CABECERA
+*********************************************/
+
+#cabecera
+{
+    position: relative;
+    width: 400px;
+    height: 96px;
+    margin: 15px auto 25px auto;
+    text-align: center;
+    padding:0;
+}
+
+
+#cabecera li{
+	list-style: none;
+	display: inline-block;
+	margin: 0;
+	width: 96px;
+	height: 96px;
+	cursor: pointer;
+	overflow: hidden;
+	padding: 0;
+}
+
+#cabecera li:hover{
+	background-position: 0px -96px;
+}
+#cabecera li.imgCabecera{
+	background-position: 0px -192px;
+}
+
+/* PAGINATION
+*********************************************/
+.pagination
+{
+	top: -40px;
+	position: relative;
+	margin-right: 8px;
+	float: right;
+}
+
+.pagination li
+{
+	display: block;
+	width: auto;
+	float: left;
+}
+
+.pagination li a
+{
+	display: block;
+	padding: 3px 5px;
+	color: #fff;
+	background-color: #7199e9;
+	text-decoration:none;
+	border: 1px solid lightgrey;
+	margin: 0 1px;
+}
+
+.pagination li a:hover
+{
+	background-color: #4169b9;
+}
+
+.pagination li a.active
+{
+	border: 1px solid lightgrey;
+	color: #000;
+	background-color: #fff;
+}
+
+.pagination li a.inactive 
+{
+	background-color: #eee;
+	color: #777;
+	border: 1px solid #ccc;
+}
+
+
+/* CATALOGO
+*********************************************/
+
+#catalogo
+{
+	height: 555px;
+ 	overflow: hidden;
+ 	position: relative;
+	float: left;
+	width: 512px;
+	text-align: center;
+	font-size: smaller;
+	line-height: 1.8;
+	text-align: left;
+	padding: 16px;
+}
+ 	
+#catalogo .item
+{
+	float: left;
+	margin: 5px;
+}
+
+#catalogo .caratula
+{
+	position: relative;
+	margin-bottom: 3px;
+	width: 160px;
+        height: 160px;
+        text-align: center;
+}
+#catalogo .caratula img.cover{
+    height: 160px;
+}
+
+#catalogo .comprar
+{
+	position: absolute;
+	bottom: 1px;
+	right: 1px;
+	z-index: 120;
+}
+
+#catalogo .info
+{
+    height: 90px;
+    width: 140px;
+    overflow:hidden;
+    vertical-align: top;
+    padding: 0 10px;
+}
+
+
+/* CESTA
+*********************************************/
+
+
+#cesta img
+{
+    margin-top: 5px;
+    width: 16px;
+}
+
+
+#cesta .compra{
+	height: auto;
+	overflow: hidden;
+}
+
+#cesta .itemCompra, #cesta .paqueteCompra
+{
+	clear: left;
+	width: 100%;
+	vertical-align: middle;
+	text-align: left;
+	margin-bottom: 15px;
+}
+
+#cesta .itemCompra p, #cesta .paqueteCompra p
+{
+	float: left;
+	height: 18px;
+	display: block;
+	vertical-align: middle;
+	width: auto;
+	padding: 2px;
+	margin: 1px;
+}
+
+#cesta .itemCompra p.precio, #cesta .paqueteCompra p.precio
+{
+	float: right;
+}
+
+#cesta .paqueteCompra p.descripcion{
+    padding-left: 60px;
+    height: auto;
+    clear:both;
+    font-style: italic;
+}
+
+
+#cesta .album{
+	width: 20px;
+	padding-left: 5px;
+}
+
+#cesta .factura
+{
+	clear: left;
+	margin-top: 25px;
+}
+
+#cesta .factura p
+{
+	text-align: right;
+	line-height: 1.0em;
+}
+
+#cesta .factura p#total span
+{
+	font-weight: bold;
+	border-top: 1px dotted lightgrey;
+	padding-top: 5px;
+}
+
+#cesta .factura p span{
+	display: inline-table;
+	width: 70px;
+	padding: 2px 5px;
+	text-align: right;
+}
+
+#bajoArticulo{
+    width: 620px;
+    display: block;
+    position: relative;
+    margin-top: 8px;
+    height: 200px;
+}
+
+/* COMENTARIOS
+*********************************************/
+
+#comentarios
+{
+    width: 360px;
+    float: left;
+    margin-left: 5px;
+    text-align: left;
+    padding: 8px;
+    min-height: 188px;
+}
+
+#comentarios input
+{
+    width: auto;
+    display:block;
+    
+}
+
+/* RECOMENDACIONES
+*********************************************/
+
+#recomendaciones{
+    width: 210px;
+    float: left;
+    padding: 8px;
+}
+
+#recomendaciones li{
+    display:inline-block;
+    text-align: center;
+    float: left;
+    width: 80px;
+    margin: 0 12px;
+}
+
+#recomendaciones .cover{
+    height: 115px;
+    display: block;
+    margin: 0 auto;
+}
+
+#recomendaciones .cover:hover{
+    cursor: pointer;
+}
+
+#recomendaciones .oferta p, #recomendaciones .oferta h4 {
+    display:block;
+    clear: left;
+    margin: 2px 0;
+}
+
+#recomendaciones .oferta input[type=submit]{
+    width: auto;
+}
+
+#recomendaciones .nota{
+    font-size: 75%;
+}
+
+/* CRITERIOS
+*********************************************/
+
+
+#criterios
+{
+    position: relative;
+    float: left;
+    left: 50%;
+    top: 48px;
+    width: 320px;
+    height: 400px;
+    margin-left: -400px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+#criterios input
+{
+    width: 40px;
+}
+
+.mensaje
+{
+    display: none;
+}
+
+#resultados
+{
+    position: relative;
+    float: right;
+    top: 48px;
+    width: 512px;
+    height: 400px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+
+#tienda
+{
+    width: 896px;
+    position: relative;
+    left: 50%;
+    top: 48px;
+    margin-left: -448px;
+    margin-top: -32px;
+    text-align: center;
+}
+
+/* MENU SESION
+*****************************************/
+
+#x
+{
+    position: absolute;
+    top: 10px;
+    right: 0;
+    text-align: center;
+    font-size: 14px;
+}
+
+#x a{
+    font-weight: bold;
+    border:1px solid #5179C9;
+    padding:2px;
+    font-size: 11px;
+}
+
+#x a:hover{
+    border-color: white;
+    color:white;
+    background-color: #5179C9;
+}
+
+#x p{
+	margin:0;
+	padding:0;
+}
+
+
+
+/* otros
+*****************************************/
+
+.borde
+{
+    border: solid;
+    border-radius: 10px;
+    border-color: #5179c9;
+}
+
+#envio
+{
+    text-align: left;
+}
+
+
+#envio input
+{
+    width: 160px;
+}
+
+#info
+{
+	padding: 10px;
+}
+
+.floatLeft
+{
+    float: left;
+}
+
+/* FORMULARIO
+************************************/
+
+.formulario label
+{
+    float: left;
+    width: 100px;
+    text-align: right;
+    margin-right: 5px;
+}
+
+.formulario input
+{
+    width: 200px;
+    text-align: left;
+}
+
+.formulario .boton
+{
+    margin-top: 20px;
+    width: 100px;
+    text-align: center;
+}
+
+
+.formulario p
+{
+	margin: 3px 0;
+	padding: 0;
+}
+
+#pagar
+{
+    margin-top: 20px;
+    width: 80px;
+}
+
+
+/* IDENTIFICATE
+**********************************************/
+#identificate {
+	padding: 15px;
+}
+#identificate p{
+	padding: 10px;
+}
+
+#identificate .formulario p{
+	padding: 1px;
+}
+
+#identificate p span:first-child{
+		font-weight: bold;
+		width: 190px;
+		text-align: right;
+		padding-right: 3px;
+		float:left;
+		clear: left;
+}
+
+#identificate p span{
+		display: inline-block;
+		text-align: left;
+		width: auto;
+		float: left;
+}
