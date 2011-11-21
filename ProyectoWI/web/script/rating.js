@@ -116,7 +116,7 @@ var rating = {
             rating.average = [num, 0];
             
             // change the statustext div and show it
-            rating.notifytext.innerHTML = 'Se est· guardando la puntuaciÛn.';
+            rating.notifytext.innerHTML = 'Se est√±a guardando la puntuaci√≥n.';
             var notify_display = new YAHOO.util.Anim(rating.notifytext, { opacity: { to: 1 } }, 0.25, YAHOO.util.Easing.easeIn);
             notify_display.animate();       
             
@@ -124,7 +124,7 @@ var rating = {
             var post_to = rating.ratingform.action;
             rating.ratingform.elements[0].value = num;
             YAHOO.util.Connect.setForm(rating.ratingform);
-            var c = YAHOO.util.Connect.asyncRequest('POST', post_to + '?xhr=True', rating.ajax_callback);
+            var c = YAHOO.util.Connect.asyncRequest('POST', post_to, rating.ajax_callback);
             //YAHOO.util.Connect.asyncRequest('POST', post_to, rating.ajax_callback);
         }
     },
@@ -133,7 +133,7 @@ var rating = {
         success: function(o) {
             // release the form to normal status and change the statustext
             rating.submitted = false;
-            rating.notifytext.innerHTML = 'PuntuaciÛn guardada.';
+            rating.notifytext.innerHTML = 'Puntuaci√≥n guardada.';
         },
         failure: function(o) { // we shouldn't ever go down this path.
             alert('Error: ' + o.status + " " + o.statusText );

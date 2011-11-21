@@ -3,7 +3,7 @@ html
     margin: 0%;
     padding: 0;
     height: auto;
-    
+
 }
 
 
@@ -109,6 +109,10 @@ ul
 	font-size: 150%;
 }
 
+#articulo .cover
+{
+    height: 245px;
+}
 
 
 /* BUSCA
@@ -228,6 +232,10 @@ ul
 	position: relative;
 	margin-bottom: 3px;
 	width: 160px;
+        height: 160px;
+        text-align: center;
+}
+#catalogo .caratula img.cover{
     height: 160px;
 }
 
@@ -242,9 +250,10 @@ ul
 #catalogo .info
 {
     height: 90px;
-    width: 160px;
+    width: 140px;
     overflow:hidden;
     vertical-align: top;
+    padding: 0 10px;
 }
 
 
@@ -264,7 +273,7 @@ ul
 	overflow: hidden;
 }
 
-#cesta .itemCompra 
+#cesta .itemCompra, #cesta .paqueteCompra
 {
 	clear: left;
 	width: 100%;
@@ -273,7 +282,7 @@ ul
 	margin-bottom: 15px;
 }
 
-#cesta .itemCompra p
+#cesta .itemCompra p, #cesta .paqueteCompra p
 {
 	float: left;
 	height: 18px;
@@ -284,9 +293,16 @@ ul
 	margin: 1px;
 }
 
-#cesta .itemCompra p.precio
+#cesta .itemCompra p.precio, #cesta .paqueteCompra p.precio
 {
 	float: right;
+}
+
+#cesta .paqueteCompra p.descripcion{
+    padding-left: 60px;
+    height: auto;
+    clear:both;
+    font-style: italic;
 }
 
 
@@ -321,20 +337,73 @@ ul
 	text-align: right;
 }
 
+#bajoArticulo{
+    width: 620px;
+    display: block;
+    position: relative;
+    margin-top: 8px;
+    height: 200px;
+}
+
 /* COMENTARIOS
 *********************************************/
 
 #comentarios
 {
-    width: 600px;
-    left: 50%;
-    margin-left: 300px;
+    width: 360px;
+    float: left;
+    margin-left: 5px;
+    text-align: left;
+    padding: 8px;
+    min-height: 188px;
 }
 
 #comentarios input
 {
-	width: auto;
-	display:block;
+    width: auto;
+    display:block;
+    
+}
+
+/* RECOMENDACIONES
+*********************************************/
+
+#recomendaciones{
+    width: 210px;
+    float: left;
+    padding: 8px;
+}
+
+#recomendaciones li{
+    display:inline-block;
+    text-align: center;
+    float: left;
+    width: 80px;
+    margin: 0 12px;
+}
+
+#recomendaciones .cover{
+    height: 115px;
+    display: block;
+    margin: 0 auto;
+}
+
+#recomendaciones .cover:hover{
+    cursor: pointer;
+}
+
+#recomendaciones .oferta p, #recomendaciones .oferta h4 {
+    display:block;
+    clear: left;
+    margin: 2px 0;
+}
+
+#recomendaciones .oferta input[type=submit]{
+    width: auto;
+}
+
+#recomendaciones .nota{
+    font-size: 75%;
 }
 
 /* CRITERIOS

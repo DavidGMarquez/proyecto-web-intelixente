@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package tienda.controlador;
 
 import java.io.IOException;
@@ -16,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
+import tienda.DAO.ArticuloDAO;
 import tienda.DAO.ComentariosDAO;
 import tienda.DAO.ValoracionesDAO;
 import tienda.Helpers.ArticuloHelper;
@@ -23,8 +20,9 @@ import tienda.Helpers.TiendaHelper;
 import tienda.Helpers.UsuarioHelper;
 import tienda.modelo.Articulo;
 import tienda.modelo.Direccion;
-import tienda.modelo.ArticuloPedido;
+import tienda.modelo.Pedido;
 import tienda.modelo.Comentarios;
+import tienda.modelo.Paquete3x2;
 import tienda.modelo.ShoppingCart;
 import tienda.modelo.Usuario;
 
@@ -64,7 +62,7 @@ public class Controlador extends HttpServlet {
             codigo = request.getParameter("codigo");
 
             th = new TiendaHelper(session);
-            catalogo = th.obtenerDiscos(usuario);
+            catalogo = th.obtenerArticulos(usuario);
 
             dispatcher = getServletContext().getRequestDispatcher("/index.jsp");
 
@@ -72,13 +70,13 @@ public class Controlador extends HttpServlet {
                 session.invalidate();
                 usuario = null;
 
-            } else // Información de un disco, con comentarios y valoraciones
-            if ("disco".equalsIgnoreCase(page) && codigo != null) {
+            } else // Información de un articulo, con comentarios y valoraciones
+            if ("articulo".equalsIgnoreCase(page) && codigo != null) {
                 if ("valorar".equalsIgnoreCase(action)) {
                     ValoracionesDAO vd = new ValoracionesDAO();
                     vd.insertar(usuario.getIdUsuario(), codigo, Integer.parseInt(request.getParameter("valoracion")));
                 }
-                dispatcher = getServletContext().getRequestDispatcher("/disco.jsp");
+                dispatcher = getServletContext().getRequestDispatcher("/articulo.jsp");
                 Articulo articulo = null;
                 ComentariosDAO cd = new ComentariosDAO();
                 for (int i = 0; i < catalogo.size(); i++) {
@@ -92,6 +90,8 @@ public class Controlador extends HttpServlet {
                         break;
                     }
                 }
+                
+
                 if ("comentar".equalsIgnoreCase(action) && request.getParameter("comentario") != null) {
                     Comentarios c = new Comentarios();
                     c.setCodigoArticulo(articulo.getCodigoArticulo());
@@ -101,11 +101,31 @@ public class Controlador extends HttpServlet {
                     cd.insertarComentario(c);
                 }
 
-
                 ArrayList<Comentarios> comentarios = cd.findComentariosByCodigoArticulo(codigo);
                 if (comentarios != null) {
                     request.setAttribute("comentarios", comentarios);
                 }
+                
+                if ("oferta3x2".equalsIgnoreCase(action)){
+                    System.out.println("oferta3x2: paso 1");
+                    ArrayList<Articulo> articulos = (ArrayList<Articulo>)session.getAttribute("recomendaciones");
+                    articulos.add((Articulo)session.getAttribute("articulo"));
+                    Paquete3x2 pack = new Paquete3x2(articulos);
+                    System.out.println("oferta3x2: paso 2");
+                    if(!cart.upPaquete(pack)){
+                        System.out.println("oferta3x2: falta stock");
+                        request.setAttribute("mensaje", "No se han podido añadir los artículos por falta de stock");
+                    }else{
+                        System.out.println("oferta3x2: añadida");
+                        session.setAttribute("cart", cart);
+                    }
+                    System.out.println("oferta3x2: paso 3");
+                }
+                
+                // Obtener dos artículos parecidos
+                ArticuloDAO aDAO = new ArticuloDAO();
+                List<Articulo> recomendaciones = aDAO.findArticulosByCluster(articulo.getCluster(), articulo.getCodigoArticulo(), 2, true, null);
+                session.setAttribute("recomendaciones", recomendaciones);
             } // Identigicación de usuario
             else if ("usuario".equalsIgnoreCase(page)) {
                 UsuarioHelper uh = new UsuarioHelper();
@@ -121,10 +141,14 @@ public class Controlador extends HttpServlet {
                         if (usuario.getIdTipoUsuario() == 1) {
                             dispatcher = getServletContext().getRequestDispatcher("/administracion/controladorAdmin");
                         } else {
+                            if (usuario.getIdTipoUsuario() == 3) {
+                                cart.setDescuento(20);
+                                session.setAttribute("cart", cart);
+                            }
                             dispatcher = getServletContext().getRequestDispatcher("/usuario.jsp?action=ver");
                         }
                     } else {
-                        session.setAttribute("mensaje", new String("El usuario que ha introducido no existe."));
+                        session.setAttribute("mensaje", "El usuario que ha introducido no existe.");
                         dispatcher = getServletContext().getRequestDispatcher("/usuario.jsp?action=logueo");
                     }
                 } else if ("registro".equalsIgnoreCase(action)) {
@@ -152,7 +176,7 @@ public class Controlador extends HttpServlet {
             }
             if (("tienda".equalsIgnoreCase(page)) || ("busca".equalsIgnoreCase(page))) {
                 if ("pagar".equalsIgnoreCase(action)) {
-                    TiendaHelper th = new TiendaHelper(session);
+                    //TiendaHelper th = new TiendaHelper(session);
                     Direccion d = new Direccion();
                     d.setDireccion(request.getParameter("calle"));
                     d.setLocalidad(request.getParameter("localidad"));
@@ -181,13 +205,13 @@ public class Controlador extends HttpServlet {
                         d.setCp(request.getParameter("cp"));
                     }
                     if (codigo != null) {
-                        ArticuloPedido dp = new ArticuloPedido();
-                        dp.setCodigoArticulo(codigo);
+                        Pedido dp = new Pedido();
+                        dp.getArticulo().setCodigoArticulo(codigo);
                         if ("up".equalsIgnoreCase(action)) {
                             for (int i = 0; i < catalogo.size(); i++) {
                                 if (catalogo.get(i).getCodigoArticulo().equalsIgnoreCase(codigo)) {
                                     if (!cart.up(catalogo.get(i))) {
-                                        request.setAttribute("mensaje", "No se pueden añadir más undiades de este producto por falta de stock.");
+                                        request.setAttribute("mensaje", "No se pueden añadir más unidades de este producto por falta de stock.");
                                     }
                                     session.setAttribute("cart", cart);
                                     break;
@@ -202,6 +226,15 @@ public class Controlador extends HttpServlet {
                                 }
                             }
 
+                        } else if ("upPack".equalsIgnoreCase(action)) {
+                            if(cart.upPaquete(codigo)){
+                                session.setAttribute("cart", cart);
+                            }else{
+                                request.setAttribute("mensaje", "No se pueden añadir más unidades de este producto por falta de stock.");
+                            }
+                        } else if ("downPack".equalsIgnoreCase(action)) {
+                            cart.downPaquete(codigo);
+                            session.setAttribute("cart", cart);
                         }
                     }
                 }
@@ -217,6 +250,7 @@ public class Controlador extends HttpServlet {
             }
 
         } catch (Exception e) {
+            System.out.println("Controlador. Excepcion. " + e.getLocalizedMessage());
             dispatcher = getServletContext().getRequestDispatcher("/index.jsp");
         } finally {
             dispatcher.forward(request, response);

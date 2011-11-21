@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import tienda.modelo.ArticuloPedido;
+import tienda.modelo.Pedido;
 
 /**
  *
@@ -24,13 +24,14 @@ public class ArticuloVendidoDAO
     String query;
     MySQLMetodos m = new MySQLMetodos();
 
-    public void insertarArticulo(ArticuloPedido a, int idVenta)
+    public void insertarArticulo(Pedido a, int idVenta)
     {
         try
         {
             conexion = m.obtenerConexionDAWA();
             sentenciaSQL = conexion.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            query = "INSERT INTO `articulovendido` (`idVenta`, `codigo`, `unidades`, `costeUnidad`)" + "VALUES ('" + idVenta + "', '" + a.getCodigoArticulo() + "', '" + a.getCantidad() + "', '" + a.getPrecio() + "')";
+            query = "INSERT INTO `articulovendido` (`idVenta`, `codigo`, `unidades`, `costeUnidad`)" 
+                    + "VALUES ('" + idVenta + "', '" + a.getArticulo().getCodigoArticulo() + "', '" + a.getCantidad() + "', '" + a.getArticulo().getPrecio() + "')";
             sentenciaSQL.executeUpdate(query);
         }
         catch (Exception ex)

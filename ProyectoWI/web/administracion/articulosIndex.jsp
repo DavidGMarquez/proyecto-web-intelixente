@@ -12,11 +12,11 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="../css/administracion/administracion.css" media="screen" rel="stylesheet" type="text/css">
-        <script type="application/x-javascript" src="../script/administracion/discos.js"></script>
-        <title>Administracion de discos</title>
+        <script type="application/x-javascript" src="../script/administracion/articulos.js"></script>
+        <title>Administracion de articulos</title>
     </head>
-    <body onload="recuperaDiscos(<c:out value='${pagina}'/>)">
-        <div id="titulo">Administración: Discos</div>
+    <body onload="recuperaArticulos(<c:out value='${pagina}'/>)">
+        <div id="titulo">Administración: Artículos</div>
         <%@ include file="menu.jsp"%>
         <div id="comentario"><span><c:out value="${comentario}"/></span></div>
         <div id="lista">Cargando...</div>

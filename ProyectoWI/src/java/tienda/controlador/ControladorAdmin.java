@@ -54,8 +54,8 @@ public class ControladorAdmin extends HttpServlet {
                     idUsuario = Integer.parseInt(idUsuarioS.trim());
                 }
 
-                //Obtengo el idDisco
-                String idDisco = request.getParameter("idDisco");
+                //Obtengo el idArticulo
+                String idArticulo = request.getParameter("idArticulo");
 
                 //Obtento el número de página
                 String paginaS = request.getParameter("pagina");
@@ -153,81 +153,82 @@ public class ControladorAdmin extends HttpServlet {
                     session.setAttribute("tipos", tu);
                     dispatcher = getServletContext().getRequestDispatcher("/administracion/usuarioEdit.jsp");
 
-                } else if ("discosIndex".equalsIgnoreCase(action)) {
-                    dispatcher = getServletContext().getRequestDispatcher("/administracion/discosIndex.jsp");
-                } else if ("discosLista".equalsIgnoreCase(action)) {
+                } else if ("articulosIndex".equalsIgnoreCase(action)) {
+                    dispatcher = getServletContext().getRequestDispatcher("/administracion/articulosIndex.jsp");
+                } else if ("articulosLista".equalsIgnoreCase(action)) {
                     ArticuloHelper ah = new ArticuloHelper();
                     session = ah.listaArticulos(session, request);
-                    dispatcher = getServletContext().getRequestDispatcher("/administracion/discosLista.jsp");
-                } else if ("activarDisco".equalsIgnoreCase(action) && idDisco != null) {
+                    dispatcher = getServletContext().getRequestDispatcher("/administracion/articulosLista.jsp");
+                } else if ("activarArticulo".equalsIgnoreCase(action) && idArticulo != null) {
                     ArticuloHelper ah = new ArticuloHelper();
-                    boolean result = ah.activarArticulo(idDisco, Boolean.TRUE);
+                    boolean result = ah.activarArticulo(idArticulo, Boolean.TRUE);
                     if (result) {
                         session.setAttribute("comentario", "El articulo ha sido activado");
                     } else {
                         session.setAttribute("comentario", "El articulo no se ha activado");
                     }
-                    dispatcher = getServletContext().getRequestDispatcher("/administracion/discosIndex.jsp");
-                } else if ("desactivarDisco".equalsIgnoreCase(action) && idDisco != null) {
+                    dispatcher = getServletContext().getRequestDispatcher("/administracion/articulosIndex.jsp");
+                } else if ("desactivarArticulo".equalsIgnoreCase(action) && idArticulo != null) {
                     ArticuloHelper ah = new ArticuloHelper();
-                    boolean result = ah.activarArticulo(idDisco, Boolean.FALSE);
+                    boolean result = ah.activarArticulo(idArticulo, Boolean.FALSE);
                     if (result) {
                         session.setAttribute("comentario", "El articulo ha sido desactivado");
                     } else {
                         session.setAttribute("comentario", "El articulo no se ha desactivado");
                     }
-                    dispatcher = getServletContext().getRequestDispatcher("/administracion/discosIndex.jsp");
-                } else if ("borrarDisco".equalsIgnoreCase(action) && idDisco != null) {
+                    dispatcher = getServletContext().getRequestDispatcher("/administracion/articulosIndex.jsp");
+                } else if ("borrarArticulo".equalsIgnoreCase(action) && idArticulo != null) {
                     ArticuloHelper ah = new ArticuloHelper();
-                    boolean result = ah.borrarArticulo(idDisco);
+                    boolean result = ah.borrarArticulo(idArticulo);
                     if (result) {
                         List<Articulo> lista = ah.findArticulos();
                         session.setAttribute("articulos", lista);
-                        session.setAttribute("comentario", "El disco ha sido borrado correctamente");
-                        dispatcher = getServletContext().getRequestDispatcher("/administracion/discosIndex.jsp");
+                        session.setAttribute("comentario", "El articulo ha sido borrado correctamente");
+                        dispatcher = getServletContext().getRequestDispatcher("/administracion/articulosIndex.jsp");
                     } else {
-                        tienda.Error e = new tienda.Error("Error al borrar disco", "Se ha producido un error al borrar el discoo", "controladorAdmin?action=discosIndex&pagina=" + pagina);
+                        tienda.Error e = new tienda.Error("Error al borrar articulo", "Se ha producido un error al borrar el articuloo", "controladorAdmin?action=articulosIndex&pagina=" + pagina);
                         HttpSession session1 = request.getSession(true);
                         session1.setAttribute("error", e);
                         dispatcher = getServletContext().getRequestDispatcher("/administracion/error.jsp");
                     }
-                } else if ("editarDisco".equalsIgnoreCase(action)) {
+                } else if ("editarArticulo".equalsIgnoreCase(action)) {
                     ArticuloHelper ah = new ArticuloHelper();
-                    Articulo a = ah.findArticuloById(idDisco);
+                    Articulo a = ah.findArticuloById(idArticulo);
                     session.setAttribute("articulo", a);
-                    session.setAttribute("acc", "1");
-                    dispatcher = getServletContext().getRequestDispatcher("/administracion/discoEdit.jsp");
-                } else if ("modificarDisco".equalsIgnoreCase(action)) {
+                    session.setAttribute("acc", "modificar");
+                    dispatcher = getServletContext().getRequestDispatcher("/administracion/articuloEdit.jsp");
+                } else if ("modificarArticulo".equalsIgnoreCase(action)) {
                     ArticuloHelper ah = new ArticuloHelper();
-                    session = ah.modificarArticulo(session, request, idDisco);
+                    session = ah.modificarArticulo(session, request, idArticulo);
                     if (session != null) {
                         List<Articulo> lista = ah.findArticulos();
                         session.setAttribute("articulos", lista);
-                        session.setAttribute("comentario", "El disco ha sido modificado correctamente");
-                        dispatcher = getServletContext().getRequestDispatcher("/administracion/discosIndex.jsp");
+                        session.setAttribute("comentario", "El articulo ha sido modificado correctamente");
+                        dispatcher = getServletContext().getRequestDispatcher("/administracion/articulosIndex.jsp");
                     } else {
-                        tienda.Error e = new tienda.Error("Error al editar disco", "Se ha producido un error al editar el disco", "controladorAdmin?action=editarDisco&idDisco=" + idDisco);
+                        tienda.Error e = new tienda.Error("Error al editar articulo", "Se ha producido un error al editar el articulo", "controladorAdmin?action=editarArticulo&idArticulo=" + idArticulo);
                         HttpSession session1 = request.getSession(true);
                         session1.setAttribute("error", e);
                         dispatcher = getServletContext().getRequestDispatcher("/administracion/error.jsp");
                     }
-                } else if ("insertarDiscoForm".equalsIgnoreCase(action)) {
-                    session.setAttribute("acc", "2");
+                } else if ("insertarArticuloForm".equalsIgnoreCase(action)) {
+                    session.setAttribute("acc", "insertar");
                     session.removeAttribute("articulo");
-                    dispatcher = getServletContext().getRequestDispatcher("/administracion/discoEdit.jsp");
-                } else if ("insertarDisco".equalsIgnoreCase(action)) {
+                    
+                    dispatcher = getServletContext().getRequestDispatcher("/administracion/articuloEdit.jsp");
+                } else if ("insertarArticulo".equalsIgnoreCase(action)) {
                     ArticuloHelper ah = new ArticuloHelper();
                     Integer result = ah.insertarArticulo(request);
                     if (result == 1) {
                         List<Articulo> lista = ah.findArticulos();
                         session.setAttribute("articulos", lista);
-                        session.setAttribute("comentario", "El disco ha sido insertado correctamente");
-                        dispatcher = getServletContext().getRequestDispatcher("/administracion/discosIndex.jsp");
+                        session.setAttribute("comentario", "El articulo ha sido insertado correctamente");
+                        dispatcher = getServletContext().getRequestDispatcher("/administracion/articulosIndex.jsp");
                     } else if (result == -1) {
-                        session.setAttribute("comentario", "El disco ya existe en la base de datos.");
-                        dispatcher = getServletContext().getRequestDispatcher("/administracion/discosIndex.jsp");
+                        session.setAttribute("comentario", "El articulo ya existe en la base de datos.");
+                        dispatcher = getServletContext().getRequestDispatcher("/administracion/articulosIndex.jsp");
                     } else {
-                        tienda.Error e = new tienda.Error("Error al insertar disco", "Se ha producido un error al insertar el disco", "controladorAdmin?action=discosIndex");
+                        tienda.Error e = new tienda.Error("Error al insertar articulo", "Se ha producido un error al insertar el articulo", "controladorAdmin?action=articulosIndex");
                         session.setAttribute("error", e);
                         dispatcher = getServletContext().getRequestDispatcher("/administracion/error.jsp");
                     }

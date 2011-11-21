@@ -10,34 +10,51 @@ import java.io.Serializable;
  *
  * @author Vanesa
  */
-public class Articulo implements Serializable{
+public class Articulo implements Serializable, Comparable{
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 8038336055575115281L;
-	private String codigoArticulo;
-    private String grupo;
-    private String album;
-    private String pais;
-    private float precio;
+    private static final long serialVersionUID = 8038336055575115281L;
+    private String codigoArticulo;
+    private double precio;
     private Boolean activo;
     private Integer unidades;
-    private String imagen;
-    private Integer anho;
+    private Pelicula pelicula;
+    private Integer cluster;
 
-    public Articulo(String codigoArticulo, String grupo, String album, String pais, float precio, Boolean activo, Integer unidades, String imagen,Integer anho) {
+    public Articulo(){}
+    
+    public Articulo(String codigoArticulo, double precio, Boolean activo, Integer unidades) {
+        this();
         this.codigoArticulo = codigoArticulo;
-        this.grupo = grupo;
-        this.album = album;
-        this.pais = pais;
         this.precio = precio;
         this.activo = activo;
         this.unidades = unidades;
-        this.imagen = imagen;
-        this.anho=anho;
+    }
+    
+    public Articulo(String codigoArticulo, double precio, Boolean activo, Integer unidades, Integer cluster) {
+        this(codigoArticulo, precio, activo, unidades);
+        this.cluster = cluster;
+    }
+    
+    /*public Articulo(String codigoArticulo, float precio, Boolean activo, Integer unidades, Integer cluster) {
+        this();
+        this.codigoArticulo = codigoArticulo;
+        this.precio = precio;
+        this.activo = activo;
+        this.unidades = unidades;
+    }*/
+    
+    public Articulo(String codigoArticulo, double precio, Boolean activo, 
+            Integer unidades, Integer cluster, Pelicula pelicula) {
+        this(codigoArticulo, precio, activo, unidades, cluster);
+        this.pelicula = pelicula;
     }
 
-    public Articulo(){}
+    public Integer getIdPelicula(){
+        return pelicula.getId();
+    }
+    
 
     public Integer getUnidades() {
         return unidades;
@@ -63,52 +80,54 @@ public class Articulo implements Serializable{
         this.codigoArticulo = codigoArticulo;
     }
 
-    public String getImagen() {
-        return imagen;
-    }
-
-    public void setImagen(String imagen) {
-        this.imagen = imagen;
-    }
-
-    public String getAlbum() {
-        return album;
-    }
-
-    public void setAlbum(String album) {
-        this.album = album;
-    }
-
-    public String getGrupo() {
-        return grupo;
-    }
-
-    public void setGrupo(String grupo) {
-        this.grupo = grupo;
-    }
-
-    public String getPais() {
-        return pais;
-    }
-
-    public void setPais(String pais) {
-        this.pais = pais;
-    }
-
-    public float getPrecio() {
+    public double getPrecio() {
         return precio;
     }
 
-    public void setPrecio(float precio) {
+    public void setPrecio(double precio) {
         this.precio = precio;
     }
-
-    public Integer getAnho() {
-        return anho;
+    
+    public Pelicula getPelicula(){
+        return pelicula;
+    }
+    
+    public void setPelicula(Pelicula p){
+        this.pelicula = p;
     }
 
-    public void setAnho(Integer anho) {
-        this.anho = anho;
+     public Integer getCluster() {
+        return cluster;
     }
 
+    public void setCluster(Integer cluster) {
+        this.cluster = cluster;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return new Articulo(codigoArticulo.toString(), precio, activo.booleanValue(), 
+                unidades.intValue(), cluster.intValue(), pelicula);
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) return false;
+        if(obj instanceof Articulo){
+            return (((Articulo)obj).getCodigoArticulo().equals(codigoArticulo));  
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + (this.codigoArticulo != null ? this.codigoArticulo.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return codigoArticulo.compareTo(((Articulo)o).getCodigoArticulo());
+    }
 }

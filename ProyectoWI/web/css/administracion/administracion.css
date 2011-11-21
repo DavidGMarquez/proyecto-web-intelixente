@@ -82,7 +82,7 @@ a:hover{
     text-align:center;
 }
 
-#centrar{
+.centrar{
     margin:0px auto;
 }
 
@@ -109,7 +109,6 @@ a:hover{
 }
 
 #lista td{
-    width:10%;
     border-bottom:1px solid rgb(76,76,76);
 }
 
@@ -127,8 +126,20 @@ a:hover{
     font-weight: bold;
 }
 
-.size{
-    width: 300px;
+#edit input[type="text"]{
+    width: 100px;
 }
 
+#edit input.size{
+    width: 350px;
+    font-size: smaller;
+}
 
+#cntButons {
+    width: 100%;
+    text-align: center;
+}
+
+#edit .footer{
+    text-align: center;
+}

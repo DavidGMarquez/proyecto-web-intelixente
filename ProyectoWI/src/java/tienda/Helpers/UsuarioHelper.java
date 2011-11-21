@@ -169,7 +169,7 @@ public class UsuarioHelper {
                 request.getParameter("email"),
                 activo,
                 Integer.parseInt(request.getParameter("idTipoUsuario")),
-                Float.parseFloat(request.getParameter("totalCompra")));
+                Double.parseDouble(request.getParameter("totalCompra")));
         String idDireccionS = request.getParameter("idDireccion");
         Integer idDireccion = null;
         if (idDireccionS != null) {

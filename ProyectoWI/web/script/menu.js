@@ -74,7 +74,7 @@ var validarLogueo = function()
     if(!validarLongitud($("#password"), 6))
     {
         b = false;
-        msg  = msg + "La contraseña debe tener 6 o más caracteres.";
+        msg  = msg + "La contraseï¿½a debe tener 6 o mï¿½s caracteres.";
     }
 
     if(msg.length > 0)
@@ -98,38 +98,38 @@ var validarRegistro = function()
     if(!validarLongitud($("#password"), 6))
     {
         b = false;
-        msg  = msg + "La contraseña debe tener 6 o más caracteres.\n\n";
+        msg  = msg + "La contraseï¿½a debe tener 6 o mï¿½s caracteres.\n\n";
     }
 
     if(!validarLongitud($("#nombre"), 3))
     {
         b = false;
-        msg  = msg + "El nombre debe tener 3 o más caracteres.\n\n";
+        msg  = msg + "El nombre debe tener 3 o mï¿½s caracteres.\n\n";
     }
     if(!validarLongitud($("#telefono"),9) && !validarRango($("#telefono"), 0, 999999999))
         {
             b = false;
-            msg  = msg + "Introduzca un número de teléfono válido.\n\n";
+            msg  = msg + "Introduzca un nï¿½mero de telï¿½fono vï¿½lido.\n\n";
         }
     if(!validarLongitud($("#calle"), 5) && !$("#calle").val().lastIndexOf(",", 0) > 3)
         {
             b = false;
-            msg  = msg + "Introduzca una dirección con el formato 'Calle, nº.\n\n";
+            msg  = msg + "Introduzca una direcciï¿½n con el formato 'Calle, nï¿½.\n\n";
         }
     if(!validarLongitud($("#localidad"), 3))
     {
         b = false;
-        msg  = msg + "El nombre de la localidad debe tener 3 o más caracteres.\n\n";
+        msg  = msg + "El nombre de la localidad debe tener 3 o mï¿½s caracteres.\n\n";
     }
      if(!validarLongitud($("#provincia"), 3))
     {
         b = false;
-        msg  = msg + "El nombre de la provincia debe tener 3 o más caracteres.\n\n";
+        msg  = msg + "El nombre de la provincia debe tener 3 o mï¿½s caracteres.\n\n";
     }
     if(!validarLongitud($("#cp"), 5) && !validarRango($("#cp"), 1, 99999))
         {
             b = false;
-            msg  = msg + "El código postal debe tener 5 dígitos.\n\n";
+            msg  = msg + "El cï¿½digo postal debe tener 5 dï¿½gitos.\n\n";
         }
 
     if(msg.length > 0)
@@ -193,7 +193,7 @@ var botones = function()
     $(".cover").click
     (
         function(){
-            window.location = "controlador?page=disco&codigo=" + this.name;
+            window.location = "controlador?page=articulo&codigo=" + this.name;
         }
     );
         
@@ -228,5 +228,5 @@ desactivar = function(a)
 var confirmarCompra = function()
 {
     //return window.confirm("AsegÃºrese de que su cesta es correcta y confirme que quiere realizar el pago de " + $("#total").html().split(" ", 2)[1]);
-    return window.confirm("Asegúrese de que su cesta es correcta y confirme que quiere realizar el pago de " + $("#pTotal").html());
+    return window.confirm("AsegÃºrese de que su cesta es correcta y confirme que quiere realizar el pago de " + $("#pTotal").html());
 };

@@ -15,7 +15,7 @@ function funcionCallback(){
 	}
 }
 
-function recuperaDiscos(pagina){
+function recuperaArticulos(pagina){
 	// Creamos el control XMLHttpRequest segun el navegador en el que estemos
 	if( window.XMLHttpRequest )
 		ajax = new XMLHttpRequest(); // No Internet Explorer
@@ -28,6 +28,6 @@ function recuperaDiscos(pagina){
 
         if(pagina==undefined) pagina=1;
 	// Enviamos la peticion
-	ajax.open( "GET", "controladorAdmin?action=discosLista&pagina="+pagina, true );
+	ajax.open( "GET", "controladorAdmin?action=articulosLista&pagina="+pagina, true );
 	ajax.send( "" );
 }

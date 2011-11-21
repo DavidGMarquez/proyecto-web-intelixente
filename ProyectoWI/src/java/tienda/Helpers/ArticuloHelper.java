@@ -28,7 +28,7 @@ public class ArticuloHelper {
         List<Articulo> l = aDAO.findArticulos(false,"");
         session.setAttribute("Articulos", l);
 
-        //Calculos para la paginación
+        //Calculos para la paginaciï¿½n
         Integer registros = 4;
         Integer paginas = l.size() / registros;
         if (l.size() % registros > 0) {
@@ -60,21 +60,12 @@ public class ArticuloHelper {
         try {
             Boolean activo = !(request.getParameter("activo") == null 
             		|| request.getParameter("activo").equalsIgnoreCase("false"));
-            Integer ud;
-            ud = Integer.parseInt(request.getParameter("unidades"));
-            Float precio;
-            precio = Float.parseFloat(request.getParameter("precio"));
-            Integer anho;
-            anho = Integer.parseInt(request.getParameter("anho"));
+            Integer ud = Integer.parseInt(request.getParameter("unidades"));
+            Float precio = Float.parseFloat(request.getParameter("precio"));
             Articulo a = new Articulo(codigoArticulo,
-                    request.getParameter("grupo"),
-                    request.getParameter("album"),
-                    request.getParameter("pais"),
                     precio,
                     activo,
-                    ud,
-                    request.getParameter("imagen"),
-                    anho);
+                    ud);
 
             aDAO.modificarArticulo(a);
             return session;
@@ -89,16 +80,8 @@ public class ArticuloHelper {
             		|| request.getParameter("activo").equalsIgnoreCase("false"));
             Integer ud = Integer.parseInt(request.getParameter("unidades"));
             Float precio = Float.parseFloat(request.getParameter("precio"));
-            Integer anho = Integer.parseInt(request.getParameter("anho"));
             Articulo a = new Articulo(request.getParameter("codigo"),
-                    request.getParameter("grupo"),
-                    request.getParameter("album"),
-                    request.getParameter("pais"),
-                    precio,
-                    activo,
-                    ud,
-                    request.getParameter("imagen"),
-                    anho);
+                    precio, activo, ud);
             Integer result;
             Boolean exite = aDAO.existeArticulo(a);
             if (exite == null) {
@@ -150,6 +133,6 @@ public class ArticuloHelper {
         session.setAttribute("filtrarTitulo", filtrarTitulo);
         session.setAttribute("filtrarPrecioMaximo", filtrarPM);
         List<Articulo> l = aDAO.findArticulosFiltrados(anho, filtrarAnho, precioMaximo, filtrarPM, artista, filtrarArtista, titulo, filtrarTitulo);*/
-        return aDAO.findArticulosFiltrados(anho, precioMaximo, artista, titulo);
+        return aDAO.findArticulosFiltrados(anho, precioMaximo, titulo);
     }
 }

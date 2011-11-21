@@ -16,7 +16,7 @@ import tienda.DAO.UsuarioDAO;
 import tienda.DAO.VenderDAO;
 import tienda.modelo.Articulo;
 import tienda.modelo.Direccion;
-import tienda.modelo.ArticuloPedido;
+import tienda.modelo.Pedido;
 import tienda.modelo.ShoppingCart;
 import tienda.modelo.Usuario;
 import util.Email;
@@ -38,7 +38,7 @@ public class TiendaHelper {
         listaArticulos = new ArrayList<Articulo>();
     }
 
-	public List<Articulo> obtenerDiscos(Usuario u) {
+	public List<Articulo> obtenerArticulos(Usuario u) {
         try {
             listaArticulos = ad.findArticulos(true, "");
             for (int i = 0; i < listaArticulos.size(); i++) {
@@ -56,7 +56,7 @@ public class TiendaHelper {
         try {
             ShoppingCart cart = (ShoppingCart) session.getAttribute("cart");
             Usuario u = (Usuario) session.getAttribute("usuario");
-            ArrayList<ArticuloPedido> cesta = cart.getCesta();
+            ArrayList<Pedido> cesta = cart.getCesta();
             // Insertar direccion
             DireccionDAO dd = new DireccionDAO();
             int idDireccion = dd.insertarDireccion(d);
@@ -80,22 +80,25 @@ public class TiendaHelper {
                 float total = 0;
                 for (int i = 0; i < cesta.size(); i++) {
                     if ("VIP".equalsIgnoreCase(u.getTipo())) {
-                        cesta.get(i).setPrecio((float) (cesta.get(i).getPrecio() * 0.8));
+                        cesta.get(i).getArticulo().
+                                setPrecio((float) (cesta.get(i).getArticulo().getPrecio() * 0.8));
                     }
                     avd.insertarArticulo(cesta.get(i), idVenta);
                     total += cesta.get(i).getTotal();
-                    Articulo a = cesta.get(i);
+                    Articulo a = cesta.get(i).getArticulo();
                     a.setUnidades(a.getUnidades() - cesta.get(i).getCantidad());
                     ad.modificarUnidades(a);
-                    textoEmail = textoEmail + "\t " + cesta.get(i).getGrupo() + " - " + cesta.get(i).getAlbum() + "\tunidades:" + cesta.get(i).getCantidad() + "\n";
+                    textoEmail = textoEmail + "\t " + cesta.get(i).getArticulo().getPelicula().getTitulo()
+                            + "\tunidades:" + cesta.get(i).getCantidad() + "\n";
                 }
                 u.setTotalCompra(u.getTotalCompra() + total);
                 textoEmail = textoEmail + "\nEl total de la compra es: " + total + "\n";
                 if (u.getIdTipoUsuario() == 2 && u.getTotalCompra() > 100) {
                     u.setTipo("VIP");
                     u.setIdTipoUsuario(3);
+                    cart.setDescuento(20);
+                    session.setAttribute("cart", cart);
                 }
-
                 // Actualizar usuario
                 new UsuarioDAO().actualizarEstadoUsuario(u);
                 textoEmail = textoEmail + "\nGracias por su compra";

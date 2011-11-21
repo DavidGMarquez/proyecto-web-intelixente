@@ -4,11 +4,13 @@
  */
 package tienda.modelo;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Vanesa
  */
-public class Usuario
+public class Usuario implements Serializable
 {
 
     private Integer idUsuario;
@@ -19,17 +21,14 @@ public class Usuario
     private Boolean activo;
     private Integer idTipoUsuario;
     private Direccion direccion;
-    private Float totalCompra;
+    private Double totalCompra;
     private String tipo;
 
-    public Usuario()
+    public Usuario(){}
+
+    public Usuario(Integer idUsuario, String nombre, String password, String telefono, String email, Boolean activo, Integer idTipoUsuario, Double totalCompra)
     {
-    }
-
-
-
-    public Usuario(Integer idUsuario, String nombre, String password, String telefono, String email, Boolean activo, Integer idTipoUsuario, Float totalCompra)
-    {
+        this();
         this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.password = password;
@@ -41,17 +40,10 @@ public class Usuario
 
     }
 
-    public Usuario(Integer idUsuario, String nombre, String password, String telefono, String email, Boolean activo, Integer idTipoUsuario, Direccion direccion, Float totalCompra)
+    public Usuario(Integer idUsuario, String nombre, String password, String telefono, String email, Boolean activo, Integer idTipoUsuario, Direccion direccion, Double totalCompra)
     {
-        this.idUsuario = idUsuario;
-        this.nombre = nombre;
-        this.password = password;
-        this.telefono = telefono;
-        this.email = email;
-        this.activo = activo;
-        this.idTipoUsuario = idTipoUsuario;
+        this(idUsuario, nombre, password, telefono, email, activo, idTipoUsuario, totalCompra);
         this.direccion = direccion;
-        this.totalCompra = totalCompra;
     }
 
     public Boolean getActivo()
@@ -134,12 +126,12 @@ public class Usuario
         this.telefono = telefono;
     }
 
-    public Float getTotalCompra()
+    public Double getTotalCompra()
     {
         return totalCompra;
     }
 
-    public void setTotalCompra(Float totalCompra)
+    public void setTotalCompra(Double totalCompra)
     {
         this.totalCompra = totalCompra;
     }
