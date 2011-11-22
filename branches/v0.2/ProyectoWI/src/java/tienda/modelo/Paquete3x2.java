@@ -29,6 +29,10 @@ public class Paquete3x2 {
         calcularIndice();
     }*/
     
+    public int getIndex(){
+        return index;
+    }
+    
     public ArrayList<Articulo> getArticulos(){
         return articulos;
     }
