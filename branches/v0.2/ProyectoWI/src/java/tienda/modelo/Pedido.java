@@ -26,10 +26,15 @@ public class Pedido
         cantidad = 1;
         articulo = new Articulo();
     }
-
+    
     public Pedido(Articulo a) {
         this.cantidad = 1;
         this.articulo = a;
+    }
+    
+    public Pedido(Articulo a, Integer cantidad){
+        this(a);
+        this.cantidad = cantidad;
     }
 
     public Double getTotal(){
@@ -58,5 +63,9 @@ public class Pedido
     
     public void up(){
         this.cantidad++;
+    }
+    
+    public void up(Integer incremento){
+        this.cantidad += incremento;
     }
 }
