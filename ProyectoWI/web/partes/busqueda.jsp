@@ -2,12 +2,23 @@
 <div id="busca" class="borde formulario cuadro">
     <h4>Puedes buscar en el catálogo aquí.</h4>
     <form method="POST" action="controlador?page=busca">
-        <p><label for="precioMaximo">Precio máximo: </label><input name="precioMaximo" type="text" value ="${precioMaximo}"/></p>
-        <p><label for="titulo">Título: </label><input name="titulo" type="text" value ="${titulo}"/></p>
-        <p><label for="anho">Año exacto: </label><input name="anho" type="text" value="${anho}"/></p>
+        <ul>
+        <li>
+            <label for="precioMaximo">Precio máximo: </label>
+            <input name="precioMaximo" type="text" value="${precioMaximo}"/>
+        </li>
+        <li>
+            <label for="titulo">Título:</label>
+            <input name="titulo" type="text" value="${titulo}"/>
+        </li>
+        <li>
+            <label for="anho">Año exacto:</label>
+            <input name="anho" type="text" value="${anho}"/>
+        </li>
+        </ul>
         <p>
-        	<button onClick="return resetFiltro();">Borrar todo</button>
-        	<input type="submit" value="Filtrar"/>
+            <button onClick="return resetFiltro();">Borrar todo</button>
+            <input type="submit" value="Filtrar"/>
         </p>
     </form>
 </div>
