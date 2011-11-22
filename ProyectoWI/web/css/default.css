@@ -124,6 +124,22 @@ ul
     width: 80px;
 }
 
+#busca li{
+    height: auto;
+    margin-bottom: 5px;
+    height: 25px;
+}
+
+#busca label{
+    clear: left;
+    width: 110px;
+}
+#busca li input{
+    width: 140px;
+    border-radius: 5px;
+    border: 0;
+    height: 22px;
+}
 /* CABECERA
 *********************************************/
 
