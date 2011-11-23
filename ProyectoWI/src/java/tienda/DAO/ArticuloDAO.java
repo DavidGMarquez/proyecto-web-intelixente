@@ -16,7 +16,11 @@ import tienda.modelo.Pedido;
 import tienda.modelo.Pelicula;
 
 /**
- *
+ * En algunas consultas se usará la vista articulos_movies
+ * SELECT a.codigoArticulo, a.precio, a.unidades, 
+ *  a.activo, a.idPelicula, idCluster, title as titulo, 
+ *  imdbPictureURL as imagen, year as anho "
+ * FROM `articulos` a,`movies` m 
  * @author Vanesa
  */
 public class ArticuloDAO {
@@ -264,7 +268,7 @@ public class ArticuloDAO {
         }
 
         if (filtrarTitulo && !titulo.isEmpty()) {
-        	condicion += (condicion.isEmpty()? " where " : " and ") + " album like '%" + titulo + "%'";
+        	condicion += (condicion.isEmpty()? " where " : " and ") + " titulo like '%" + titulo + "%'";
         }
 
         return findArticulos(true, condicion);
