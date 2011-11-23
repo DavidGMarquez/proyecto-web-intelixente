@@ -109,30 +109,16 @@ public class ArticuloHelper {
         return aDAO.borrarArticulo(codigoArticulo);
     }
 
-    public List<Articulo> filtrar(HttpSession session,HttpServletRequest request) {
-    	//Boolean filtrarAnho = request.getParameter("filtrarAnho") == null;
-        //Boolean filtrarPM = request.getParameter("filtrarPrecioMaximo") == null;
-        //Boolean filtrarArtista = request.getParameter("filtrarArtista") == null;
-        //Boolean filtrarTitulo = request.getParameter("filtrarTitulo") == null;
-    	
+    public List<Articulo> filtrar(HttpSession session, HttpServletRequest request) {
     	String anho = request.getParameter("anho");
         String titulo = request.getParameter("titulo");
-        String artista = request.getParameter("artista");
         Float precioMaximo=null;
         try{
         	precioMaximo=Float.parseFloat(request.getParameter("precioMaximo"));
-        }catch(Exception e){
-            //filtrarPM=false;
-        }
+        }catch(Exception e){ }
         session.setAttribute("anho", anho);
-        session.setAttribute("artista", artista);
         session.setAttribute("titulo", titulo);
         session.setAttribute("precioMaximo", precioMaximo);
-        /*session.setAttribute("filtrarAnho", filtrarAnho);
-        session.setAttribute("filtrarArtista", filtrarArtista);
-        session.setAttribute("filtrarTitulo", filtrarTitulo);
-        session.setAttribute("filtrarPrecioMaximo", filtrarPM);
-        List<Articulo> l = aDAO.findArticulosFiltrados(anho, filtrarAnho, precioMaximo, filtrarPM, artista, filtrarArtista, titulo, filtrarTitulo);*/
         return aDAO.findArticulosFiltrados(anho, precioMaximo, titulo);
     }
 }
