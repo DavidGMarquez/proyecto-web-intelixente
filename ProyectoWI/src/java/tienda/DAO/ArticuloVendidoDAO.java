@@ -26,6 +26,11 @@ public class ArticuloVendidoDAO
 
     public void insertarArticulo(Pedido a, int idVenta)
     {
+        insertarArticulo(a,idVenta,a.getTotal());
+    }
+    
+    public void insertarArticulo(Pedido a, int idVenta, double precio)
+    {
         try
         {
             conexion = m.obtenerConexionDAWA();
