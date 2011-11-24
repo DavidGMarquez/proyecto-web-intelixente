@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import tienda.Helpers.ArticuloHelper;
+import tienda.Helpers.PeliculaHelper;
 import tienda.Helpers.UsuarioHelper;
 import tienda.modelo.Articulo;
 import tienda.modelo.TipoUsuario;
@@ -191,11 +192,22 @@ public class ControladorAdmin extends HttpServlet {
                         session1.setAttribute("error", e);
                         dispatcher = getServletContext().getRequestDispatcher("/administracion/error.jsp");
                     }
-                } else if ("editarArticulo".equalsIgnoreCase(action)) {
-                    ArticuloHelper ah = new ArticuloHelper();
-                    Articulo a = ah.findArticuloById(idArticulo);
-                    session.setAttribute("articulo", a);
-                    session.setAttribute("acc", "modificar");
+                } else if ("editarArticulo".equalsIgnoreCase(action) 
+                        || "insertarArticuloForm".equalsIgnoreCase(action)) {
+                    PeliculaHelper ph = new PeliculaHelper();
+                    ph.pasarActores(request);
+                    ph.pasarDirectores(request);
+                    ph.pasarGeneros(request);
+                    ph.pasarPaises(request);
+                    if("editarArticulo".equalsIgnoreCase(action)){
+                        ArticuloHelper ah = new ArticuloHelper();
+                        Articulo a = ah.findArticuloById(idArticulo);
+                        session.setAttribute("articulo", a);
+                        session.setAttribute("acc", "modificar");
+                    }else{
+                        session.setAttribute("acc", "insertar");
+                        session.removeAttribute("articulo");
+                    }
                     dispatcher = getServletContext().getRequestDispatcher("/administracion/articuloEdit.jsp");
                 } else if ("modificarArticulo".equalsIgnoreCase(action)) {
                     ArticuloHelper ah = new ArticuloHelper();
@@ -211,11 +223,6 @@ public class ControladorAdmin extends HttpServlet {
                         session1.setAttribute("error", e);
                         dispatcher = getServletContext().getRequestDispatcher("/administracion/error.jsp");
                     }
-                } else if ("insertarArticuloForm".equalsIgnoreCase(action)) {
-                    session.setAttribute("acc", "insertar");
-                    session.removeAttribute("articulo");
-                    
-                    dispatcher = getServletContext().getRequestDispatcher("/administracion/articuloEdit.jsp");
                 } else if ("insertarArticulo".equalsIgnoreCase(action)) {
                     ArticuloHelper ah = new ArticuloHelper();
                     Integer result = ah.insertarArticulo(request);
