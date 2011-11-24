@@ -9,7 +9,7 @@ public class ShoppingCart
     //private ArrayList<Paquete3x2> paquetes;
     private HashMap<String, Paquete3x2> paquetes;
     private double precioTotal;
-    private int descuento;
+    private int descuento=0;
 
     public ShoppingCart()
     {
@@ -85,6 +85,11 @@ public class ShoppingCart
         }
         cesta.put(pedido.getCodigoArticulo(), dp);
         return true;
+    }
+    
+    public synchronized void vaciar(){
+        cesta.clear();
+        paquetes.clear();
     }
     
     private boolean hayStock(Articulo articulo){
