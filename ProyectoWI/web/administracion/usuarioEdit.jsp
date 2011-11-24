@@ -53,7 +53,7 @@
                         </tr>
                         <tr>
                             <td class="resaltarCelda cab">Pass:</td>
-                            <td><input type="button" name="pass" value="Cambiar contraseña" onclick="ejecutarAccion(this,<c:out value='${pagina}'/>,<c:out value='${usuarioE.idUsuario}'/>)"/></td>
+                            <td><input class="enlace" type="button" name="pass" value="Cambiar contraseña" onclick="ejecutarAccion(this,<c:out value='${pagina}'/>,<c:out value='${usuarioE.idUsuario}'/>)"/></td>
                         </tr>
                         <tr>
                             <td class="resaltarCelda cab">Telefono:</td>
