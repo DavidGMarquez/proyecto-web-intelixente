@@ -17,15 +17,15 @@
         </li>
         </ul>
         <p>
-            <button onClick="return resetFiltro();">Borrar todo</button>
-            <input type="submit" value="Filtrar"/>
+            <button class="boton" onClick="return resetFiltro();">Borrar todo</button>
+            <input class="boton" type="submit" value="Filtrar"/>
         </p>
     </form>
 </div>
 <script>
-	function resetFiltro(){
-		$("#busca input[type=text]").val("");
-		//$("#busca input[type=checkbox]").removeAttr('checked');
-		return false;
-	}
+    function resetFiltro(){
+        $("#busca input[type=text]").val("");
+        //$("#busca input[type=checkbox]").removeAttr('checked');
+        return false;
+    }
 </script>
