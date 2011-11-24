@@ -36,19 +36,25 @@
     <body>
         <%@ include file="partes/menuTienda.jsp"%>
             <div id="articulo" class="borde cuerpo">
-                <c:choose>
-                    <c:when test="${empty articulo.pelicula.imagen}">
-                        <img class="cover" src="img/caratula.png"/>
-                    </c:when>
-                    <c:otherwise>
-                        <img class="cover" src="${articulo.pelicula.imagen}"/>
-                    </c:otherwise>
-                </c:choose>
+                <div class="cntIzquierda">
+                    <c:choose>
+                        <c:when test="${empty articulo.pelicula.imagen}">
+                            <img class="cover" src="img/caratula.png"/>
+                        </c:when>
+                        <c:otherwise>
+                            <img class="cover" src="${articulo.pelicula.imagen}"/>
+                        </c:otherwise>
+                    </c:choose>
+                    <div class="cntPrecio">
+                        <p><fmt:formatNumber pattern="$0.00" value="${articulo.precio}"/></span></p>
+                        <a href="javascript:void(0)" class="boton">Añadir al carrito</a>
+                    </div> 
+                </div>
                 <div class="datos">
-                        <p class="title"><span>Titulo: </span><span>${articulo.pelicula.titulo}</span></p>
-                        <p><span>Año: </span><span>${articulo.pelicula.anho}</span></p>
-                        <p><span>Precio: </span><span><fmt:formatNumber pattern="$0.00" value="${articulo.precio}"/></span></p>
-                        <p><span>Puntuación general: </span><span>${valoracionGeneral}</span></p>
+                        <p class="title"><span>Titulo: </span>${articulo.pelicula.titulo}</p>
+                        <p><span class="resaltar">Año: </span>${articulo.pelicula.anho}</p>
+                        <p><span class="resaltar">Precio: </span><fmt:formatNumber pattern="$0.00" value="${articulo.precio}"/></p>
+                        <p><span class="resaltar">Puntuación general: </span>${valoracionGeneral}</p>
                         <c:choose>
                                 <c:when test="${not empty usuario}">
                                     <%-- <p>Puntúe el articulo, introduzca un valor entre 0 y 9: 
@@ -58,27 +64,79 @@
                                     </form>
                                     </p>--%>
                                     <div id="ratingdiv">
-                                                            <form id="rating" action="controlador?page=articulo&action=valorar&usuario=${usuario.idUsuario}&codigo=${articulo.codigoArticulo}" method="post" title="Average: 3.4">
-                                                                    <label for="id_rating">Valoración:</label>
-                                                                    <select name="valoracion" id="id_rating">
-                                                                            <option value="1">1 - Mala</option>
-                                                                            <option value="2">2 - Pasable</option>
-                                                                            <option value="3">3 - Buena</option>
-                                                                            <option value="4">4 - Muy buena</option>
-                                                                            <option value="5">5 - Excelente</option>
-                                                                    </select>
-                                                                    <input type="submit" value="Puntuar" />
-                                                            </form>
-                                                    </div>
-                                    </c:when>
+                                        <form id="rating" action="controlador?page=articulo&action=valorar&usuario=${usuario.idUsuario}&codigo=${articulo.codigoArticulo}" method="post" title="Average: 3.4">
+                                            <label for="id_rating">Valoración:</label>
+                                            <select name="valoracion" id="id_rating">
+                                                    <option value="1">1 - Mala</option>
+                                                    <option value="2">2 - Pasable</option>
+                                                    <option value="3">3 - Buena</option>
+                                                    <option value="4">4 - Muy buena</option>
+                                                    <option value="5">5 - Excelente</option>
+                                            </select>
+                                            <input type="submit" value="Puntuar" />
+                                        </form>
+                                    </div>
+                                </c:when>
                             </c:choose>
-                    </div>
+                        <p class="resaltar">Más info:</p>
+                        <table>
+                        <tr>
+                            <td class="resaltarCelda cab">Director(es)</td>
+                            <td class="lista">
+                                <c:if test="${not empty articulo.pelicula.directores}">
+                                    <ul>
+                                        <c:forEach items="${articulo.pelicula.directores}" var="director">
+                                            <li><c:out value="${director.nombre}"></c:out></li>
+                                        </c:forEach>
+                                    </ul>
+                                </c:if>
+                            </td> 
+                        </tr>
+                        <tr>
+                            <td class="resaltarCelda cab">Actor(es)</td>
+                            <td class="lista">
+                                <c:if test="${not empty articulo.pelicula.actores}">
+                                    <ul>
+                                        <c:forEach items="${articulo.pelicula.actores}" var="actor">
+                                            <li><c:out value="${actor.nombre}"></c:out></li>
+                                        </c:forEach>
+                                    </ul>
+                                </c:if>
+                            </td> 
+                        </tr>
+                        <tr>
+                            <td class="resaltarCelda cab">Género(s)</td>
+                            <td class="lista">
+                                <c:if test="${not empty articulo.pelicula.generos}">
+                                        <c:forEach items="${articulo.pelicula.generos}" var="genero">
+                                            <c:out value="${genero}"></c:out>.
+                                        </c:forEach>
+                                </c:if>
+                            </td> 
+                        </tr>
+                        <tr>
+                            <td class="resaltarCelda cab">Pais(es)</td>
+                            <td class="lista">
+                                <c:if test="${not empty articulo.pelicula.paises}">
+                                    <ul>
+                                        <c:forEach items="${articulo.pelicula.paises}" var="pais">
+                                            <li><c:out value="${pais}"></c:out></li>
+                                        </c:forEach>
+                                    </ul>
+                                </c:if>
+                            </td> 
+                        </tr>
+                        </table>
+                        
                 </div>
+                           
+            </div>
                 <div id="bajoArticulo" class="cuerpo">
-                    <div id="recomendaciones" class="borde">
+                    <div id="recomendaciones" class="borde conCabecera">
+                        <h3>Películas relacionadas</h3>
+                        <div class="contenido">
                         <c:choose>
                             <c:when test="${not empty recomendaciones}">
-                                <h3>Películas relacionadas</h3>
                                 <ul>
                                     <c:forEach items="${recomendaciones}" var="i">
                                         <li>
@@ -90,7 +148,7 @@
                                                         <img src="${i.pelicula.imagen}" class="cover" name="${i.codigoArticulo}"/>
                                                 </c:otherwise>
                                         </c:choose>
-                                        <span><c:out value="${i.pelicula.titulo}"/></span>
+                                        <span class="title"><c:out value="${i.pelicula.titulo}"/></span>
                                         </li>
                                     </c:forEach>
                                 </ul>  
@@ -103,7 +161,7 @@
                                         <input type="hidden" name="codigo" value="${articulo.codigoArticulo}" />
                                         <%--<input type="hidden" name="articulo2" value="${recomendaciones[0].codigoArticulo}" />
                                         <input type="hidden" name="articulo3" value="${recomendaciones[1].codigoArticulo}" />--%>
-                                        <input type="submit" value="Comprar" />
+                                        <input class="boton" type="submit" value="Comprar" />
                                     </form>
                                     <p class="nota">*La película gratuita será la de menor precio</p>
                                 </div>
@@ -111,36 +169,38 @@
                             <c:otherwise>
                                 <p>No hay recomendaciones</p>
                             </c:otherwise>
-                        </c:choose>    
+                        </c:choose>  
+                        </div>
                     </div>
 
-                    <div id="comentarios" class="borde">
+                    <div id="comentarios" class="borde conCabecera">
                         <h3>Comentarios</h3>
-                        <c:choose>
-                        <c:when test="${not empty comentarios}">
-                                    <c:forEach items="${comentarios}" var="x">
-                                        <p><span style="font-weight: bold">${x.nombreUsuario}:</span> ${x.comentario}</p>
-                                    </c:forEach>
-                                </c:when>
-                                <c:otherwise>
-                                        <p>No hay ningún comentario</p>
-                                </c:otherwise>
-                        </c:choose>
-                        <c:choose>
-                        <c:when test="${not empty usuario}">
-                                    <form action="controlador?page=articulo&action=comentar&codigo=${articulo.codigoArticulo}" method="POST">
-                                        <!-- <label for="comentario">Comenta: </label> -->
-                                        <!-- <input name="comentario" type="text"/> -->
-                                        <textarea name="comentario" rows="3" cols="15"></textarea>
-                                        <input type="submit" value="Comentar">
-                                    </form>
-                                </c:when>
-                                <c:otherwise>
-                                        <p>Necesita registrarse o iniciar sesión para poder comentar</p>
-                                </c:otherwise>
-                        </c:choose>
+                        <div class="contenido">
+                            <c:choose>
+                            <c:when test="${not empty comentarios}">
+                                        <c:forEach items="${comentarios}" var="x">
+                                            <p><span style="font-weight: bold">${x.nombreUsuario}:</span> ${x.comentario}</p>
+                                        </c:forEach>
+                                    </c:when>
+                                    <c:otherwise>
+                                            <p>No hay ningún comentario</p>
+                                    </c:otherwise>
+                            </c:choose>
+                            <c:choose>
+                            <c:when test="${not empty usuario}">
+                                        <form action="controlador?page=articulo&action=comentar&codigo=${articulo.codigoArticulo}" method="POST">
+                                            <!-- <label for="comentario">Comenta: </label> -->
+                                            <!-- <input name="comentario" type="text"/> -->
+                                            <textarea name="comentario" rows="3" cols="15"></textarea>
+                                            <input class="boton" type="submit" value="Comentar">
+                                        </form>
+                                    </c:when>
+                                    <c:otherwise>
+                                            <p>Necesita registrarse o iniciar sesión para poder comentar</p>
+                                    </c:otherwise>
+                            </c:choose>
+                        </div>
                     </div>
                 </div>
-
 	</body>
 </html>
