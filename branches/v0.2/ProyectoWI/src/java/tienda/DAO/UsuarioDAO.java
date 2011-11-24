@@ -22,9 +22,9 @@ public class UsuarioDAO
 {
 
     Connection conexion = null;
-    Statement sentenciaSQL = null;
+    /*Statement sentenciaSQL = null;
     ResultSet consulta = null;
-    String query;
+    String query;*/
     MySQLMetodos m = new MySQLMetodos();
 
     public List<Usuario> findUsuarios()
@@ -33,10 +33,10 @@ public class UsuarioDAO
         {
             List<Usuario> l = new ArrayList<Usuario>();
             conexion = m.obtenerConexionDAWA();
-            sentenciaSQL = conexion.createStatement();
+            Statement sentenciaSQL = conexion.createStatement();
             //Obtengo la lista de usuarios
-            query = "SELECT * FROM usuarios where idTipoUsuario>1";
-            consulta = sentenciaSQL.executeQuery(query);
+            String query = "SELECT * FROM usuarios where idTipoUsuario>1";
+            ResultSet consulta = sentenciaSQL.executeQuery(query);
             do
             {
                 consulta.next();
@@ -66,10 +66,10 @@ public class UsuarioDAO
         try
         {
             conexion = m.obtenerConexionDAWA();
-            sentenciaSQL = conexion.createStatement();
+            Statement sentenciaSQL = conexion.createStatement();
             //Obtengo la lista de usuarios
-            query = "SELECT * FROM usuarios where idUsuario=" + idUsuario;
-            consulta = sentenciaSQL.executeQuery(query);
+            String query = "SELECT * FROM usuarios where idUsuario=" + idUsuario;
+            ResultSet consulta = sentenciaSQL.executeQuery(query);
             consulta.next();
             Usuario u = new Usuario(consulta.getInt("idUsuario"), consulta.getString("nombre"), null, consulta.getString("telefono"), consulta.getString("email"), consulta.getBoolean("activo"), consulta.getInt("idTipoUsuario"), consulta.getDouble("totalCompra"));
             //Obtengo la dirección
@@ -98,10 +98,10 @@ public class UsuarioDAO
         try
         {
             conexion = m.obtenerConexionDAWA();
-            sentenciaSQL = conexion.createStatement();
+            Statement sentenciaSQL = conexion.createStatement();
             //Compruebo si el artículos existe en la bd
-            query = "SELECT idUsuario FROM usuarios where email='" + email+ "' and password='" + pass + "' and activo=1";
-            consulta = sentenciaSQL.executeQuery(query);
+            String query = "SELECT idUsuario FROM usuarios where email='" + email+ "' and password='" + pass + "' and activo=1";
+            ResultSet consulta = sentenciaSQL.executeQuery(query);
             if (consulta.next()){
                 return consulta.getInt("idUsuario");
             }else{
@@ -125,13 +125,13 @@ public class UsuarioDAO
         {
             conexion = m.obtenerConexionDAWA();
             Integer idDireccion;
-            sentenciaSQL = conexion.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            query = "INSERT INTO `direcciones` ( `direccion`, `localidad`, `provincia`, `cp`) " + "VALUES ( '" + u.getDireccion().getDireccion() + "', '" + u.getDireccion().getLocalidad() + "', '" + u.getDireccion().getProvincia() + "', '" + u.getDireccion().getCp() + "')";
+            Statement sentenciaSQL = conexion.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            String query = "INSERT INTO `direcciones` ( `direccion`, `localidad`, `provincia`, `cp`) " + "VALUES ( '" + u.getDireccion().getDireccion() + "', '" + u.getDireccion().getLocalidad() + "', '" + u.getDireccion().getProvincia() + "', '" + u.getDireccion().getCp() + "')";
             sentenciaSQL.executeUpdate(query);
             //Obtengo el idDirección
             query = "SELECT max(idDireccion) FROM direcciones";
             System.out.println(query);
-            consulta = sentenciaSQL.executeQuery(query);
+            ResultSet consulta = sentenciaSQL.executeQuery(query);
             consulta.next();
             // !!!!!!!!!!!!!!!!!
             idDireccion = consulta.getInt("max(idDireccion)");
@@ -159,7 +159,7 @@ public class UsuarioDAO
         try
         {
             conexion = m.obtenerConexionDAWA();
-            query = "DELETE from usuarios where idUsuario=" + idUsuario;
+            String query = "DELETE from usuarios where idUsuario=" + idUsuario;
             m.ejecutarOperacion(conexion, query);
             return true;
         }
@@ -181,7 +181,7 @@ public class UsuarioDAO
         try
         {
             conexion = m.obtenerConexionDAWA();
-            query = "UPDATE usuarios set " + "nombre='" + u.getNombre() + "'," + "telefono='" + u.getTelefono() + "'," + "email='" + u.getEmail() + "'," + "activo=" + u.getActivo() + "," + "idTipoUsuario='" + u.getIdTipoUsuario() + "', totalCompra= " + u.getTotalCompra() + " where idUsuario=" + u.getIdUsuario();
+            String query = "UPDATE usuarios set " + "nombre='" + u.getNombre() + "'," + "telefono='" + u.getTelefono() + "'," + "email='" + u.getEmail() + "'," + "activo=" + u.getActivo() + "," + "idTipoUsuario='" + u.getIdTipoUsuario() + "', totalCompra= " + u.getTotalCompra() + " where idUsuario=" + u.getIdUsuario();
             m.ejecutarOperacion(conexion, query);
             query = "UPDATE direcciones set " + "direccion='" + u.getDireccion().getDireccion() + "'," + "localidad='" + u.getDireccion().getLocalidad() + "'," + "provincia='" + u.getDireccion().getProvincia() + "'," + "cp='" + u.getDireccion().getCp() + "' " + "where idDireccion=" + u.getDireccion().getIdDireccion();
             System.out.println(query);
@@ -205,7 +205,7 @@ public class UsuarioDAO
         try
         {
             conexion = m.obtenerConexionDAWA();
-            query = "UPDATE usuarios set " + " activo=" + activar + "" + " where idUsuario=" + idUsuario;
+            String query = "UPDATE usuarios set " + " activo=" + activar + "" + " where idUsuario=" + idUsuario;
             System.out.println("query: " + query);
             m.ejecutarOperacion(conexion, query);
         }
@@ -221,14 +221,16 @@ public class UsuarioDAO
 
     public List<TipoUsuario> findTiposUsuario()
     {
+        boolean interna = false;
     	List<TipoUsuario> l = new ArrayList<TipoUsuario>();
         try
         {
-            conexion = m.obtenerConexionDAWA();
-            sentenciaSQL = conexion.createStatement();
+            interna = !conexion.isClosed();
+            if(!interna) conexion = m.obtenerConexionDAWA();
+            Statement sentenciaSQL = conexion.createStatement();
             //Obtengo la lista de usuarios
-            query = "SELECT * FROM tipousuario where idTipoUsuario>1";
-            consulta = sentenciaSQL.executeQuery(query);
+            String query = "SELECT * FROM tipousuario where idTipoUsuario>1";
+            ResultSet consulta = sentenciaSQL.executeQuery(query);
             while (consulta.next())
             {
                 TipoUsuario tu = new TipoUsuario(consulta.getInt("idTipoUsuario"), consulta.getString("tipo"));
@@ -244,7 +246,7 @@ public class UsuarioDAO
         }
         finally
         {
-            m.cerrarConexion(conexion);
+            if(!interna) m.cerrarConexion(conexion);
         }
     }
 
@@ -284,7 +286,7 @@ public class UsuarioDAO
         try
         {
             conexion = m.obtenerConexionDAWA();
-            query = "UPDATE usuarios set password='" + pass + "' where idUsuario=" + idUsuario;
+            String query = "UPDATE usuarios set password='" + pass + "' where idUsuario=" + idUsuario;
             m.ejecutarOperacion(conexion, query);
             return true;
         }
@@ -304,7 +306,7 @@ public class UsuarioDAO
         try
         {
             conexion = m.obtenerConexionDAWA();
-            query = "UPDATE usuarios set " + " totalCompra=" + u.getTotalCompra() + ", idTipoUsuario="+u.getIdTipoUsuario() + " where idUsuario=" + u.getIdUsuario();
+            String query = "UPDATE usuarios set " + " totalCompra=" + u.getTotalCompra() + ", idTipoUsuario="+u.getIdTipoUsuario() + " where idUsuario=" + u.getIdUsuario();
             System.out.println("query: " + query);
             m.ejecutarOperacion(conexion, query);
         }
