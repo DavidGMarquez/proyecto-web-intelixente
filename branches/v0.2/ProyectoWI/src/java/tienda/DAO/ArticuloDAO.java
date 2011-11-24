@@ -26,9 +26,9 @@ import tienda.modelo.Pelicula;
 public class ArticuloDAO {
 
     Connection conexion = null;
-    Statement sentenciaSQL = null;
+    /*Statement sentenciaSQL = null;
     ResultSet consulta = null;
-    String query;
+    String query;*/
     MySQLMetodos m = new MySQLMetodos();
 
     //ACTUALIZADA
@@ -37,18 +37,18 @@ public class ArticuloDAO {
         try {
             
             conexion = m.obtenerConexionDAWA();
-            sentenciaSQL = conexion.createStatement();
+            Statement sentenciaSQL = conexion.createStatement();
             // TODO : PROBAR consulta
             if(condicion == null) condicion = "";
             condicion += (condicion.isEmpty()? " WHERE ": " AND ") + " a.idPelicula = m.id ";
             if(filtrarActivos){
                 condicion += " AND a.activo = 1 AND a.unidades > 0";
             }
-            query = "SELECT a.codigoArticulo, a.precio, a.unidades, a.activo, a.idPelicula, idCluster, title as titulo, imdbPictureURL as imagen, year as anho "
+            String query = "SELECT a.codigoArticulo, a.precio, a.unidades, a.activo, a.idPelicula, idCluster, title as titulo, imdbPictureURL as imagen, year as anho "
                     + "FROM `articulos` a,`movies` m "
                     + condicion;
             System.out.println("ArticuloDAO:" + query);
-            consulta = sentenciaSQL.executeQuery(query);
+            ResultSet consulta = sentenciaSQL.executeQuery(query);
             while (consulta.next()) {
                 // TODO: obtener otros datos de la película si es necesario en la pagina web
                 Pelicula p = new Pelicula(consulta.getInt("idPelicula"),
@@ -82,7 +82,7 @@ public class ArticuloDAO {
         List<Articulo> l = new ArrayList<Articulo>();
         try {
             conexion = m.obtenerConexionDAWA();
-            sentenciaSQL = conexion.createStatement();
+            Statement sentenciaSQL = conexion.createStatement();
             if(condicion == null) condicion = "";
             condicion += (condicion.isEmpty()? " WHERE ": " AND ") + " a.idPelicula = m.id ";
             if(codigoArticulo != null && !codigoArticulo.isEmpty()){
@@ -95,11 +95,11 @@ public class ArticuloDAO {
             if(maxElementos != null && maxElementos>0){
                 condicion += " LIMIT 0 , " + maxElementos;
             }
-            query = "SELECT a.codigoArticulo, a.precio, a.unidades, a.activo, a.idPelicula, idCluster, title as titulo, imdbPictureURL as imagen, year as anho "
+            String query = "SELECT a.codigoArticulo, a.precio, a.unidades, a.activo, a.idPelicula, idCluster, title as titulo, imdbPictureURL as imagen, year as anho "
                     + "FROM `articulos` a,`movies` m "
                     + condicion;
             System.out.println("ArticuloDAO:" + query);
-            consulta = sentenciaSQL.executeQuery(query);
+            ResultSet consulta = sentenciaSQL.executeQuery(query);
             while (consulta.next()) {
                 // TODO: obtener otros datos de la película si es necesario en la pagina web
                 Pelicula p = new Pelicula(consulta.getInt("idPelicula"),
@@ -119,18 +119,23 @@ public class ArticuloDAO {
         }
         return l;
     }
+    
+    public Articulo findArticuloById(String idArticulo){
+        return findArticuloById(idArticulo, true, true, true, true);
+    }
 
-    //probada actualizada 
-    public Articulo findArticuloById(String idArticulo) {
+    //TODO: PROBAR Y COMPLETAR
+    public Articulo findArticuloById(String idArticulo, boolean conActores, 
+            boolean conDirectores, boolean conGeneros, boolean conPaises ) {
         try {
             conexion = m.obtenerConexionDAWA();
-            sentenciaSQL = conexion.createStatement();
+            Statement sentenciaSQL = conexion.createStatement();
             //Obtengo la lista de Articulos
             // TODO : probar consulta
             //query = "SELECT * FROM articulos where codigoArticulo='" + idArticulo + "'";
-            query = "SELECT a.codigoArticulo, a.precio, a.unidades, a.activo, a.idPelicula, idCluster, title as titulo, imdbPictureURL as imagen, year as anho "
+            String query = "SELECT a.codigoArticulo, a.precio, a.unidades, a.activo, a.idPelicula, idCluster, title as titulo, imdbPictureURL as imagen, year as anho "
                     + "FROM `articulos` a,`movies` m WHERE codigoArticulo ='" + idArticulo + "' AND a.idPelicula = m.id";
-            consulta = sentenciaSQL.executeQuery(query);
+            ResultSet consulta = sentenciaSQL.executeQuery(query);
             Articulo u = null;
             if (consulta.next());
             {
@@ -143,6 +148,20 @@ public class ArticuloDAO {
                         consulta.getFloat("precio"),
                         consulta.getBoolean("activo"),
                         consulta.getInt("unidades"), consulta.getInt("idCluster"),  p);
+                Integer movieID = p.getId();
+                PeliculasDAO peliDAO = new PeliculasDAO();
+                if(conDirectores){
+                    p.setDirectores(peliDAO.getDirectores(movieID));
+                }
+                if(conActores){
+                    p.setActores(peliDAO.getActores(movieID));
+                }
+                if(conGeneros){
+                    p.setGeneros(peliDAO.getGeneros(movieID));
+                }
+                if(conPaises){
+                    p.setPaises(peliDAO.getPaises(movieID));
+                }
             }
             return u;
         } catch (Exception ex) {
@@ -157,11 +176,11 @@ public class ArticuloDAO {
     public Boolean existeArticulo(Articulo a) {
         try {
             conexion = m.obtenerConexionDAWA();
-            sentenciaSQL = conexion.createStatement();
+            Statement sentenciaSQL = conexion.createStatement();
             //Compruebo si el artículos existe en la bd
             //query = "SELECT codigoArticulo FROM articulos where grupo='" + a.getGrupo() + "' and album='" + a.getAlbum() + "'";
-            query = "SELECT codigoArticulo FROM articulos where codigoArticulo='" + a.getCodigoArticulo() + "'";
-            consulta = sentenciaSQL.executeQuery(query);
+            String query = "SELECT codigoArticulo FROM articulos where codigoArticulo='" + a.getCodigoArticulo() + "'";
+            ResultSet consulta = sentenciaSQL.executeQuery(query);
             if (consulta.next()) {
                 return true;
             } else {
@@ -181,9 +200,9 @@ public class ArticuloDAO {
         try {
             //Falta ver que el código no está duplicado
             conexion = m.obtenerConexionDAWA();
-            sentenciaSQL = conexion.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            Statement sentenciaSQL = conexion.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             //TODO corregir este insert para introducir articulos y peliculas
-            query = "INSERT INTO `articulos` (`codigoArticulo`, `precio`, `activo`, `unidades`, `idPelicula`)" 
+            String query = "INSERT INTO `articulos` (`codigoArticulo`, `precio`, `activo`, `unidades`, `idPelicula`)" 
                     + " VALUES ('" + a.getCodigoArticulo() + "', " + a.getPrecio() 
                     + ", " + a.getActivo() + ", " + a.getUnidades() + ", " + a.getPelicula().getId() + ");";
             System.out.println(query);
@@ -201,7 +220,7 @@ public class ArticuloDAO {
     public boolean borrarArticulo(String codigoArticulo) {
         try {
             conexion = m.obtenerConexionDAWA();
-            query = "DELETE from articulos where codigoArticulo='" + codigoArticulo + "'";
+            String query = "DELETE from articulos where codigoArticulo='" + codigoArticulo + "'";
             m.ejecutarOperacion(conexion, query);
             return true;
         } catch (Exception ex) {
@@ -217,7 +236,7 @@ public class ArticuloDAO {
     public boolean modificarArticulo(Articulo a) {
         try {
             conexion = m.obtenerConexionDAWA();
-            query = "UPDATE articulos "
+            String query = "UPDATE articulos "
                     + "set precio=" + a.getPrecio() + ",activo=" + a.getActivo() 
                     + ",unidades=" + a.getUnidades()
                     + " where codigoArticulo='" + a.getCodigoArticulo() + "'";
@@ -235,7 +254,7 @@ public class ArticuloDAO {
     public boolean activarArticulo(String idArticulo, Boolean activar) {
         try {
             conexion = m.obtenerConexionDAWA();
-            query = "UPDATE articulos set " + " activo=" + activar + "" + " where codigoArticulo='" + idArticulo + "'";
+            String query = "UPDATE articulos set " + " activo=" + activar + "" + " where codigoArticulo='" + idArticulo + "'";
             System.out.println("query: " + query);
             m.ejecutarOperacion(conexion, query);
             return true;
@@ -260,7 +279,7 @@ public class ArticuloDAO {
         String condicion = "";
 
         if (filtrarAnho && !anho.isEmpty()) {
-            condicion += (condicion.isEmpty()? " where " : " and ") + " anho=" + anho;
+            condicion += (condicion.isEmpty()? " where " : " and ") + " year=" + anho;
         }
 
         if (filtrarPM) {
@@ -268,7 +287,7 @@ public class ArticuloDAO {
         }
 
         if (filtrarTitulo && !titulo.isEmpty()) {
-        	condicion += (condicion.isEmpty()? " where " : " and ") + " titulo like '%" + titulo + "%'";
+        	condicion += (condicion.isEmpty()? " where " : " and ") + " title like '%" + titulo + "%'";
         }
 
         return findArticulos(true, condicion);
@@ -279,7 +298,7 @@ public class ArticuloDAO {
     public void modificarUnidades(Articulo a) {
         try {
             conexion = m.obtenerConexionDAWA();
-            query = "UPDATE articulos set " + " unidades=" + a.getUnidades() 
+            String query = "UPDATE articulos set " + " unidades=" + a.getUnidades() 
                     + " where codigoArticulo='" + a.getCodigoArticulo() + "'";
             System.out.println("query: " + query);
             m.ejecutarOperacion(conexion, query);
@@ -295,11 +314,11 @@ public class ArticuloDAO {
     public Boolean compruebaStock(Pedido a) {
         try {
             conexion = m.obtenerConexionDAWA();
-            sentenciaSQL = conexion.createStatement();
+            Statement sentenciaSQL = conexion.createStatement();
             //Obtengo el stock actual
-            query = "SELECT unidades FROM articulos "
+            String query = "SELECT unidades FROM articulos "
                     + "where codigoArticulo='" + a.getArticulo().getCodigoArticulo() + "'";
-            consulta = sentenciaSQL.executeQuery(query);
+            ResultSet consulta = sentenciaSQL.executeQuery(query);
             consulta.next();
             Integer stock = consulta.getInt("unidades");
 
