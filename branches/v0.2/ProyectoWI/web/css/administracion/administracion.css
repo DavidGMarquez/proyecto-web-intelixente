@@ -28,16 +28,41 @@ body{
     height: auto;
 }
 
-a{
+input[type=submit], input[type=button], input[type=reset], button, .boton{
+    font-size: 1em;
+    color: white;
+    background-color: #5179C9;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 2px;
+    margin: 2px;
+    cursor: pointer;
+}
+
+input[type=submit]:hover, input[type=button]:hover, input[type=reset]:hover, 
+button:hover, .boton:hover{
+    background-color: #81a9f9;
+    border-color: #5179C9;
+}
+
+a, input.enlace{
     text-decoration: none;
     font-weight: bold;
     color: #5179c9;
+    background-color: transparent;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
 }
 
-a:hover{
+a:hover, input.enlace:hover{
     text-decoration: none;
     font-weight: bold;
     color: #314E89;
+    background-color: transparent;
+    border: 0;
+    border-radius: 0;
 }
 
 #titulo{
@@ -90,7 +115,7 @@ a:hover{
     background-color:#ddd;
 }
 
-#lista table{
+#lista table, #lista h3{
     width:80%;
     margin:0px auto;
     margin-top:10px;
@@ -142,4 +167,53 @@ a:hover{
 
 #edit .footer{
     text-align: center;
+}
+
+
+ul.cntElementos{
+  padding: 3px; 
+  margin: 0;
+  overflow: hidden;
+}
+
+ul.cntElementos li{
+    border-radius: 4px;
+    background-color: white;
+    padding: 2px 3px;
+    float: left;
+    list-style: none;
+    margin: 3px 5px 3px 0;
+    border: 1px solid #d0d0d0;
+}
+
+ul.cntElementos li a{
+    /*display: inline-block;*/
+    padding: 0 2px;
+}
+
+ul.cntElementos li.eliminado{
+    display: none;
+}
+
+.formNuevo{
+    margin: 3px 5px 10px 10px;
+}
+
+.formNuevo .boton{
+    color: white;
+    background-color: #5179C9;
+    border: 0;
+    border-radius: 4px;
+    padding: 2px;
+    
+}
+
+#edit #txtTitulo{
+    width: 200px;
+}
+
+#edit #txtCover{
+    width: 390px;
+    max-width: 390px;
+    min-width: 390px;
 }
