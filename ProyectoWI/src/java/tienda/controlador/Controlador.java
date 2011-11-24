@@ -72,12 +72,21 @@ public class Controlador extends HttpServlet {
 
             } else // Información de un articulo, con comentarios y valoraciones
             if ("articulo".equalsIgnoreCase(page) && codigo != null) {
+                dispatcher = getServletContext().getRequestDispatcher("/articulo.jsp");
                 if ("valorar".equalsIgnoreCase(action)) {
                     ValoracionesDAO vd = new ValoracionesDAO();
                     vd.insertar(usuario.getIdUsuario(), codigo, Integer.parseInt(request.getParameter("valoracion")));
                 }
-                dispatcher = getServletContext().getRequestDispatcher("/articulo.jsp");
-                Articulo articulo = null;
+                
+                ArticuloHelper ah = new ArticuloHelper();
+                Articulo articulo = ah.findArticuloById(codigo);
+                session.setAttribute("articulo", articulo);
+                request.setAttribute("valoracionGeneral", new ValoracionesDAO().obtenerValoracionGeneralArticulo(codigo));
+                if (usuario != null) {
+                    request.setAttribute("valoracionUsuario", new ValoracionesDAO().obtenerValoracionUsuarioArticulo(usuario.getIdUsuario(), codigo));
+                }
+                
+                /*Articulo articulo = null;
                 ComentariosDAO cd = new ComentariosDAO();
                 for (int i = 0; i < catalogo.size(); i++) {
                     if (codigo.equalsIgnoreCase(catalogo.get(i).getCodigoArticulo())) {
@@ -89,9 +98,9 @@ public class Controlador extends HttpServlet {
                         session.setAttribute("articulo", articulo);
                         break;
                     }
-                }
+                }*/
                 
-
+                ComentariosDAO cd = new ComentariosDAO();
                 if ("comentar".equalsIgnoreCase(action) && request.getParameter("comentario") != null) {
                     Comentarios c = new Comentarios();
                     c.setCodigoArticulo(articulo.getCodigoArticulo());
@@ -107,21 +116,17 @@ public class Controlador extends HttpServlet {
                 }
                 
                 if ("oferta3x2".equalsIgnoreCase(action)){
-                    System.out.println("oferta3x2: paso 1");
                     ArrayList<Articulo> articulos = (ArrayList<Articulo>)session.getAttribute("recomendaciones");
                     articulos.add((Articulo)session.getAttribute("articulo"));
                     Paquete3x2 pack = new Paquete3x2(articulos);
-                    System.out.println("oferta3x2: paso 2");
                     if(!cart.upPaquete(pack)){
                         System.out.println("oferta3x2: falta stock");
                         request.setAttribute("mensaje", "No se han podido añadir los artículos por falta de stock");
                     }else{
-                        System.out.println("oferta3x2: añadida");
                         session.setAttribute("cart", cart);
                     }
-                    System.out.println("oferta3x2: paso 3");
                 }
-                
+
                 // Obtener dos artículos parecidos
                 ArticuloDAO aDAO = new ArticuloDAO();
                 List<Articulo> recomendaciones = aDAO.findArticulosByCluster(articulo.getCluster(), articulo.getCodigoArticulo(), 2, true, null);
