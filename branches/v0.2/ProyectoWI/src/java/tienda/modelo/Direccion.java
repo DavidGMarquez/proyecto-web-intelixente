@@ -5,11 +5,13 @@
 
 package tienda.modelo;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Vanesa
  */
-public class Direccion {
+public class Direccion implements Serializable {
     private Integer idDireccion;
     private String direccion;
     private String localidad;
