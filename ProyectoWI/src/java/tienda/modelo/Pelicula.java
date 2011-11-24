@@ -14,8 +14,8 @@ public class Pelicula implements Serializable{
     private Integer id;
     private String titulo;
     private ArrayList<String> paises;
-    private ArrayList<String> actores;
-    private ArrayList<String> directores;
+    private ArrayList<ActorDirector> actores;
+    private ArrayList<ActorDirector> directores;
     private ArrayList<String> generos;
     private Integer anho;
     private String imagen;
@@ -24,8 +24,8 @@ public class Pelicula implements Serializable{
     /* Constructores
      * ---------------------------------- */
     public Pelicula(){
-        this.actores = new ArrayList<String>();
-        this.directores = new ArrayList<String>();
+        this.actores = new ArrayList<ActorDirector>();
+        this.directores = new ArrayList<ActorDirector>();
         this.generos = new ArrayList<String>();
         this.paises = new ArrayList<String>();
     }
@@ -47,19 +47,19 @@ public class Pelicula implements Serializable{
         this.id = id;
     }
     
-    public ArrayList<String> getActores() {
+    public ArrayList<ActorDirector> getActores() {
         return actores;
     }
 
-    public void setActores(ArrayList<String> actores) {
+    public void setActores(ArrayList<ActorDirector> actores) {
         this.actores = actores;
     }
 
-    public ArrayList<String> getDirectores() {
+    public ArrayList<ActorDirector> getDirectores() {
         return directores;
     }
 
-    public void setDirectores(ArrayList<String> directores) {
+    public void setDirectores(ArrayList<ActorDirector> directores) {
         this.directores = directores;
     }
     
