@@ -8,18 +8,18 @@
    	<ul class="compra">
    		<c:forEach items="${cart.cesta}" var="i">
     		<li class="itemCompra">
-	    		<p class="boton"><img class="activar" src="img/-.png" name="page=${param.page}&action=down&codigo=${i.articulo.codigoArticulo}"/></p>
+	    		<p><img class="activar" src="img/-.png" name="page=${param.page}&action=down&codigo=${i.articulo.codigoArticulo}"/></p>
 	    		<p class="cantidad"><c:out value="${i.cantidad}"/></p>
-	    		<p class="boton"><img class="activar" src="img/+.png" name="page=${param.page}&action=up&codigo=${i.articulo.codigoArticulo}"/></p>
+	    		<p><img class="activar" src="img/+.png" name="page=${param.page}&action=up&codigo=${i.articulo.codigoArticulo}"/></p>
 	    		<p class="album"><c:out value="${i.articulo.pelicula.titulo}"/></p>
 	    		<p class="precio"><fmt:formatNumber pattern="$0.00" value="${i.articulo.precio}"/>/unidad</p>
     		</li>
    		</c:forEach>
                 <c:forEach items="${cart.paquetes}" var="i">
     		<li class="paqueteCompra">
-	    		<p class="boton"><img class="activar" src="img/-.png" name="page=${param.page}&action=downPack&codigo=${i.codigoPack}"/></p>
+	    		<p><img class="activar" src="img/-.png" name="page=${param.page}&action=downPack&codigo=${i.codigoPack}"/></p>
 	    		<p class="cantidad"><c:out value="${i.cantidad}"/></p>
-	    		<p class="boton"><img class="activar" src="img/+.png" name="page=${param.page}&action=upPack&codigo=${i.codigoPack}"/></p>
+	    		<p><img class="activar" src="img/+.png" name="page=${param.page}&action=upPack&codigo=${i.codigoPack}"/></p>
                         <p>Paquete 3x2</p>
                         <p class="precio"><fmt:formatNumber pattern="$0.00" value="${i.precioUnidad}"/>/unidad</p>
                         <p class="descripcion"><c:out value="${i.titulo}"/></p>
@@ -40,7 +40,7 @@
                     <c:choose>
                     <c:when test="${cart.precioTotal > 0.00}">
                         <form method="post" action="controlador?page=${param.page}&action=pagar" onsubmit="return confirmarCompra();">
-                            <input id="pagar" type="submit" value="PAGAR"/>
+                            <input class="boton" id="pagar" type="submit" value="PAGAR"/>
                             <div id="envio" class="formulario">
                                 <h3>Dirección de envío</h3>
                                 <p>
