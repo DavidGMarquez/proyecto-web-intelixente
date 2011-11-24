@@ -4,6 +4,7 @@
     Author     : Vanesa
 --%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
@@ -41,6 +42,7 @@
                     <table>
                         <tr>
                             <th class="resaltarCelda">Código</th>
+                            <th class="resaltarCelda">Película</th>
                             <th class="resaltarCelda">Precio</th>
                             <th class="resaltarCelda">Activar</th>
                             <th class="resaltarCelda">Editar</th>
@@ -53,7 +55,8 @@
                         <c:forEach items="${articulos}" var="item" begin="${inicio}" end="${fin-1}" step="1">
                             <tr>
                                 <td><c:out value="${item.codigoArticulo}"/></td>
-                                <td><c:out value="${item.precio}"/></td>
+                                <td><c:out value="${item.pelicula.titulo}"/></td>
+                                <td><fmt:formatNumber pattern="$0.00" value="${item.precio}"/></td>
                                 <td>
                                 <c:choose>
                                     <c:when test="${item.activo==false}">
