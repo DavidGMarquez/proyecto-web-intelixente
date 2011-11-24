@@ -3,7 +3,9 @@
 <div id="cntItems">
 	<c:choose>
 		<c:when test="${empty catalogo }">
-			<p>No hay elementos en el catalogo</p>
+                    <div class="borde">
+			<p class="info">No hay elementos en el catalogo</p>
+                    </div>
 		</c:when>
 		<c:otherwise>
 			<div id="catalogo" class="borde">
