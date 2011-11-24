@@ -53,7 +53,7 @@ def tipo(field, value):
         elif isfloat(value):
                 t = "FLOAT"
         if(field == "id"):
-                t+=" NOT NULL PRIMARY KEY"                      
+                t+=" NOT NULL PRIMARY KEY AUTO_INCREMENT"                      
         return t
 #####################################################      
 # crea a sentencia CREATE para unha taboa        
