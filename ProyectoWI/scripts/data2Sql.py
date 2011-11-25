@@ -72,6 +72,8 @@ def createStatement(filename,fields,example, encode="utf8"):
 #  PROGRAMA PRINCIPAL
 ################################################################################
 
+# Páxina: http://www.grouplens.org/node/462 (arquivo: HetRec 2011 MovieLens Data Set (.zip))
+
 # DIRECTORIO DOS FONTES
 path = 'hetrec2011-movielens-2k/'
 # FICHEIRO DE SAIDA
@@ -91,17 +93,14 @@ limit = 0
 if len(sys.argv) == 2:
         limit = int(sys.argv[1])
 
-#filelist = ["movies"]
-
-
 out = open(outputscript,"w")
 
 # PARA CADA UN DELES        
 for filename in filelist:
 
-        f = open(path + filename + ".dat","r")                         # ficheiro de lectura
-        first_line = f.readline()                                                       # lemos a linea dos campos
-        second_line = f.readline()                                                      # lemos a primeira linea de datos (para saber os tipos)
+        f = open(path + filename + ".dat","r")                                  # ficheiro de lectura
+        first_line = f.readline()                                               # lemos a linea dos campos
+        second_line = f.readline()                                              # lemos a primeira linea de datos (para saber os tipos)
         headers = first_line.split("\t")                                        # obtemos unha lista cos campos
        
         print "Generating SQL for " + filename
@@ -111,14 +110,50 @@ for filename in filelist:
        
         # XERAMOS OS INSERTS
         i = 0
+        out.write("\nINSERT INTO `" + filename.upper().replace("-","_") + "` (" + ", ".join(headers) + ") values ")
         for line in f:
                 if  i < limit or limit == 0:
+                        if i != 0:
+                            out.write(",")
                         i=i+1  
                         datos = map(quote, line.rstrip("\r\n").split("\t"))
-                        out.write("\nINSERT INTO `" + filename.upper().replace("-","_") + "` (" + ", ".join(headers) + ") values (" + ", ".join(datos) + ");\n")
+                        out.write("\n(" + ", ".join(datos) + ")")
                 else:
+                        out.write(";")
                         break
         f.close()
+
+
+############## PARA A TÁBOA ARTÍCULOS
+
+# Valores para as propiedades dos artículos
+prefixCodigo = "pel"
+precio = 30
+
+f = open(path + "movies.dat","r")          # ficheiro de lectura
+f.readline()                               # lemos a linea dos campos
+print "Generating SQL truncate and insert for articulos"
+
+# Vacio la tabla
+out.write("\nTRUNCATE `articulos`;");
+# Creo la cabecera del insert
+out.write("\nINSERT INTO `articulos`(`codigoArticulo`,`precio`, `idPelicula`) VALUES ")
+
+# XERAMOS OS INSERTS
+i = 0
+for line in f:
+        if  i < limit or limit == 0:
+                if i != 0:
+                    out.write(",")
+                i=i+1  
+                idMovie, sep, tail = line.rstrip("\r\n").partition("\t")
+                out.write("\n('" + prefixCodigo + str(i) + "', " + str(precio) + ", " + idMovie + ")")
+        else:
+                out.write(";")
+                break
+f.close()
+
+
 out.close()
 
 
