@@ -11,16 +11,12 @@ function ejecutarAccion(boton, pagina){
             campos=campos+"codigo ";
             error=true;
         }
-        if (document.formulario.grupo.value == ""){
-            campos=campos+"grupo ";
+        /*if (document.formulario.imagen.value == ""){
+            campos=campos+"imagen ";
             error=true;
-        }
-        if (document.formulario.album.value == ""){
+        }*/
+        if (document.formulario.titulo.value == ""){
             campos=campos+"album ";
-            error=true;
-        }
-        if (document.formulario.pais.value == ""){
-            campos=campos+"pais ";
             error=true;
         }
         

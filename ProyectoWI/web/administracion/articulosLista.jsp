@@ -22,10 +22,8 @@
         </c:when>
         <c:otherwise>
             <h2>Lista de articulos</h2>
-            <div id="lista">
-
+            <div class="lista">
                 <div id="centrar">
-
                     <c:forEach var="p" begin="1" end="${paginas}" step="1">
                         <c:choose>
                             <c:when test="${p==pagina}">
@@ -42,8 +40,9 @@
                     <table>
                         <tr>
                             <th class="resaltarCelda">Código</th>
-                            <th class="resaltarCelda">Película</th>
+                            <th class="resaltarCelda text">Película</th>
                             <th class="resaltarCelda">Precio</th>
+                            <th class="resaltarCelda">Unidades</th>
                             <th class="resaltarCelda">Activar</th>
                             <th class="resaltarCelda">Editar</th>
                             <th class="resaltarCelda">Borrar</th>
@@ -55,17 +54,18 @@
                         <c:forEach items="${articulos}" var="item" begin="${inicio}" end="${fin-1}" step="1">
                             <tr>
                                 <td><c:out value="${item.codigoArticulo}"/></td>
-                                <td><c:out value="${item.pelicula.titulo}"/></td>
+                                <td class="text"><c:out value="${item.pelicula.titulo}"/></td>
                                 <td><fmt:formatNumber pattern="$0.00" value="${item.precio}"/></td>
+                                <td><c:out value="${item.unidades}"/></td>
                                 <td>
-                                <c:choose>
-                                    <c:when test="${item.activo==false}">
-                                        <a href="controladorAdmin?action=activarArticulo&pagina=<c:out value='${pagina}'/>&idArticulo=<c:out value='${item.codigoArticulo}'/>">activar</a>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <a href="controladorAdmin?action=desactivarArticulo&pagina=<c:out value='${pagina}'/>&idArticulo=<c:out value='${item.codigoArticulo}'/>">desactivar</a>
-                                    </c:otherwise>
-                                </c:choose>
+                                    <c:choose>
+                                        <c:when test="${item.activo==false}">
+                                            <a href="controladorAdmin?action=activarArticulo&pagina=<c:out value='${pagina}'/>&idArticulo=<c:out value='${item.codigoArticulo}'/>">activar</a>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <a href="controladorAdmin?action=desactivarArticulo&pagina=<c:out value='${pagina}'/>&idArticulo=<c:out value='${item.codigoArticulo}'/>">desactivar</a>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </td>
                                 <td><a href="controladorAdmin?action=editarArticulo&pagina=<c:out value='${pagina}'/>&idArticulo=<c:out value='${item.codigoArticulo}'/>">editar</a></td>
                                 <td><a href="controladorAdmin?action=borrarArticulo&pagina=<c:out value='${pagina}'/>&idArticulo=<c:out value='${item.codigoArticulo}'/>">borrar</a></td>

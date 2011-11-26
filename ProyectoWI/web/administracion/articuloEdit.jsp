@@ -22,10 +22,13 @@
         <div id="titulo">Administración: Articulos</div>
         <%@ include file="menu.jsp"%>
         <h2>Administración: Editar Articulo</h2>
-        <div id="lista">
+        <div class="lista">
             <div class="centrar" id="edit">
                 <form method="post" action="#" name="formulario">
                     <input type="hidden" name="pagina" value="${pagina}"/>
+                     <c:if test="${acc=='modificar'}">
+                         <input type="hidden" name="idPelicula" value="${articulo.pelicula.id}"/>
+                     </c:if>
                     <h3>Artículo</h3>
                     <table>
                         <c:choose>
@@ -63,12 +66,6 @@
                     </table>
                     <h3>Pelicula</h3>
                     <table>
-                        <c:if test="${acc=='modificar'}">
-                            <tr>
-                                <td class="resaltarCelda cab"><label for="id">Identificador:</td>
-                                <td><input type="text" id="txtIdPelicula" name="idPelicula" value="${articulo.pelicula.id}" disabled></td>
-                            </tr>
-                        </c:if>
                         <tr>
                             <td class="resaltarCelda cab"><label for="titulo">Título:</label></td>
                             <td><input id="txtTitulo" type="text" name="titulo" value="${articulo.pelicula.titulo}">*</td>
@@ -79,7 +76,7 @@
                         </tr>
                         <tr>
                             <td class="resaltarCelda cab"><label for="imagen">Imagen:</label></td>
-                            <td><textarea id="txtCover" rows="2"><c:out value="${articulo.pelicula.imagen}"></c:out></textarea></td>
+                            <td><textarea id="txtCover" name="imagen" rows="2"><c:out value="${articulo.pelicula.imagen}"></c:out></textarea></td>
                         </tr>
                         <tr>
                             <td class="resaltarCelda cab">Directores:</td>
@@ -167,25 +164,19 @@
                         <input type="button" value="Cancelar" name="cancelar" onclick="ejecutarAccion(this,<c:out value='${pagina}'/>)">
                         <c:choose>
                             <c:when test="${acc=='modificar'}">
-                                <input type="button" value="Modificar" name="modificar" onclick="ejecutarAccionGate(this,<c:out value='${pagina}'/>)">
+                                <input type="button" value="Modificar" name="modificar" onclick="crearSelects(); ejecutarAccion(this,<c:out value='${pagina}'/>)">
                             </c:when>
                             <c:otherwise>
-                                <input type="button" value="Insertar" name="insertar" onclick="ejecutarAccionGate(this,<c:out value='${pagina}'/>)">
+                                <input type="button" value="Insertar" name="insertar" onclick="crearSelects(); ejecutarAccion(this,<c:out value='${pagina}'/>)">
                             </c:otherwise>
                         </c:choose>
                     </div>
                     <p class="footer">* Los campos marcados con asterisco son obligatorios.</p>
-                    <div id="selectsOcultos" style="display:none;">
-                        <select multiple name="actoresBorrados" id="actoresBorrados"></select>
-                        <select multiple name="actoresCreados" id="actoresCreados"></select>
-                        <select multiple name="actoresAnhadidos" id="actoresAnhadidos"></select>
-                        <select multiple name="directoresBorrados" id="directoresBorrados"></select>
-                        <select multiple name="directoresCreados" id="directoresCreados"></select>
-                        <select multiple name="directoresAnhadidos" id="directoresAnhadidos"></select>
-                        <select multiple name="generosBorrados" id="generosBorrados"></select>
-                        <select multiple name="generosAnhadidos" id="generosAnhadidos"></select>
-                        <select multiple name="paisesBorrados" id="paisesBorrados"></select>
-                        <select multiple name="paisesAnhadidos" id="paisesAnhadidos"></select>
+                    <div id="selectsOcultos" style="display:none;" >
+                        <select multiple name="actores" id="actores"></select>
+                        <select multiple name="directores" id="directores"></select>
+                        <select multiple name="generos" id="generos"></select>
+                        <select multiple name="paises" id="paises"></select>
                     </div>
                     
                 </form>
@@ -252,8 +243,8 @@
             //Comprobar si existe ya el elemento
             var $cnt=$("#cnt-" + tipo + "-" + nuevoId)
             if($cnt.length){
-                if($cnt.hasClass("eliminar")){
-                    $cnt.removeClass("eliminar");
+                if($cnt.hasClass("eliminado")){
+                    $cnt.removeClass("eliminado");
                 }else{
                     alert("El elemento ya existe");
                 }
@@ -268,9 +259,9 @@
             $("#ul-" + tipo).append(codigo);
         }
         
-        function ejecutarAccionGate(boton, pagina){
+        function crearSelects(){
             //Preparamos selects
-            for each (var tipo in ["actor","director"]) {
+            /*for each (var tipo in ["actor","director"]) {
                 //Añadidos
                 $("#ul-" + tipo + " li.nuevo").each(function(){
                     var id=$(this).find("span").text().replace("cnt-" + tipo + "-","");
@@ -286,25 +277,24 @@
                     var id=$this.attr("id").replace("cnt-" + tipo + "-","");
                     $("#" + tipo + "esBorrados").append("<option value='" + id + "' selected>"+ $this.find("span").text() +"</option>");
                 });
-            }
-            //Generos
-            $("#ul-genero li.nuevo").each(function(){
-                $("#generosAnhadidos").append("<option selected>"+ $(this).find("span").text()+"</option>");
+            }*/
+            //Actores
+            $("#ul-actor li:not(.eliminado)").each(function(){
+                $("#actores").append("<option selected>"+ $(this).find("span").text() +"</option>");
             });
-            
-            $("#ul-genero li.eliminado").each(function(){
-                $("#generosBorrados").append("<option selected>"+ $(this).find("span").text()+"</option>");
+            //Directores
+            $("#ul-director li:not(.eliminado)").each(function(){
+                $("#directores").append("<option selected>"+ $(this).find("span").text() +"</option>");
+            });
+            //Generos
+            $("#ul-genero li:not(.eliminado)").each(function(){
+                $("#generos").append("<option selected>"+ $(this).find("span").text()+"</option>");
             });
             //Paises
-            $("#ul-pais li.nuevo").each(function(){
-                $("#paisesAnhadidos").append("<option selected>"+ $(this).find("span").text()+"</option>");
-            });
-            
-            $("#ul-pais li.eliminado").each(function(){
-                $("#paisesBorrados").append("<option selected>"+ $(this).find("span").text()+"</option>");
+            $("#ul-pais li:not(.eliminado)").each(function(){
+                $("#paises").append("<option selected>"+ $(this).find("span").text()+"</option>");
             });
 
-            //ejecutarAccion(boton, pagina);
         }
       
       

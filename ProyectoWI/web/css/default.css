@@ -133,6 +133,8 @@ form input[type=text], form input[type=password]
 
 #articulo img{
     margin: 12px 13px 0 10px;
+    height: 245px;
+    max-width: 170px;
 }
 
 #articulo .datos{
@@ -143,11 +145,6 @@ form input[type=text], form input[type=password]
 #articulo .title{
     font-size: 150%;
     color: #5179C9;
-}
-
-#articulo .cover
-{
-    height: 245px;
 }
 
 #articulo .datos table{
@@ -309,6 +306,7 @@ form input[type=text], form input[type=password]
 #catalogo
 {
 	/*height: 555px;*/
+        min-height: 540px;
  	overflow: hidden;
  	position: relative;
 	float: left;
@@ -378,7 +376,7 @@ form input[type=text], form input[type=password]
 	width: 100%;
 	vertical-align: middle;
 	text-align: left;
-	margin-bottom: 15px;
+        overflow: hidden;
 }
 
 #cesta .itemCompra p, #cesta .paqueteCompra p
@@ -499,6 +497,7 @@ form input[type=text], form input[type=password]
 
 #recomendaciones .cover{
     height: 115px;
+    max-width: 80px;
     display: block;
     margin: 0 auto;
 }
