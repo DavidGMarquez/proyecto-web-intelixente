@@ -29,7 +29,6 @@ import util.Email;
  */
 public class TiendaHelper {
 
-    float descuento = (float) 20.0;
     HttpSession session;
     ArticuloDAO articuloDAO;
     List<Articulo> listaArticulos;
@@ -40,14 +39,9 @@ public class TiendaHelper {
         listaArticulos = new ArrayList<Articulo>();
     }
 
-	public List<Articulo> obtenerArticulos(Usuario u) {
+    public List<Articulo> obtenerArticulos() {
         try {
             listaArticulos = articuloDAO.findArticulos(true, "");
-            for (int i = 0; i < listaArticulos.size(); i++) {
-                if (!listaArticulos.get(i).getActivo()) {
-                    listaArticulos.remove(i);
-                }
-            }
         } catch (Exception ex) {
             Logger.getLogger(TiendaHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -106,10 +100,10 @@ public class TiendaHelper {
                 ArticuloVendidoDAO avd = new ArticuloVendidoDAO();
                 articuloDAO = new ArticuloDAO();
                 for (int i = 0; i < cesta.size(); i++) {
-                    if(cart.getDescuento() != 0){
+                    if(cart.getDescuentoPorcentaje() != 0){
                         cesta.get(i).getArticulo().
                                 setPrecio((float) (cesta.get(i).getArticulo().getPrecio() 
-                                * (1-cart.getDescuento())/100));
+                                * (1-cart.getDescuentoPorcentaje())/100));
                     }
                     avd.insertarArticulo(cesta.get(i), idVenta);
                     Articulo a = cesta.get(i).getArticulo();
@@ -121,13 +115,13 @@ public class TiendaHelper {
                 //paquetes
                 textoEmail += "\n\n Packs 3x2:";
                 for (int i = 0; i < paquetes.size(); i++) {
-                    for (int j=0; i<paquetes.get(i).getArticulos().size(); i++){
+                    for (int j=0; j<paquetes.get(i).getArticulos().size(); j++){
                         Pedido p = new Pedido(paquetes.get(i).getArticulos().get(j));
                         double precio = p.getArticulo().getPrecio();
                         if(paquetes.get(i).getIndex() == j){
                             precio = 0.0;
-                        }else if(cart.getDescuento() != 0){
-                            precio = precio*(1-cart.getDescuento())/100;
+                        }else if(cart.getDescuentoPorcentaje() != 0){
+                            precio = precio*(1-(float)cart.getDescuentoPorcentaje()/100);
                         }
                         avd.insertarArticulo(p, idVenta, precio);
                         Articulo a = p.getArticulo();
