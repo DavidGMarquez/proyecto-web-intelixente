@@ -29,12 +29,15 @@ public class Pelicula implements Serializable{
         this.generos = new ArrayList<String>();
         this.paises = new ArrayList<String>();
     }
-    public Pelicula(Integer id, String titulo, Integer anho, String imagen){
+    public Pelicula(String titulo, Integer anho, String imagen){
         this();
-        this.id=id;
         this.titulo = titulo;
         this.anho = anho;
         this.imagen = imagen;
+    }
+    public Pelicula(Integer id, String titulo, Integer anho, String imagen){
+        this(titulo, anho, imagen);
+        this.id=id;
     }
     
     /* Getters & setters
