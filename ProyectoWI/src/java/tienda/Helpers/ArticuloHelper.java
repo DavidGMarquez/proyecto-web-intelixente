@@ -4,13 +4,18 @@
  */
 package tienda.Helpers;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 //import java.util.logging.Level;
 //import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import tienda.DAO.ArticuloDAO;
+import tienda.DAO.PeliculasDAO;
+import tienda.modelo.ActorDirector;
 import tienda.modelo.Articulo;
+import tienda.modelo.Pelicula;
 
 /**
  *
@@ -19,6 +24,7 @@ import tienda.modelo.Articulo;
 public class ArticuloHelper {
 
     ArticuloDAO aDAO = new ArticuloDAO();
+    PeliculasDAO pDAO = new PeliculasDAO();
 
     public List<Articulo> findArticulos() {
         return aDAO.findArticulos(false,"");
@@ -68,8 +74,32 @@ public class ArticuloHelper {
                     ud);
 
             aDAO.modificarArticulo(a);
+            
+            //Pelicula
+            Integer idPelicula = Integer.parseInt(request.getParameter("idPelicula"));
+            String titulo = request.getParameter("titulo");
+            Integer anho = Integer.parseInt(request.getParameter("anho"));
+            String imagen = request.getParameter("imagen");
+            Pelicula p = new Pelicula(idPelicula,titulo, anho, imagen);
+            p.setPaises(new ArrayList<String>(Arrays.asList(request.getParameterValues("paises"))));
+            p.setGeneros(new ArrayList<String>(Arrays.asList(request.getParameterValues("generos"))));
+            String[] actores= request.getParameterValues("actores");
+            if(actores != null){
+                for(int i=0; i<actores.length; i++){
+                    p.getActores().add(new ActorDirector(actores[i]));
+                }
+            }
+            String[] directores= request.getParameterValues("directores");
+            if(directores != null){
+                for(int i=0; i<directores.length; i++){
+                    p.getDirectores().add(new ActorDirector(directores[i]));
+                }
+            }
+            pDAO.modificarPelicula(p);
+            
             return session;
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -82,13 +112,33 @@ public class ArticuloHelper {
             Float precio = Float.parseFloat(request.getParameter("precio"));
             Articulo a = new Articulo(request.getParameter("codigo"),
                     precio, activo, ud);
-            Integer result;
+            Integer result = -1;
             Boolean exite = aDAO.existeArticulo(a);
             if (exite == null) {
                 return null;
-            } else if (exite) {
-                result = -1;
-            } else {
+            } else if (!exite) {
+                String titulo = request.getParameter("titulo");
+                Integer anho = Integer.parseInt(request.getParameter("anho"));
+                String imagen = request.getParameter("imagen");
+                Pelicula p = new Pelicula(titulo, anho, imagen);
+                p.setPaises(new ArrayList<String>(Arrays.asList(request.getParameterValues("paises"))));
+                p.setGeneros(new ArrayList<String>(Arrays.asList(request.getParameterValues("generos"))));
+                String[] actores= request.getParameterValues("actores");
+                if(actores != null){
+                    for(int i=0; i<actores.length; i++){
+                        p.getActores().add(new ActorDirector(actores[i]));
+                    }
+                }
+                String[] directores= request.getParameterValues("directores");
+                if(directores != null){
+                    for(int i=0; i<directores.length; i++){
+                        p.getDirectores().add(new ActorDirector(directores[i]));
+                    }
+                }
+                int movieId = pDAO.insertarPelicula(p);
+                if(movieId == -1) return -3;
+                p.setId(movieId);
+                a.setPelicula(p);
                 Boolean result1 = aDAO.insertarArticulo(a);
                 if (result1 == null) {
                     return null;
@@ -114,7 +164,7 @@ public class ArticuloHelper {
         String titulo = request.getParameter("titulo");
         Float precioMaximo=null;
         try{
-        	precioMaximo=Float.parseFloat(request.getParameter("precioMaximo"));
+                    precioMaximo=Float.parseFloat(request.getParameter("precioMaximo"));
         }catch(Exception e){ }
         session.setAttribute("anho", anho);
         session.setAttribute("titulo", titulo);
