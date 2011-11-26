@@ -21,7 +21,7 @@
             </c:when>
             <c:otherwise>
                 <h2>Lista de usuarios</h2>
-                <div id="lista">
+                <div class="lista">
                     
                     <div id="centrar">
                         

@@ -102,10 +102,7 @@ a:hover, input.enlace:hover{
     border:2px solid #314E89;
     padding:10px;
 }*/
-/*listaUsuarios.js*/
-#lista{
-    text-align:center;
-}
+
 
 .centrar{
     margin:0px auto;
@@ -115,25 +112,22 @@ a:hover, input.enlace:hover{
     background-color:#ddd;
 }
 
-#lista table, #lista h3{
+/*listaUsuarios.js*/
+.lista{
+    text-align:center;
+}
+
+.lista table, .lista h3{
     width:80%;
     margin:0px auto;
     margin-top:10px;
 }
 
-#lista th{
-    width:10%;
-    border-bottom:1px solid rgb(76,76,76);
-    
+.lista th.text, .lista td.text{
+    width:20%;
 }
 
-#lista th.text{
-    width:25%;
-    border-bottom:1px solid rgb(76,76,76);
-    
-}
-
-#lista td{
+.lista td, .lista th{
     border-bottom:1px solid rgb(76,76,76);
 }
 
@@ -157,7 +151,6 @@ a:hover, input.enlace:hover{
 
 #edit input.size{
     width: 350px;
-    font-size: smaller;
 }
 
 #cntButons {
@@ -169,6 +162,15 @@ a:hover, input.enlace:hover{
     text-align: center;
 }
 
+#edit #txtTitulo{
+    width: 200px;
+}
+
+#edit #txtCover{
+    width: 390px;
+    max-width: 390px;
+    min-width: 390px;
+}
 
 ul.cntElementos{
   padding: 3px; 
@@ -206,14 +208,4 @@ ul.cntElementos li.eliminado{
     border-radius: 4px;
     padding: 2px;
     
-}
-
-#edit #txtTitulo{
-    width: 200px;
-}
-
-#edit #txtCover{
-    width: 390px;
-    max-width: 390px;
-    min-width: 390px;
 }

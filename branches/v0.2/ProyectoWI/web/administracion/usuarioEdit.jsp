@@ -20,17 +20,15 @@
         <%@ include file="menu.jsp"%>
         
         <h2>Administración: Editar Usuario <c:out value="${usuarioE.nombre}"/></h2>
-        <div id="lista">
-
-            <div id="centrar">
+        <div class="lista">
+            <div class="centrar" id="edit">
                 <div id="comentario"><span><c:out value="${comentario}"/></span></div>
                 <form method="post" name="formulario" action="controladorAdmin?action=modificarUsuario">
                     <input type="hidden" name="idUsuario" value="${usuarioE.idUsuario}"/>
                     <input type="hidden" name="idDireccion" value="${usuarioE.direccion.idDireccion}"/>
                     <input type="hidden" name="pagina" value="${pagina}"/>
-                    <table id="edit">
-                        <tr >
-
+                    <table>
+                        <tr>
                             <td class="resaltarCelda cab">Nombre:</td>
                             <td><input class="size" type="text" name="nombre" value="${usuarioE.nombre}">*</td>
                         </tr>
@@ -83,7 +81,6 @@
                                 </select>
                             </td>
                         </tr>
-                        
                         <tr>
                             <td class="resaltarCelda cab">Direccion:</td>
                             <td><input class="size" type="text" name="direccion" value="${usuarioE.direccion.direccion}"></td>
@@ -100,15 +97,12 @@
                             <td class="resaltarCelda cab">CP:</td>
                             <td><input type="text" name="cp" value="${usuarioE.direccion.cp}"></td>
                         </tr>
-                        <tr>
-                            <td></td>
-                            <td>
-                                <input type="button" value="Cancelar" name="cancelar" onclick="ejecutarAccion(this,<c:out value='${pagina}'/>)">
-                                <input type="button" value="Guardar" name="guardar" onclick="ejecutarAccion(this,<c:out value='${pagina}'/>)">
-                            </td>
-                        </tr>
                     </table>
-                    * Los campos marcados con asterisco son obligatorios.
+                    <p class="footer">* Los campos marcados con asterisco son obligatorios.</p>
+                    <div id="cntButons">
+                        <input type="button" value="Cancelar" name="cancelar" onclick="ejecutarAccion(this,<c:out value='${pagina}'/>)">
+                        <input type="button" value="Guardar" name="guardar" onclick="ejecutarAccion(this,<c:out value='${pagina}'/>)">
+                    </div>
                 </form>
             </div>
         </div>

@@ -31,6 +31,12 @@
 		<!--script type="text/javascript" src="script/animation/animation-min.js"></script-->
 		<script type="text/javascript" src="script/rating.js"></script>
         <!-- Fin de scripts de YUI -->
+        <script type="application/x-javascript">
+            $(document).ready(function(){
+                    var a = "${mensaje}";
+                    if(a.length > 0) alert("${mensaje}");
+            });
+        </script>
     </head>
 
     <body>
@@ -39,15 +45,15 @@
                 <div class="cntIzquierda">
                     <c:choose>
                         <c:when test="${empty articulo.pelicula.imagen}">
-                            <img class="cover" src="img/caratula.png"/>
+                            <img class="cover2" src="img/caratula.png"/>
                         </c:when>
                         <c:otherwise>
-                            <img class="cover" src="${articulo.pelicula.imagen}"/>
+                            <img class="cover2" src="${articulo.pelicula.imagen}"/>
                         </c:otherwise>
                     </c:choose>
                     <div class="cntPrecio">
                         <p><fmt:formatNumber pattern="$0.00" value="${articulo.precio}"/></span></p>
-                        <a href="javascript:void(0)" class="boton">Añadir al carrito</a>
+                        <a href="javascript:void(0)" class="boton activar" name="page=${param.page}&action=up&codigo=${articulo.codigoArticulo}" class="boton">Añadir al carrito</a>
                     </div> 
                 </div>
                 <div class="datos">

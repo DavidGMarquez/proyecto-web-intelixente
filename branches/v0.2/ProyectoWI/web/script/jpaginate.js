@@ -18,19 +18,18 @@ cookies = if you want to use cookies to remember which page the user is on, true
 
 */
 (function($){
-    $.fn.jPaginate = function(options) {
-        var defaults = {
+    $.fn.jPaginate = function(personalOptions) {
+        var options = {
             items: 6,
             next: "Siguiente",
             previous: "Anterior",
             active: "active",
             pagination_class: "pagination",
-            minimize: false,
-            nav_items: 6,
-			cookies: false
+            minimize: true,
+            nav_items: 5,
+            cookies: false
         };
-        var options = $.extend(defaults, options);
-
+        $.extend(options, personalOptions);
         return this.each(function() {
             // object is the selected pagination element list
             obj = $(this);
@@ -46,27 +45,26 @@ cookies = if you want to use cookies to remember which page the user is on, true
             var numP = 0;
             var nexP = show_per_page;
             //loop through all pages and assign elements into array
-            for (i=1;i<=number_of_pages;i++)
-            {    
+            for (i=1;i<=number_of_pages;i++) {    
                 array_of_elements[i] = obj.children().slice(numP, nexP);
                 numP += show_per_page;
                 nexP += show_per_page;
             }
             
             // display first page and set first cookie
-			if (options.cookies == true) {
-				if (get_cookie("current")) {
-					showPage(get_cookie("current"));
-					createPagination(get_cookie("current"));
-				} else {
-					set_cookie( "current", "1");
-					showPage(get_cookie("current"));
-					createPagination(get_cookie("current"));
-				}
-			} else {
-				showPage(1);
-				createPagination(1);
-			}
+            if (options.cookies == true) {
+                    if (get_cookie("current")) {
+                            showPage(get_cookie("current"));
+                            createPagination(get_cookie("current"));
+                    } else {
+                            set_cookie( "current", "1");
+                            showPage(get_cookie("current"));
+                            createPagination(get_cookie("current"));
+                    }
+            } else {
+                    showPage(1);
+                    createPagination(1);
+            }
             //show selected page
             function showPage(page) {
             	if(page==0) page=1;
@@ -83,34 +81,33 @@ cookies = if you want to use cookies to remember which page the user is on, true
 				var previous_inactive = "<li><a class='inactive'>"+options.previous+"</a></li>";
                 var next_inactive = "<li><a class='inactive'>"+options.next+"</a></li>";
                 end = "</ul>";
-                var after = number_of_pages - options.after + 1;
+                //var after = number_of_pages - options.after + 1;
                 var pagi_range = paginationCalculator(curr);
-				for (i=1;i<=number_of_pages;i++)
+		for (i=1;i<=number_of_pages;i++)
                 {
+                    var addNavItem = false;
                     if (options.minimize == true) {
-						var half = Math.ceil(number_of_pages/2);
+			var half = Math.ceil(number_of_pages/2);
                     	if (i >= pagi_range.start && i <= pagi_range.end) {
-							if (i == curr) { items += '<li><a class="'+options.active+'" title="'+i+'">'+i+'</a></li>';} 
-                        	else { items += '<li><a href="#" class="goto" title="'+i+'">'+i+'</a></li>';}
-						} else if (curr <= half) {
-							if (i >= (number_of_pages - 2)) {
-								if (i == curr) { items += '<li><a class="'+options.active+'" title="'+i+'">'+i+'</a></li>';} 
-                        		else { items += '<li><a href="#" class="goto" title="'+i+'">'+i+'</a></li>';}
-							} 
-						} else if (curr >= half) {
-							if (i <= 2) {
-								if (i == curr) { items += '<li><a class="'+options.active+'" title="'+i+'">'+i+'</a></li>';} 
-                        		else { items += '<li><a href="#" class="goto" title="'+i+'">'+i+'</a></li>';}
-							}
-						}
-                    } else {
-                        if (i == curr) { items += '<li><a class="'+options.active+'" title="'+i+'">'+i+'</a></li>';} 
-                        else { items += '<li><a href="#" class="goto" title="'+i+'">'+i+'</a></li>';}
+                            addNavItem = true;
+			} else if (curr <= half && i >= (number_of_pages - 2)) {
+                            addNavItem = true;
+                        } else if (curr >= half && i <= 2) {
+                            addNavItem = true;
+                        }
+                    }
+                    addNavItem = addNavItem || !options.minimize;
+                    if(addNavItem){
+                        if (i == curr) { 
+                            items += '<li><a class="'+options.active+'" title="'+i+'">'+i+'</a></li>';
+                        } else { 
+                            items += '<li><a href="#" class="goto" title="'+i+'">'+i+'</a></li>';
+                        }
                     }
                 }
-				if (number_of_pages == 1) {
-					nav = start + previous_inactive + items + next_inactive + end;
-				} else if (curr != 1 && curr != number_of_pages) {
+                if (number_of_pages == 1) {
+                    nav = start + previous_inactive + items + next_inactive + end;
+                } else if (curr != 1 && curr != number_of_pages) {
                     nav = start + previous + items + next + end;
                 } else if (curr == number_of_pages) {
                     nav = start + previous + items + next_inactive + end;
@@ -120,21 +117,21 @@ cookies = if you want to use cookies to remember which page the user is on, true
                 obj.after(nav);
             }
 			
-			/* code to handle cookies */
-			function set_cookie( name, value ) {		  
-			  $.cookie(name, value);
-			}
-			function get_cookie ( cookie_name )	{
-			 	return $.cookie(cookie_name);
-			}
-            
-			function paginationCalculator(curr)  {
-				var half = Math.floor(options.nav_items/2);
-				var upper_limit = number_of_pages - options.nav_items;
-				var start = curr > half ? Math.max( Math.min(curr - half, upper_limit), 0 ) : 0;
-				var end = curr > half?Math.min(curr + half + (options.nav_items % 2), number_of_pages):Math.min(options.nav_items, number_of_pages);
-				return {start:start, end:end};
-			}
+            /* code to handle cookies */
+            function set_cookie( name, value ) {		  
+              $.cookie(name, value);
+            }
+            function get_cookie ( cookie_name )	{
+                    return $.cookie(cookie_name);
+            }
+
+            function paginationCalculator(curr)  {
+                    var half = Math.floor(options.nav_items/2);
+                    var upper_limit = number_of_pages - options.nav_items;
+                    var start = curr > half ? Math.max( Math.min(curr - half, upper_limit), 0 ) : 0;
+                    var end = curr > half?Math.min(curr + half + (options.nav_items % 2), number_of_pages):Math.min(options.nav_items, number_of_pages);
+                    return {start:start, end:end};
+            }
 			
             // handle click on pagination 
             $(".goto").live("click", function(e){
