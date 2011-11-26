@@ -20,7 +20,6 @@ import tienda.Helpers.TiendaHelper;
 import tienda.Helpers.UsuarioHelper;
 import tienda.modelo.Articulo;
 import tienda.modelo.Direccion;
-import tienda.modelo.Pedido;
 import tienda.modelo.Comentarios;
 import tienda.modelo.Paquete3x2;
 import tienda.modelo.ShoppingCart;
@@ -43,41 +42,36 @@ public class Controlador extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, JspException {
         try {
-            dispatcher = null;
-            // Seteo las variables de la sesión
-
+            dispatcher = getServletContext().getRequestDispatcher("/index.jsp");
+            
             session = request.getSession(true);
-            session.removeAttribute("comentario");
+            
             usuario = (Usuario) session.getAttribute("usuario");
             cart = (ShoppingCart) session.getAttribute("cart");
             if (cart == null) {
                 cart = new ShoppingCart();
             }
             session.setAttribute("usuario", usuario);
+            if(usuario != null && usuario.getIdTipoUsuario() == 3){
+                cart.setDescuento(20);
+            }
             session.setAttribute("cart", cart);
-            session.setAttribute("mensaje", null);
 
             page = request.getParameter("page");
             action = request.getParameter("action");
             codigo = request.getParameter("codigo");
 
             th = new TiendaHelper(session);
-            catalogo = th.obtenerArticulos(usuario);
-
-            dispatcher = getServletContext().getRequestDispatcher("/index.jsp");
 
             if ("salir".equalsIgnoreCase(action)) {
                 session.invalidate();
                 usuario = null;
 
-            } else // Información de un articulo, con comentarios y valoraciones
-            if ("articulo".equalsIgnoreCase(page) && codigo != null) {
+            } // Información de un articulo, con comentarios y valoraciones
+            else  if ("articulo".equalsIgnoreCase(page) && codigo != null) {
+                System.out.println("Articulo");
                 dispatcher = getServletContext().getRequestDispatcher("/articulo.jsp");
-                if ("valorar".equalsIgnoreCase(action)) {
-                    ValoracionesDAO vd = new ValoracionesDAO();
-                    vd.insertar(usuario.getIdUsuario(), codigo, Integer.parseInt(request.getParameter("valoracion")));
-                }
-                
+
                 ArticuloHelper ah = new ArticuloHelper();
                 Articulo articulo = ah.findArticuloById(codigo);
                 session.setAttribute("articulo", articulo);
@@ -86,22 +80,22 @@ public class Controlador extends HttpServlet {
                     request.setAttribute("valoracionUsuario", new ValoracionesDAO().obtenerValoracionUsuarioArticulo(usuario.getIdUsuario(), codigo));
                 }
                 
-                /*Articulo articulo = null;
                 ComentariosDAO cd = new ComentariosDAO();
-                for (int i = 0; i < catalogo.size(); i++) {
-                    if (codigo.equalsIgnoreCase(catalogo.get(i).getCodigoArticulo())) {
-                        articulo = catalogo.get(i);
-                        request.setAttribute("valoracionGeneral", new ValoracionesDAO().obtenerValoracionGeneralArticulo(codigo));
-                        if (usuario != null) {
-                            request.setAttribute("valoracionUsuario", new ValoracionesDAO().obtenerValoracionUsuarioArticulo(usuario.getIdUsuario(), codigo));
-                        }
-                        session.setAttribute("articulo", articulo);
-                        break;
-                    }
-                }*/
+                ArrayList<Comentarios> comentarios = cd.findComentariosByCodigoArticulo(codigo);
+                if (comentarios != null) {
+                    request.setAttribute("comentarios", comentarios);
+                }
                 
-                ComentariosDAO cd = new ComentariosDAO();
-                if ("comentar".equalsIgnoreCase(action) && request.getParameter("comentario") != null) {
+                // Obtener dos artículos parecidos
+                ArticuloDAO aDAO = new ArticuloDAO();
+                List<Articulo> recomendaciones = aDAO.findArticulosByCluster(articulo.getCluster(), articulo.getCodigoArticulo(), 2, true, null);
+                session.setAttribute("recomendaciones", recomendaciones);
+                
+                if ("valorar".equalsIgnoreCase(action)) {
+                    ValoracionesDAO vd = new ValoracionesDAO();
+                    vd.insertar(usuario.getIdUsuario(), codigo, Integer.parseInt(request.getParameter("valoracion")));
+                } 
+                else if ("comentar".equalsIgnoreCase(action) && request.getParameter("comentario") != null) {
                     Comentarios c = new Comentarios();
                     c.setCodigoArticulo(articulo.getCodigoArticulo());
                     c.setComentario(request.getParameter("comentario"));
@@ -109,13 +103,7 @@ public class Controlador extends HttpServlet {
                     c.setNombreUsuario(usuario.getNombre());
                     cd.insertarComentario(c);
                 }
-
-                ArrayList<Comentarios> comentarios = cd.findComentariosByCodigoArticulo(codigo);
-                if (comentarios != null) {
-                    request.setAttribute("comentarios", comentarios);
-                }
-                
-                if ("oferta3x2".equalsIgnoreCase(action)){
+                else if ("oferta3x2".equalsIgnoreCase(action)){
                     ArrayList<Articulo> articulos = (ArrayList<Articulo>)session.getAttribute("recomendaciones");
                     articulos.add((Articulo)session.getAttribute("articulo"));
                     Paquete3x2 pack = new Paquete3x2(articulos);
@@ -124,15 +112,22 @@ public class Controlador extends HttpServlet {
                         request.setAttribute("mensaje", "No se han podido añadir los artículos por falta de stock");
                     }else{
                         session.setAttribute("cart", cart);
+                        request.setAttribute("mensaje", "Se ha añadido el pack 3x2 al carrito.");
                     }
+                }else if ("up".equalsIgnoreCase(action)){
+                    Articulo a = (Articulo) session.getAttribute("articulo");
+                    if (!cart.up(a)) {
+                        request.setAttribute("mensaje", "No se pueden añadir más unidades de este producto por falta de stock.");
+                    }else{
+                        request.setAttribute("mensaje", "Se ha añadido el articulo al carrito");
+                        session.setAttribute("cart", cart);
+                    }
+                    return;
                 }
-
-                // Obtener dos artículos parecidos
-                ArticuloDAO aDAO = new ArticuloDAO();
-                List<Articulo> recomendaciones = aDAO.findArticulosByCluster(articulo.getCluster(), articulo.getCodigoArticulo(), 2, true, null);
-                session.setAttribute("recomendaciones", recomendaciones);
+                
             } // Identigicación de usuario
             else if ("usuario".equalsIgnoreCase(page)) {
+                System.out.println("Usuario");
                 UsuarioHelper uh = new UsuarioHelper();
 
                 if (usuario != null) {
@@ -153,7 +148,7 @@ public class Controlador extends HttpServlet {
                             dispatcher = getServletContext().getRequestDispatcher("/usuario.jsp?action=ver");
                         }
                     } else {
-                        session.setAttribute("mensaje", "El usuario que ha introducido no existe.");
+                        request.setAttribute("mensaje", "El usuario que ha introducido no existe.");
                         dispatcher = getServletContext().getRequestDispatcher("/usuario.jsp?action=logueo");
                     }
                 } else if ("registro".equalsIgnoreCase(action)) {
@@ -179,7 +174,15 @@ public class Controlador extends HttpServlet {
                     dispatcher = getServletContext().getRequestDispatcher("/usuario.jsp?action=logueo");
                 }
             }
-            if (("tienda".equalsIgnoreCase(page)) || ("busca".equalsIgnoreCase(page))) {
+            else if ("tienda".equalsIgnoreCase(page) || "busca".equalsIgnoreCase(page)) {
+                if("busca".equalsIgnoreCase(page)){
+                    ArticuloHelper ah = new ArticuloHelper();
+                    catalogo = ah.filtrar(session, request);
+                }else{
+                    catalogo = th.obtenerArticulos();
+                }
+                session.setAttribute("catalogo", catalogo);
+                dispatcher = getServletContext().getRequestDispatcher("/tienda.jsp");
                 if ("pagar".equalsIgnoreCase(action)) {
                     //TiendaHelper th = new TiendaHelper(session);
                     Direccion d = new Direccion();
@@ -187,31 +190,18 @@ public class Controlador extends HttpServlet {
                     d.setLocalidad(request.getParameter("localidad"));
                     d.setProvincia(request.getParameter("provincia"));
                     d.setCp(request.getParameter("cp"));
-
                     Boolean correcto = th.pagar(d);
                     session.setAttribute("usuario", usuario);
                     if (correcto) {
-                        session.setAttribute("comentario", "Compra realizada con éxito");
-                        session.setAttribute("cart", new ShoppingCart());
+                        request.setAttribute("mensaje", "Compra realizada con éxito");
+                        cart.vaciar();
+                        session.setAttribute("cart", cart);
                     } else {
-                        session.setAttribute("comentario", "La compra no se puede realizar porque no hay stock de alguno de los artículos");
+                        request.setAttribute("mensaje", "La compra no se puede realizar porque no hay stock de alguno de los artículos");
                     }
                 }
-                if (catalogo.isEmpty()) {
-                    dispatcher = getServletContext().getRequestDispatcher("/index.jsp");
-                } else {
-                    dispatcher = getServletContext().getRequestDispatcher("/tienda.jsp");
-                    session.setAttribute("catalogo", catalogo);
-                    if ("pagar".equalsIgnoreCase(action)) {
-                        Direccion d = new Direccion();
-                        d.setDireccion(request.getParameter("calle"));
-                        d.setLocalidad(request.getParameter("localidad"));
-                        d.setProvincia(request.getParameter("provincia"));
-                        d.setCp(request.getParameter("cp"));
-                    }
+                if (!catalogo.isEmpty()) {
                     if (codigo != null) {
-                        Pedido dp = new Pedido();
-                        dp.getArticulo().setCodigoArticulo(codigo);
                         if ("up".equalsIgnoreCase(action)) {
                             for (int i = 0; i < catalogo.size(); i++) {
                                 if (catalogo.get(i).getCodigoArticulo().equalsIgnoreCase(codigo)) {
@@ -230,7 +220,6 @@ public class Controlador extends HttpServlet {
                                     break;
                                 }
                             }
-
                         } else if ("upPack".equalsIgnoreCase(action)) {
                             if(cart.upPaquete(codigo)){
                                 session.setAttribute("cart", cart);
@@ -244,18 +233,14 @@ public class Controlador extends HttpServlet {
                     }
                 }
             }
-            if ("busca".equalsIgnoreCase(page)) {
-                ArticuloHelper ah = new ArticuloHelper();
-                catalogo = ah.filtrar(session, request);
-                session.setAttribute("catalogo", catalogo);
-                dispatcher = getServletContext().getRequestDispatcher("/tienda.jsp");
-            }
-            if ("info".equalsIgnoreCase(page)) {
+            else if ("info".equalsIgnoreCase(page)) {
+                System.out.println("Info");
                 dispatcher = getServletContext().getRequestDispatcher("/info.jsp");
             }
 
         } catch (Exception e) {
             System.out.println("Controlador. Excepcion. " + e.getLocalizedMessage());
+            request.setAttribute("mensaje", "Ha sucedido un error");
             dispatcher = getServletContext().getRequestDispatcher("/index.jsp");
         } finally {
             dispatcher.forward(request, response);
