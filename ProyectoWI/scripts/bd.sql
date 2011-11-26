@@ -30,8 +30,8 @@ CREATE TABLE IF NOT EXISTS `articulos` (
   `idArticulo` int(10) NOT NULL AUTO_INCREMENT,
   `codigoArticulo` varchar(15) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `precio` decimal(10,2) NOT NULL,
-  `unidades` int(11) NOT NULL,
-  `activo` tinyint(1) NOT NULL,
+  `unidades` int(11) NOT NULL DEFAULT '0',
+  `activo` tinyint(1) NOT NULL DEFAULT '0',
   `idPelicula` int(11) NOT NULL,
   `idCluster` MEDIUMINT(5) NOT NULL DEFAULT '0',
   PRIMARY KEY (`idArticulo`),
@@ -155,7 +155,7 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `activo` tinyint(1) NOT NULL,
   `idTipoUsuario` int(11) NOT NULL,
   `idDireccion` int(11) NOT NULL,
-  `totalCompra` float NOT NULL,
+  `totalCompra` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`idUsuario`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
