@@ -129,6 +129,8 @@ for filename in filelist:
 # Valores para as propiedades dos artículos
 prefixCodigo = "pel"
 precio = 30
+unidades = 10
+activo = 1
 
 f = open(path + "movies.dat","r")          # ficheiro de lectura
 f.readline()                               # lemos a linea dos campos
@@ -137,7 +139,7 @@ print "Generating SQL truncate and insert for articulos"
 # Vacio la tabla
 out.write("\nTRUNCATE `articulos`;");
 # Creo la cabecera del insert
-out.write("\nINSERT INTO `articulos`(`codigoArticulo`,`precio`, `idPelicula`) VALUES ")
+out.write("\nINSERT INTO `articulos`(`codigoArticulo`,`precio`, `idPelicula`, `unidades`, `activo`) VALUES ")
 
 # XERAMOS OS INSERTS
 i = 0
@@ -147,7 +149,7 @@ for line in f:
                     out.write(",")
                 i=i+1  
                 idMovie, sep, tail = line.rstrip("\r\n").partition("\t")
-                out.write("\n('" + prefixCodigo + str(i) + "', " + str(precio) + ", " + idMovie + ")")
+                out.write("\n('" + prefixCodigo + str(i) + "', " + str(precio) + ", " + idMovie + ", " + str(unidades) + ", " + str(activo) + ")")
         else:
                 out.write(";")
                 break
