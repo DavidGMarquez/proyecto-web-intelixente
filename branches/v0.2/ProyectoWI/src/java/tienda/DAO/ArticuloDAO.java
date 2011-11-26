@@ -18,7 +18,7 @@ import tienda.modelo.Pelicula;
 /**
  * En algunas consultas se usará la vista articulos_movies
  * SELECT a.codigoArticulo, a.precio, a.unidades, 
- *  a.activo, a.idPelicula, idCluster, title as titulo, 
+ *  a.activo, a.idPelicula, idCluster, spanishTitle as titulo, 
  *  imdbPictureURL as imagen, year as anho "
  * FROM `articulos` a,`movies` m 
  * @author Vanesa
@@ -35,18 +35,15 @@ public class ArticuloDAO {
     public List<Articulo> findArticulos(boolean filtrarActivos, String condicion) {
         List<Articulo> l = new ArrayList<Articulo>();
         try {
-            
             conexion = m.obtenerConexionDAWA();
             Statement sentenciaSQL = conexion.createStatement();
-            // TODO : PROBAR consulta
-            if(condicion == null) condicion = "";
-            condicion += (condicion.isEmpty()? " WHERE ": " AND ") + " a.idPelicula = m.id ";
+            String query = "SELECT a.codigoArticulo, a.precio, a.unidades, a.activo, a.idPelicula, idCluster, spanishTitle as titulo, imdbPictureURL as imagen, year as anho "
+                    + " FROM `articulos` a,`movies` m "
+                    + " WHERE a.idPelicula = m.id ";
             if(filtrarActivos){
-                condicion += " AND a.activo = 1 AND a.unidades > 0";
+                query += " AND a.activo = 1 AND a.unidades > 0";
             }
-            String query = "SELECT a.codigoArticulo, a.precio, a.unidades, a.activo, a.idPelicula, idCluster, title as titulo, imdbPictureURL as imagen, year as anho "
-                    + "FROM `articulos` a,`movies` m "
-                    + condicion;
+            if (condicion !=null) query += condicion;
             System.out.println("ArticuloDAO:" + query);
             ResultSet consulta = sentenciaSQL.executeQuery(query);
             while (consulta.next()) {
@@ -79,45 +76,16 @@ public class ArticuloDAO {
      * @return 
      */
     public List<Articulo> findArticulosByCluster(int clusterId, String codigoArticulo, Integer maxElementos, boolean filtrarActivos, String condicion){
-        List<Articulo> l = new ArrayList<Articulo>();
-        try {
-            conexion = m.obtenerConexionDAWA();
-            Statement sentenciaSQL = conexion.createStatement();
             if(condicion == null) condicion = "";
-            condicion += (condicion.isEmpty()? " WHERE ": " AND ") + " a.idPelicula = m.id ";
+            condicion += " AND a.idCluster = " + clusterId;
             if(codigoArticulo != null && !codigoArticulo.isEmpty()){
                 condicion += " AND a.codigoArticulo NOT LIKE '" + codigoArticulo + "' ";
-            }
-            if(filtrarActivos){
-                condicion += " AND a.activo = 1 AND a.unidades > 0";
             }
             condicion += " ORDER BY rand() ";
             if(maxElementos != null && maxElementos>0){
                 condicion += " LIMIT 0 , " + maxElementos;
             }
-            String query = "SELECT a.codigoArticulo, a.precio, a.unidades, a.activo, a.idPelicula, idCluster, title as titulo, imdbPictureURL as imagen, year as anho "
-                    + "FROM `articulos` a,`movies` m "
-                    + condicion;
-            System.out.println("ArticuloDAO:" + query);
-            ResultSet consulta = sentenciaSQL.executeQuery(query);
-            while (consulta.next()) {
-                // TODO: obtener otros datos de la película si es necesario en la pagina web
-                Pelicula p = new Pelicula(consulta.getInt("idPelicula"),
-                        consulta.getString("titulo"),
-                        consulta.getInt("anho"),
-                        consulta.getString("imagen"));
-                Articulo a = new Articulo(consulta.getString("codigoArticulo"), 
-                        consulta.getFloat("precio"), consulta.getBoolean("activo"), 
-                        consulta.getInt("unidades"), consulta.getInt("idCluster"), p);
-                l.add(a);
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(ArticuloDAO.class.getName()).log(Level.SEVERE, null, ex);
-            
-        } finally {
-            m.cerrarConexion(conexion);
-        }
-        return l;
+            return findArticulos(filtrarActivos, condicion);
     }
     
     public Articulo findArticuloById(String idArticulo){
@@ -127,51 +95,56 @@ public class ArticuloDAO {
     //TODO: PROBAR Y COMPLETAR
     public Articulo findArticuloById(String idArticulo, boolean conActores, 
             boolean conDirectores, boolean conGeneros, boolean conPaises ) {
-        try {
-            conexion = m.obtenerConexionDAWA();
-            Statement sentenciaSQL = conexion.createStatement();
-            //Obtengo la lista de Articulos
-            // TODO : probar consulta
-            //query = "SELECT * FROM articulos where codigoArticulo='" + idArticulo + "'";
-            String query = "SELECT a.codigoArticulo, a.precio, a.unidades, a.activo, a.idPelicula, idCluster, title as titulo, imdbPictureURL as imagen, year as anho "
-                    + "FROM `articulos` a,`movies` m WHERE codigoArticulo ='" + idArticulo + "' AND a.idPelicula = m.id";
-            ResultSet consulta = sentenciaSQL.executeQuery(query);
-            Articulo u = null;
-            if (consulta.next());
-            {
-                // TODO: obtener otros datos de la película si es necesario
-                Pelicula p = new Pelicula(consulta.getInt("idPelicula"),
-                        consulta.getString("titulo"),
-                        consulta.getInt("anho"),
-                        consulta.getString("imagen"));
-                u = new Articulo(consulta.getString("codigoArticulo"),
-                        consulta.getFloat("precio"),
-                        consulta.getBoolean("activo"),
-                        consulta.getInt("unidades"), consulta.getInt("idCluster"),  p);
-                Integer movieID = p.getId();
+            String condicion = " AND codigoArticulo ='" + idArticulo + "'";
+            Articulo a = findArticulos(false, condicion).get(0);
+            int movieID = a.getPelicula().getId();
+            if(conActores || conDirectores || conGeneros || conPaises){
                 PeliculasDAO peliDAO = new PeliculasDAO();
                 if(conDirectores){
-                    p.setDirectores(peliDAO.getDirectores(movieID));
+                    a.getPelicula().setDirectores(peliDAO.getDirectores(movieID));
                 }
                 if(conActores){
-                    p.setActores(peliDAO.getActores(movieID));
+                    a.getPelicula().setActores(peliDAO.getActores(movieID));
                 }
                 if(conGeneros){
-                    p.setGeneros(peliDAO.getGeneros(movieID));
+                    a.getPelicula().setGeneros(peliDAO.getGeneros(movieID));
                 }
                 if(conPaises){
-                    p.setPaises(peliDAO.getPaises(movieID));
+                    a.getPelicula().setPaises(peliDAO.getPaises(movieID));
                 }
             }
-            return u;
-        } catch (Exception ex) {
-            Logger.getLogger(ArticuloDAO.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        } finally {
-            m.cerrarConexion(conexion);
-        }
+            return a;
     }
 
+    public List<Articulo> findArticulosFiltrados(String anho, Float precioMaximo, String titulo){
+    	boolean filtrarAnho = anho!=null && !anho.isEmpty();
+    	boolean filtrarPM = precioMaximo!=null;
+    	boolean filtrarTitulo = titulo!=null && !titulo.isEmpty();
+    	return findArticulosFiltrados(anho, filtrarAnho, precioMaximo, filtrarPM, titulo, filtrarTitulo);
+    }
+    
+    
+    public List<Articulo> findArticulosFiltrados(String anho, Boolean filtrarAnho,
+            Float precioMaximo, Boolean filtrarPM, String titulo, Boolean filtrarTitulo) {
+        String condicion = "";
+
+        if (filtrarAnho && !anho.isEmpty()) {
+            condicion += " AND year=" + anho;
+        }
+
+        if (filtrarPM) {
+            condicion += " AND precio<=" + precioMaximo;
+        }
+
+        if (filtrarTitulo && !titulo.isEmpty()) {
+            condicion += " AND spanishTitle like '%" + titulo + "%'";
+        }
+
+        return findArticulos(true, condicion);
+
+    }
+    
+    
     // actualizada
     public Boolean existeArticulo(Articulo a) {
         try {
@@ -265,36 +238,8 @@ public class ArticuloDAO {
             m.cerrarConexion(conexion);
         }
     }
-
-    public List<Articulo> findArticulosFiltrados(String anho, Float precioMaximo, String titulo){
-    	boolean filtrarAnho = anho!=null && !anho.isEmpty();
-    	boolean filtrarPM = precioMaximo!=null;
-    	boolean filtrarTitulo = titulo!=null && !titulo.isEmpty();
-    	return findArticulosFiltrados(anho, filtrarAnho, precioMaximo, filtrarPM, titulo, filtrarTitulo);
-    }
     
-    
-    public List<Articulo> findArticulosFiltrados(String anho, Boolean filtrarAnho,
-            Float precioMaximo, Boolean filtrarPM, String titulo, Boolean filtrarTitulo) {
-        String condicion = "";
-
-        if (filtrarAnho && !anho.isEmpty()) {
-            condicion += (condicion.isEmpty()? " where " : " and ") + " year=" + anho;
-        }
-
-        if (filtrarPM) {
-            condicion += (condicion.isEmpty()? " where " : " and ") + " precio<=" + precioMaximo;
-        }
-
-        if (filtrarTitulo && !titulo.isEmpty()) {
-        	condicion += (condicion.isEmpty()? " where " : " and ") + " title like '%" + titulo + "%'";
-        }
-
-        return findArticulos(true, condicion);
-
-    }
-
-    // actualizada
+        // actualizada
     public void modificarUnidades(Articulo a) {
         try {
             conexion = m.obtenerConexionDAWA();
@@ -309,7 +254,6 @@ public class ArticuloDAO {
         }
     }
 
-    
     // actualizada
     public Boolean compruebaStock(Pedido a) {
         try {

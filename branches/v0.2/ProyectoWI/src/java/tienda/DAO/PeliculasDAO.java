@@ -26,80 +26,7 @@ public class PeliculasDAO
     String query;*/
     MySQLMetodos m = new MySQLMetodos();
     
-    //TODO Probar y completar
-    /**
-     * 
-     * @param p - el objeto con la pelicula que queremos insertar
-     * @return  código de la película en la base de datos si todo ha sido
-     * corecto, o -1 si algo ha fallado.
-     */
-    public int insertarPelicula(Pelicula p)
-    {
-        try 
-        {
-            conexion = m.obtenerConexionDAWA();
-            Statement sentenciaSQL = conexion.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            //TODO corregir este insert para introducir articulos y peliculas
-            conexion.setAutoCommit(false);
-            String query = "INSERT INTO `movies` (`title`, `year`, `imdbPictureURL`)" 
-                    + " VALUES ('" + p.getTitulo() + "', " + p.getAnho() + ", '"+ p.getImagen() + "');\n";
-            System.out.println(query);
-            sentenciaSQL.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
-            ResultSet consulta = sentenciaSQL.getGeneratedKeys();
-            consulta.next();
-            Integer movieID = new Integer(consulta.getInt(1));
-            //Actores
-            for(int i=0; i<p.getActores().size(); i++){
-                ActorDirector actor = p.getActores().get(i);
-                query = "INSERT INTO `movie_actors`(`movieID`, `actorID`,`actorName`) "
-                        + "VALUES ('" + movieID + "', '" + actor.getId() + "', '" + actor.getNombre() + "');\n";
-                System.out.println(query);
-                sentenciaSQL.executeUpdate(query);
-            }
-            //Directores
-            for(int i=0; i<p.getDirectores().size(); i++){
-                ActorDirector director = p.getDirectores().get(i);
-                query = "INSERT INTO `movie_directors`(`movieID`, `directorID`,`directorName`) "
-                        + "VALUES ('" + movieID + "', '" + director.getId() + "', '" + director.getNombre() + "');\n";
-                System.out.println(query);
-                sentenciaSQL.executeUpdate(query);
-            }
-            //Paises
-            for(int i=0; i<p.getPaises().size(); i++){
-                String pais = p.getPaises().get(i);
-                query = "INSERT INTO `movie_countries`(`movieID`, `country`) "
-                        + "VALUES ('" + movieID + "', '" + pais + "');\n";
-                System.out.println(query);
-                sentenciaSQL.executeUpdate(query);
-            }
-            //Generos
-            for(int i=0; i<p.getGeneros().size(); i++){
-                String genero = p.getGeneros().get(i);
-                query = "INSERT INTO `movie_genres`(`movieID`, `genre`) "
-                        + "VALUES ('" + movieID + "', '" + genero + "');\n";
-                System.out.println(query);
-                sentenciaSQL.executeUpdate(query);
-            }
-            
-            conexion.commit();
-            return movieID;
-        }
-        catch (Exception ex)
-        {
-            Logger.getLogger(PeliculasDAO.class.getName()).log(Level.SEVERE, null, ex);
-            try{
-                conexion.rollback();
-            }catch(SQLException ex2){
-                Logger.getLogger(PeliculasDAO.class.getName()).log(Level.SEVERE, null, ex2);
-            }
-            return -1;
-        }
-        finally
-        {
-            m.cerrarConexion(conexion);
-        }
-    }
-    
+
     public ArrayList<ActorDirector> getDirectores(){
         return getDirectores(null);
     }
@@ -209,5 +136,128 @@ public class PeliculasDAO
             m.cerrarConexion(conexion);
         }
         return resultado;
+    }
+
+    
+    public void eliminarOtrosDatos(int movieID, Statement sentenciaSQL) throws SQLException{
+        String query;
+        //Actores
+        query = "DELETE FROM `movie_actors` WHERE `movieID` = " + movieID; 
+        System.out.println("PeliculasDAO: " + query);
+        sentenciaSQL.executeUpdate(query);
+        //Directores
+        query = "DELETE FROM `movie_directors` WHERE `movieID` = " + movieID; 
+        System.out.println("PeliculasDAO: " + query);
+        sentenciaSQL.executeUpdate(query);
+        //Generos
+        query = "DELETE FROM `movie_genres` WHERE `movieID` = " + movieID; 
+        System.out.println("PeliculasDAO: " + query);
+        sentenciaSQL.executeUpdate(query);
+        //Paises
+        query = "DELETE FROM `movie_countries` WHERE `movieID` = " + movieID; 
+        System.out.println("PeliculasDAO: " + query);
+        sentenciaSQL.executeUpdate(query);
+        
+    }
+    
+    public void anhadirOtrosDatos(Pelicula p, Statement sentenciaSQL) throws SQLException{
+        String query;
+        int movieID = p.getId();
+        //Actores
+            for(int i=0; i<p.getActores().size(); i++){
+                ActorDirector actor = p.getActores().get(i);
+                query = "INSERT INTO `movie_actors`(`movieID`, `actorID`,`actorName`) "
+                        + "VALUES ('" + movieID + "', '" + actor.getId() + "', '" + actor.getNombre() + "');\n";
+                System.out.println("PeliculasDAO: " + query);
+                sentenciaSQL.executeUpdate(query);
+            }
+            //Directores
+            for(int i=0; i<p.getDirectores().size(); i++){
+                ActorDirector director = p.getDirectores().get(i);
+                query = "INSERT INTO `movie_directors`(`movieID`, `directorID`,`directorName`) "
+                        + "VALUES ('" + movieID + "', '" + director.getId() + "', '" + director.getNombre() + "');\n";
+                System.out.println("PeliculasDAO: " + query);
+                sentenciaSQL.executeUpdate(query);
+            }
+            //Paises
+            for(int i=0; i<p.getPaises().size(); i++){
+                String pais = p.getPaises().get(i);
+                query = "INSERT INTO `movie_countries`(`movieID`, `country`) "
+                        + "VALUES ('" + movieID + "', '" + pais + "');\n";
+                System.out.println("PeliculasDAO: " + query);
+                sentenciaSQL.executeUpdate(query);
+            }
+            //Generos
+            for(int i=0; i<p.getGeneros().size(); i++){
+                String genero = p.getGeneros().get(i);
+                query = "INSERT INTO `movie_genres`(`movieID`, `genre`) "
+                        + "VALUES ('" + movieID + "', '" + genero + "');\n";
+                System.out.println("PeliculasDAO: " + query);
+                sentenciaSQL.executeUpdate(query);
+            }
+    }
+    
+    public boolean modificarPelicula(Pelicula p) {
+        try {
+            conexion = m.obtenerConexionDAWA();
+            Statement sentenciaSQL = conexion.createStatement();
+            String query = "UPDATE movies "
+                    + "set spanishTitle='" + p.getTitulo() + "'"
+                    + ",imdbPictureURL='" + p.getImagen() + "'"
+                    + ",year=" + p.getAnho()
+                    + " where id=" + p.getId() + "";
+            sentenciaSQL.executeUpdate(query);
+            eliminarOtrosDatos(p.getId(), sentenciaSQL);
+            anhadirOtrosDatos(p, sentenciaSQL);
+            return true;
+        } catch (Exception ex) {
+            Logger.getLogger(ArticuloDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        } finally {
+            m.cerrarConexion(conexion);
+        }
+    }
+    
+    //TODO Probar y completar
+    /**
+     * 
+     * @param p - el objeto con la pelicula que queremos insertar
+     * @return  código de la película en la base de datos si todo ha sido
+     * corecto, o -1 si algo ha fallado.
+     */
+    public int insertarPelicula(Pelicula p)
+    {
+        try 
+        {
+            conexion = m.obtenerConexionDAWA();
+            Statement sentenciaSQL = conexion.createStatement();
+            //TODO corregir este insert para introducir articulos y peliculas
+            conexion.setAutoCommit(false);
+            String query = "INSERT INTO `movies` (`spanishTitle`, `year`, `imdbPictureURL`)" 
+                    + " VALUES ('" + p.getTitulo() + "', " + p.getAnho() + ", '"+ p.getImagen() + "');\n";
+            System.out.println("PeliculasDAO: " + query);
+            sentenciaSQL.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
+            ResultSet consulta = sentenciaSQL.getGeneratedKeys();
+            consulta.next();
+            Integer movieID = new Integer(consulta.getInt(1));
+            p.setId(movieID);
+            anhadirOtrosDatos(p, sentenciaSQL);
+            conexion.commit();
+            return movieID;
+        }
+        catch (Exception ex)
+        {
+            Logger.getLogger(PeliculasDAO.class.getName()).log(Level.SEVERE, null, ex);
+            try{
+                conexion.rollback();
+            }catch(SQLException ex2){
+                Logger.getLogger(PeliculasDAO.class.getName()).log(Level.SEVERE, null, ex2);
+            }
+            return -1;
+        }
+        finally
+        {
+            m.cerrarConexion(conexion);
+        }
     }
 }
