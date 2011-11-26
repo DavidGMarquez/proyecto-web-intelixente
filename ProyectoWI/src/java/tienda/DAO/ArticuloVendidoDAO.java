@@ -36,7 +36,7 @@ public class ArticuloVendidoDAO
             conexion = m.obtenerConexionDAWA();
             sentenciaSQL = conexion.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             query = "INSERT INTO `articulovendido` (`idVenta`, `codigo`, `unidades`, `costeUnidad`)" 
-                    + "VALUES ('" + idVenta + "', '" + a.getArticulo().getCodigoArticulo() + "', '" + a.getCantidad() + "', '" + a.getArticulo().getPrecio() + "')";
+                    + "VALUES ('" + idVenta + "', '" + a.getArticulo().getCodigoArticulo() + "', '" + a.getCantidad() + "', '" + precio + "')";
             sentenciaSQL.executeUpdate(query);
         }
         catch (Exception ex)
