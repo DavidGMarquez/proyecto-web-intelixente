@@ -9,7 +9,10 @@ public class ShoppingCart
     //private ArrayList<Paquete3x2> paquetes;
     private HashMap<String, Paquete3x2> paquetes;
     private double precioTotal;
-    private int descuento=0;
+    /**
+     * Descuento en porcentaje (ej. descuento=20 es un 20%)
+     */
+    private int descuentoPorcentaje=0;
 
     public ShoppingCart()
     {
@@ -18,10 +21,14 @@ public class ShoppingCart
         paquetes = new HashMap<String, Paquete3x2>();
     }
     
-    public void setDescuento(int descuento){
-        if(descuento >= 0 && descuento <= 100){
-            this.descuento = descuento;
+    public void setDescuento(int descuentoPorcentaje){
+        if(descuentoPorcentaje >= 0 && descuentoPorcentaje <= 100){
+            this.descuentoPorcentaje = descuentoPorcentaje;
         }
+    }
+    
+    public int getDescuentoPorcentaje(){
+        return descuentoPorcentaje;
     }
     
     public synchronized boolean upPaquete(String codigoPaquete){
@@ -135,7 +142,7 @@ public class ShoppingCart
         for (int i = 0; i < paquetesArray.size(); i++) {
             precioTotal += paquetesArray.get(i).getTotal();
         }
-        return (Double) precioTotal * (1 - descuento/100);
+        return (Double) precioTotal;
     }
     
     private double getDescuentoPacks(){
@@ -148,11 +155,11 @@ public class ShoppingCart
     }
 
     public double getPrecioTotal() {
-        return getPrecioTotalSinDescuento() * (1 - descuento/100);
+        return getPrecioTotalSinDescuento() * (1 - (float)descuentoPorcentaje/100);
     }
     
     public double getDescuento(){
-        return getDescuentoPacks() + getPrecioTotalSinDescuento()*descuento/100;
+        return getDescuentoPacks() + getPrecioTotalSinDescuento()*(float)descuentoPorcentaje/100;
     }
     
     public double getSubtotal(){
