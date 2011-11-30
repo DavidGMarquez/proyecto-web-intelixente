@@ -21,7 +21,7 @@ import tienda.modelo.Pelicula;
  *
  * @author Vanesa
  */
-public class ArticuloHelper {
+public class ArticuloHelper extends AbstractHelper {
 
     ArticuloDAO aDAO = new ArticuloDAO();
     PeliculasDAO pDAO = new PeliculasDAO();
@@ -35,7 +35,6 @@ public class ArticuloHelper {
         session.setAttribute("Articulos", l);
 
         //Calculos para la paginaci�n
-        Integer registros = 4;
         Integer paginas = l.size() / registros;
         if (l.size() % registros > 0) {
             paginas = paginas + 1;
@@ -164,11 +163,14 @@ public class ArticuloHelper {
         String titulo = request.getParameter("titulo");
         Float precioMaximo=null;
         try{
-                    precioMaximo=Float.parseFloat(request.getParameter("precioMaximo"));
+            precioMaximo=Float.parseFloat(request.getParameter("precioMaximo"));
         }catch(Exception e){ }
+        Integer tipo = null;
+        if(request.getParameter("tipo")!=null)
+            tipo = new Integer(request.getParameter("tipo"));
         session.setAttribute("anho", anho);
         session.setAttribute("titulo", titulo);
         session.setAttribute("precioMaximo", precioMaximo);
-        return aDAO.findArticulosFiltrados(anho, precioMaximo, titulo);
+        return aDAO.findArticulosFiltrados(anho, precioMaximo, titulo, tipo);
     }
 }
