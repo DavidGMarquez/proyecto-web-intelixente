@@ -15,9 +15,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
+import tienda.DAO.PeliculasDAO;
+import tienda.DAO.UsuarioDAO;
 import tienda.Helpers.ArticuloHelper;
 import tienda.Helpers.PeliculaHelper;
 import tienda.Helpers.UsuarioHelper;
+import tienda.Helpers.ValoracionHelper;
 import tienda.modelo.Articulo;
 import tienda.modelo.TipoUsuario;
 import tienda.modelo.Usuario;
@@ -48,10 +51,11 @@ public class ControladorAdmin extends HttpServlet {
             try {
                 session.setAttribute("usuario", usu);
                 String action = request.getParameter("action");
+                System.out.println("action = " + action);
                 //Obtento el idUsuario
                 String idUsuarioS = request.getParameter("idUsuario");
                 Integer idUsuario = null;
-                if (idUsuarioS != null) {
+                if (idUsuarioS != null && !idUsuarioS.isEmpty()) {
                     idUsuario = Integer.parseInt(idUsuarioS.trim());
                 }
 
@@ -66,20 +70,28 @@ public class ControladorAdmin extends HttpServlet {
                 } else {
                     pagina = Integer.parseInt(paginaS);
                 }
-
-
                 session.setAttribute("pagina", pagina);
                 session.removeAttribute("comentario");
 
                 if (action == null) {
                     dispatcher = getServletContext().getRequestDispatcher("/administracion/index.jsp");
                     dispatcher.forward(request, response);
+                } else if("valoracionesIndex".equalsIgnoreCase(action)){
+                    if(session.getAttribute("listaSimpleUsuarios") == null){
+                        UsuarioDAO uDao = new UsuarioDAO();
+                        session.setAttribute("listaSimpleUsuarios",uDao.getListaUsuarios());
+                    }
+                    if(session.getAttribute("listaSimplePeliculas") == null){
+                        PeliculasDAO pDao = new PeliculasDAO();
+                        session.setAttribute("listaSimplePeliculas",pDao.getListaPeliculas());
+                    }
+                    dispatcher = getServletContext().getRequestDispatcher("/administracion/valoracionesIndex.jsp");
+                } else if("valoracionesLista".equalsIgnoreCase(action)){
+                    ValoracionHelper vh = new ValoracionHelper();
+                    vh.listaValoraciones(session, request);
+                    dispatcher = getServletContext().getRequestDispatcher("/administracion/valoracionesLista.jsp");
                 } else if ("usuariosIndex".equalsIgnoreCase(action)) {
-                    //UsuarioHelper uh = new UsuarioHelper();
-                    //List<Usuario> lista = uh.findUsuarios();
-                    //session.setAttribute("usuarios", lista);
                     dispatcher = getServletContext().getRequestDispatcher("/administracion/usuariosIndex.jsp");
-
                 } else if ("usuariosLista".equalsIgnoreCase(action)) {
                     UsuarioHelper uh = new UsuarioHelper();
                     session = uh.listaUsuarios(session, request);
@@ -87,7 +99,6 @@ public class ControladorAdmin extends HttpServlet {
                 } else if ("activarUsuario".equalsIgnoreCase(action) && idUsuario != null) {
                     UsuarioHelper uh = new UsuarioHelper();
                     uh.activarUsuario(idUsuario, Boolean.TRUE);
-
                     List<Usuario> lista = uh.findUsuarios();
                     session.setAttribute("usuarios", lista);
                     session.setAttribute("comentario", "El usuario ha sido activado");
@@ -95,12 +106,10 @@ public class ControladorAdmin extends HttpServlet {
                 } else if ("desactivarUsuario".equalsIgnoreCase(action) && idUsuario != null) {
                     UsuarioHelper uh = new UsuarioHelper();
                     uh.activarUsuario(idUsuario, Boolean.FALSE);
-
                     List<Usuario> lista = uh.findUsuarios();
                     session.setAttribute("usuarios", lista);
                     session.setAttribute("comentario", "El usuario ha sido desactivado");
                     dispatcher = getServletContext().getRequestDispatcher("/administracion/usuariosIndex.jsp");
-
                 } else if ("editarUsuario".equalsIgnoreCase(action)) {
                     UsuarioHelper uh = new UsuarioHelper();
                     Usuario u = uh.findUsuarioById(idUsuario);
@@ -110,7 +119,6 @@ public class ControladorAdmin extends HttpServlet {
                     dispatcher = getServletContext().getRequestDispatcher("/administracion/usuarioEdit.jsp");
                 } else if ("modificarUsuario".equalsIgnoreCase(action)) {
                     UsuarioHelper uh = new UsuarioHelper();
-
                     session = uh.modificarUsuario(session, request, idUsuario);
                     if (session != null) {
                         List<Usuario> lista = uh.findUsuarios();
@@ -153,7 +161,6 @@ public class ControladorAdmin extends HttpServlet {
                     List<TipoUsuario> tu = uh.findTiposUsuario();
                     session.setAttribute("tipos", tu);
                     dispatcher = getServletContext().getRequestDispatcher("/administracion/usuarioEdit.jsp");
-
                 } else if ("articulosIndex".equalsIgnoreCase(action)) {
                     dispatcher = getServletContext().getRequestDispatcher("/administracion/articulosIndex.jsp");
                 } else if ("articulosLista".equalsIgnoreCase(action)) {
@@ -244,6 +251,7 @@ public class ControladorAdmin extends HttpServlet {
                 }
 
             } catch (Exception e) {
+                e.printStackTrace();
                 dispatcher = getServletContext().getRequestDispatcher("/administracion/index.jsp");
             } finally {
                 dispatcher.forward(request, response);
