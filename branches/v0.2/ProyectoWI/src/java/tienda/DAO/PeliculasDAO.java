@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import tienda.modelo.ActorDirector;
 import tienda.modelo.Pelicula;
+import tienda.modelo.PeliculaSimple;
 
 /**
  *
@@ -55,11 +56,10 @@ public class PeliculasDAO
         return resultado;
     }
     
-    
     public ArrayList<ActorDirector> getActores(){
         return getActores(null);
-        
     }
+    
     public ArrayList<ActorDirector> getActores(Integer movieID){
         ArrayList<ActorDirector> resultado = new ArrayList<ActorDirector>();
         try {
@@ -138,7 +138,6 @@ public class PeliculasDAO
         return resultado;
     }
 
-    
     public void eliminarOtrosDatos(int movieID, Statement sentenciaSQL) throws SQLException{
         String query;
         //Actores
@@ -218,7 +217,6 @@ public class PeliculasDAO
         }
     }
     
-    //TODO Probar y completar
     /**
      * 
      * @param p - el objeto con la pelicula que queremos insertar
@@ -231,7 +229,6 @@ public class PeliculasDAO
         {
             conexion = m.obtenerConexionDAWA();
             Statement sentenciaSQL = conexion.createStatement();
-            //TODO corregir este insert para introducir articulos y peliculas
             conexion.setAutoCommit(false);
             String query = "INSERT INTO `movies` (`spanishTitle`, `year`, `imdbPictureURL`)" 
                     + " VALUES ('" + p.getTitulo() + "', " + p.getAnho() + ", '"+ p.getImagen() + "');\n";
@@ -260,4 +257,38 @@ public class PeliculasDAO
             m.cerrarConexion(conexion);
         }
     }
+
+    public ArrayList<PeliculaSimple> getListaPeliculas()
+    {
+        try {
+            ArrayList<PeliculaSimple> l = new ArrayList<PeliculaSimple>();
+            conexion = m.obtenerConexionDAWA();
+            Statement sentenciaSQL = conexion.createStatement();
+            //Obtengo la lista de usuarios
+            String query = "SELECT id, spanishTitle FROM movies;";
+            System.out.println("PeliculasDAO: " + query);
+            ResultSet consulta = sentenciaSQL.executeQuery(query);
+            while(consulta.next()) {
+                PeliculaSimple p = new PeliculaSimple(consulta.getInt("id"), consulta.getString("spanishTitle"));
+                l.add(p);
+            }
+            return l;
+        } catch (Exception ex) {
+            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        } finally {
+            m.cerrarConexion(conexion);
+        }
+    } 
+    
+    
+    /*public static void pruebaGetListaPeliculas(){
+        PeliculasDAO dao = new PeliculasDAO();
+        dao.getListaPeliculas();
+    }
+
+    public static void main(String[] args){
+        pruebaGetListaPeliculas();
+    }*/
+
 }
