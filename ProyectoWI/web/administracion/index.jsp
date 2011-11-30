@@ -11,7 +11,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link href="../css/administracion/administracion.css" media="screen" rel="stylesheet" type="text/css">
+        <!--<link href="../css/administracion/administracion.css" media="screen" rel="stylesheet" type="text/css">-->
         <link href="css/administracion/administracion.css" media="screen" rel="stylesheet" type="text/css">
         <title>Administracion</title>
     </head>
@@ -23,6 +23,9 @@
             </li>
             <li>
                 <a href="administracion/controladorAdmin?action=articulosIndex">Administrar artículos</a>
+            </li>
+            <li>
+                <a href="administracion/controladorAdmin?action=valoracionesIndex">Administrar valoraciones</a>
             </li>
         </ul>
     </body>
