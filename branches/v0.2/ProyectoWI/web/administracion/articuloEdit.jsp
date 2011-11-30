@@ -34,6 +34,17 @@
                         <c:choose>
                             <c:when test="${acc=='modificar'}">
                                 <input type="hidden" name="idArticulo" value="${articulo.codigoArticulo}"/>
+                                <tr>
+                                    <td class="resaltarCelda cab">Tipo: </td>
+                                    <c:choose>
+                                        <c:when test="${articulo.tipo eq null}">
+                                            <td class="tipo">Película sin clasificar</td>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <td class="tipo">${articulo.tipoNombre}</td>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </tr>           
                             </c:when>
                             <c:otherwise>
                                 <tr>
