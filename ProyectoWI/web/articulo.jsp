@@ -62,28 +62,38 @@
                         <p><span class="resaltar">Precio: </span><fmt:formatNumber pattern="$0.00" value="${articulo.precio}"/></p>
                         <p><span class="resaltar">Puntuación general: </span>${valoracionGeneral}</p>
                         <c:choose>
-                                <c:when test="${not empty usuario}">
-                                    <%-- <p>Puntúe el articulo, introduzca un valor entre 0 y 9: 
-                                    <form name="formulario" method="POST" action="controlador?page=articulo&action=valorar&usuario=${usuario.idUsuario}&codigo=${articulo.codigoArticulo}">
-                                        <input type="text" value="${valoracionUsuario}" name="valoracion"/>
-                                        <input type="button" value="Puntuar" onclick="compruebaPuntuacion();"/>
+                            <c:when test="${not empty usuario}">
+                                <%-- <p>Puntúe el articulo, introduzca un valor entre 0 y 9: 
+                                <form name="formulario" method="POST" action="controlador?page=articulo&action=valorar&usuario=${usuario.idUsuario}&codigo=${articulo.codigoArticulo}">
+                                    <input type="text" value="${valoracionUsuario}" name="valoracion"/>
+                                    <input type="button" value="Puntuar" onclick="compruebaPuntuacion();"/>
+                                </form>
+                                </p>--%>
+                                <div id="ratingdiv">
+                                    <form id="rating" action="controlador?page=articulo&action=valorar&usuario=${usuario.idUsuario}&codigo=${articulo.codigoArticulo}" method="post" title="Average: 3.4">
+                                        <label for="id_rating">Valoración:</label>
+                                        <select name="valoracion" id="id_rating">
+                                                <option value="1">1 - Mala</option>
+                                                <option value="2">2 - Pasable</option>
+                                                <option value="3">3 - Buena</option>
+                                                <option value="4">4 - Muy buena</option>
+                                                <option value="5">5 - Excelente</option>
+                                        </select>
+                                        <input type="submit" value="Puntuar" />
                                     </form>
-                                    </p>--%>
-                                    <div id="ratingdiv">
-                                        <form id="rating" action="controlador?page=articulo&action=valorar&usuario=${usuario.idUsuario}&codigo=${articulo.codigoArticulo}" method="post" title="Average: 3.4">
-                                            <label for="id_rating">Valoración:</label>
-                                            <select name="valoracion" id="id_rating">
-                                                    <option value="1">1 - Mala</option>
-                                                    <option value="2">2 - Pasable</option>
-                                                    <option value="3">3 - Buena</option>
-                                                    <option value="4">4 - Muy buena</option>
-                                                    <option value="5">5 - Excelente</option>
-                                            </select>
-                                            <input type="submit" value="Puntuar" />
-                                        </form>
-                                    </div>
+                                </div>
+                            </c:when>
+                        </c:choose>
+                        <p><span class="resaltar">Tipo: </span>
+                            <c:choose>
+                                <c:when test="${articulo.tipo eq null}">
+                                   Película sin clasificar
                                 </c:when>
+                                <c:otherwise>
+                                    ${articulo.tipoNombre}
+                                </c:otherwise>
                             </c:choose>
+                        </p>
                         <p class="resaltar">Más info:</p>
                         <table>
                         <tr>
