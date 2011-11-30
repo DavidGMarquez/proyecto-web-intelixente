@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS `articulos` (
   `activo` tinyint(1) NOT NULL DEFAULT '0',
   `idPelicula` int(11) NOT NULL,
   `idCluster` MEDIUMINT(5) NOT NULL DEFAULT '0',
+  `tipo` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`idArticulo`),
   UNIQUE KEY `codigo` (`codigoArticulo`),
   UNIQUE KEY `idPelicula` (`idPelicula`)
