@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import tienda.modelo.TipoUsuario;
 import tienda.modelo.Usuario;
+import tienda.modelo.UsuarioSimple;
 
 /**
  *
@@ -154,6 +155,7 @@ public class UsuarioDAO
 
     //probado
     //TODO se va a borrar la dirección?
+    //TODO: sería mejor un borrado lógico
     public boolean borrarUsuario(Integer idUsuario)
     {
         try
@@ -318,5 +320,38 @@ public class UsuarioDAO
         {
             m.cerrarConexion(conexion);
         }
+    }
+
+    public ArrayList<UsuarioSimple> getListaUsuarios()
+    {
+        try {
+            ArrayList<UsuarioSimple> l = new ArrayList<UsuarioSimple>();
+            conexion = m.obtenerConexionDAWA();
+            Statement sentenciaSQL = conexion.createStatement();
+            //Obtengo la lista de usuarios
+            String query = "SELECT idUsuario, nombre FROM usuarios where idTipoUsuario>1;";
+            System.out.println("UsuarioDAO: " + query);
+            ResultSet consulta = sentenciaSQL.executeQuery(query);
+            while(consulta.next()) {
+                UsuarioSimple u = new UsuarioSimple(consulta.getInt("idUsuario"), consulta.getString("nombre"));
+                l.add(u);
+            }
+            return l;
+        } catch (Exception ex) {
+            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        } finally {
+            m.cerrarConexion(conexion);
+        }
+    } 
+    
+    
+    public static void pruebaGetListaUsuarios(){
+        UsuarioDAO dao = new UsuarioDAO();
+        dao.getListaUsuarios();
+    }
+
+    public static void main(String[] args){
+        pruebaGetListaUsuarios();
     }
 }
