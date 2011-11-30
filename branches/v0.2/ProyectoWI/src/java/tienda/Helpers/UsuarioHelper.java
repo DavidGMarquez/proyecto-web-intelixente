@@ -17,7 +17,7 @@ import util.Email;
  *
  * @author Vanesa
  */
-public class UsuarioHelper {
+public class UsuarioHelper extends AbstractHelper {
 
     private UsuarioDAO uDAO = new UsuarioDAO();
     /*private UsuarioDAO ud;
@@ -126,7 +126,6 @@ public class UsuarioHelper {
         List<Usuario> l;
 
         l = uDAO.findUsuarios();
-        Integer registros = 4;
 
         Integer paginas = l.size() / registros;
         if (l.size() % registros > 0) {
