@@ -27,7 +27,7 @@ import util.Email;
  *
  * @author harry
  */
-public class TiendaHelper {
+public class TiendaHelper extends AbstractHelper {
 
     HttpSession session;
     ArticuloDAO articuloDAO;
