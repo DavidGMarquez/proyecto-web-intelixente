@@ -1,3 +1,4 @@
+<%@page import="tienda.modelo.Articulo"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <div id="busca" class="borde formulario cuadro">
     <h4>Puedes buscar en el catálogo aquí.</h4>
@@ -14,6 +15,16 @@
         <li>
             <label for="anho">Año exacto:</label>
             <input name="anho" type="text" value="${anho}"/>
+        </li>
+        <li class="cntTipo">
+            <p>
+            <input type="radio" name="tipo" id="rdComercial" value="<%=Articulo.COMERCIAL%>" />
+            <label class="radioLabel" fclass="radioLabel" or="rdComercial">Comercial</label>
+            <input type="radio" name="tipo" id="rdAlternativa" value="<%=Articulo.ALTERNATIVA%>"/>
+            <label class="radioLabel" for="rdAlternativa">Alternativa</label>
+            <input type="radio" name="tipo" id="rdAmbas" checked value=""/>
+            <label class="radioLabel" for="rdAmbas">Ambas</label>
+            </p>
         </li>
         </ul>
         <p>
