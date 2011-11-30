@@ -30,12 +30,6 @@ a
     color: #5179c9;
 }
 
-input
-{
-    width: 60px;
-    text-align: center;
-}
-
 tr
 {
     vertical-align: middle;
@@ -200,26 +194,37 @@ form input[type=text], form input[type=password]
 
 /* BUSCA
 *********************************************/
-
-#busca input
-{
-    text-align: center;
-    width: 80px;
-}
-
 #busca li{
     height: auto;
     margin-bottom: 5px;
     height: 25px;
 }
 
-#busca label{
+#busca > label{
     clear: left;
     width: 110px;
 }
-#busca li input{
+
+#busca input[type=text]{
+    text-align: center;
     width: 140px;
 }
+
+#busca input[type=radio]{
+    display: inline;
+    float: none;
+}
+
+#busca .radioLabel{
+    width: auto;
+    display: inline;
+    float: none;
+}
+
+#busca .cntTipo{
+    text-align: right;
+}
+
 /* CABECERA
 *********************************************/
 
@@ -669,7 +674,7 @@ form input[type=text], form input[type=password]
     margin-right: 5px;
 }
 
-.formulario input
+.formulario input[type=text], .formulario input[type=password]
 {
     width: 200px;
     text-align: left;
