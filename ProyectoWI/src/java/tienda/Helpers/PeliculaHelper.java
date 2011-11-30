@@ -13,7 +13,7 @@ import tienda.modelo.ActorDirector;
  *
  * @author nessa
  */
-public class PeliculaHelper {
+public class PeliculaHelper extends AbstractHelper {
     
     private PeliculasDAO pDao;
     
