@@ -11,9 +11,10 @@ import java.io.Serializable;
  * @author Vanesa
  */
 public class Articulo implements Serializable, Comparable{
-    /**
-	 * 
-	 */
+    public static final int COMERCIAL = 0;
+    public static final int ALTERNATIVA = 1;
+    
+    
     private static final long serialVersionUID = 8038336055575115281L;
     private String codigoArticulo;
     private double precio;
@@ -21,6 +22,7 @@ public class Articulo implements Serializable, Comparable{
     private Integer unidades;
     private Pelicula pelicula;
     private Integer cluster;
+    private Integer tipo;
 
     public Articulo(){}
     
@@ -50,7 +52,31 @@ public class Articulo implements Serializable, Comparable{
         this(codigoArticulo, precio, activo, unidades, cluster);
         this.pelicula = pelicula;
     }
+    
+    public Articulo(String codigoArticulo, double precio, Boolean activo, 
+            Integer unidades, Integer cluster, Integer tipo, Pelicula pelicula) {
+        this(codigoArticulo, precio, activo, unidades, cluster, pelicula);
+        setTipo(tipo);
+    }
 
+    public Integer getTipo(){
+        return tipo;
+    }
+    
+    public String getTipoNombre(){
+        if(tipo == COMERCIAL){
+            return "comercial";
+        }else if(tipo == ALTERNATIVA){
+            return "alternativa";
+        }
+        return null;
+    }
+    
+    public final void setTipo(Integer tipo){
+        if(tipo == null || tipo == COMERCIAL ||tipo == ALTERNATIVA)
+            this.tipo = tipo;
+    }
+    
     public Integer getIdPelicula(){
         return pelicula.getId();
     }
