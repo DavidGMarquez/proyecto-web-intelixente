@@ -163,17 +163,17 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
 --
 -- Volcado de datos para la tabla `usuarios`
 --
-
+-- Ids de usuarios existentes no dataset de movielens
 INSERT INTO `usuarios` (`idUsuario`, `nombre`, `password`, `telefono`, `email`, `activo`, `idTipoUsuario`, `idDireccion`, `totalCompra`) VALUES
-(1, 'Vanesa Garcia2', 'patata', '9818989892', 'vanesagt@info.com', 0, 3, 1, 0),
-(2, 'proba', 'proba1', '987656765', 'proba@proba.com', 1, 2, 1, 0),
-(3, 'vanesa', '12345678', 'm', 'vanesa@vanesa.com', 1, 3, 1, 246.598),
-(4, 'dani', 'dani11', '981292929', 'dani@dani.com', 1, 2, 1, 0),
-(5, 'tomas', 'tomas1', '987232323', 'tomas@tomas.com', 1, 2, 1, 0),
-(6, 'maria', 'maria1', '981292929', 'maria@maria.com', 0, 2, 2, 0),
-(7, 'admin', 'admin1', '---', 'admin@tiendadawa.com', 1, 1, 1, 50.6),
-(8, 'pepe', 'pepe11', '981292929', 'pepe@pepe.com', 1, 2, 1, 15),
-(9, 'manuel', 'manuel', '981292929', 'manuel@manuel.com', 1, 2, 1, 0);
+(75, 'Vanesa Garcia2', 'patata', '9818989892', 'vanesagt@info.com', 0, 3, 1, 0),
+(78, 'proba', 'proba1', '987656765', 'proba@proba.com', 1, 2, 1, 0),
+(1860, 'vanesa', '12345678', 'm', 'vanesa@vanesa.com', 1, 3, 1, 246.598),
+(190, 'dani', 'dani11', '981292929', 'dani@dani.com', 1, 2, 1, 0),
+(175, 'tomas', 'tomas1', '987232323', 'tomas@tomas.com', 1, 2, 1, 0),
+(267, 'maria', 'maria1', '981292929', 'maria@maria.com', 0, 2, 2, 0),
+(466, 'admin', 'admin1', '---', 'admin@tiendadawa.com', 1, 1, 1, 50.6),
+(7711, 'pepe', 'pepe11', '981292929', 'pepe@pepe.com', 1, 2, 1, 15),
+(8114, 'manuel', 'manuel', '981292929', 'manuel@manuel.com', 1, 2, 1, 0);
 
 -- --------------------------------------------------------
 

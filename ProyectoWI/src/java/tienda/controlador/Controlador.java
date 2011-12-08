@@ -24,6 +24,7 @@ import tienda.modelo.Comentarios;
 import tienda.modelo.Paquete3x2;
 import tienda.modelo.ShoppingCart;
 import tienda.modelo.Usuario;
+import tienda.procesado.RecommendationHelper;
 
 public class Controlador extends HttpServlet {
 
@@ -89,6 +90,15 @@ public class Controlador extends HttpServlet {
                 // Obtener dos artículos parecidos
                 ArticuloDAO aDAO = new ArticuloDAO();
                 List<Articulo> recomendaciones = aDAO.findArticulosByCluster(articulo.getCluster(), articulo.getCodigoArticulo(), 2, true, null);
+
+                // TEST: Ver a consola cando se selecciona unha pelicula na tenda
+                String cod = articulo.getCodigoArticulo();
+                Integer idUsuario = usuario.getIdUsuario();
+
+                aDAO.findArticulosSimilares(null, cod, RecommendationHelper.ITEM_BASED);
+                aDAO.findArticulosSimilares(idUsuario, cod, RecommendationHelper.USER_BASED);
+
+
                 session.setAttribute("recomendaciones", recomendaciones);
                 
                 if ("valorar".equalsIgnoreCase(action)) {
