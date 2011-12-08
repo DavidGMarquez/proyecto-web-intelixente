@@ -136,7 +136,7 @@ public class ArticuloDAO {
             String titulo, Integer tipo) {
         String condicion = "";
 
-        if (anho != null) {
+        if (anho != null && !anho.isEmpty()) {
             condicion += " AND year=" + anho;
         }
 

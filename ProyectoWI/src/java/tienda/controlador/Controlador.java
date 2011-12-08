@@ -239,7 +239,8 @@ public class Controlador extends HttpServlet {
             }
 
         } catch (Exception e) {
-            System.out.println("Controlador. Excepcion. " + e.getLocalizedMessage());
+             System.out.println("Controlador. Excepcion. " + e.getLocalizedMessage());
+             e.printStackTrace();
             request.setAttribute("mensaje", "Ha sucedido un error");
             dispatcher = getServletContext().getRequestDispatcher("/index.jsp");
         } finally {

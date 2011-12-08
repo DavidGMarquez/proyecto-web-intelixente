@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 //import java.util.logging.Level;
 //import java.util.logging.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import tienda.DAO.ArticuloDAO;
@@ -164,10 +166,13 @@ public class ArticuloHelper extends AbstractHelper {
         Float precioMaximo=null;
         try{
             precioMaximo=Float.parseFloat(request.getParameter("precioMaximo"));
-        }catch(Exception e){ }
+        }catch(Exception e){
+            Logger.getLogger(ArticuloHelper.class.getName()).log(Level.ALL, "Error parseando precio",e);
+        }
         Integer tipo = null;
-        if(request.getParameter("tipo")!=null)
+        if(request.getParameter("tipo")!=null &&  !request.getParameter("tipo").isEmpty()){
             tipo = new Integer(request.getParameter("tipo"));
+        }
         session.setAttribute("anho", anho);
         session.setAttribute("titulo", titulo);
         session.setAttribute("precioMaximo", precioMaximo);
