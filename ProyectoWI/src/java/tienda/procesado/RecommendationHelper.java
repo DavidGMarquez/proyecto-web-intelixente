@@ -10,6 +10,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.mahout.cf.taste.common.TasteException;
@@ -17,6 +18,7 @@ import org.apache.mahout.cf.taste.impl.model.file.FileDataModel;
 import org.apache.mahout.cf.taste.impl.neighborhood.NearestNUserNeighborhood;
 import org.apache.mahout.cf.taste.impl.recommender.GenericItemBasedRecommender;
 import org.apache.mahout.cf.taste.impl.recommender.GenericUserBasedRecommender;
+import org.apache.mahout.cf.taste.impl.recommender.knn.KnnItemBasedRecommender;
 import org.apache.mahout.cf.taste.impl.similarity.LogLikelihoodSimilarity;
 import org.apache.mahout.cf.taste.impl.similarity.PearsonCorrelationSimilarity;
 import org.apache.mahout.cf.taste.neighborhood.UserNeighborhood;
@@ -25,6 +27,14 @@ import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import org.apache.mahout.cf.taste.recommender.UserBasedRecommender;
 import org.apache.mahout.cf.taste.similarity.ItemSimilarity;
 import org.apache.mahout.cf.taste.similarity.UserSimilarity;
+import org.apache.mahout.classifier.bayes.BayesClassifier;
+import org.apache.mahout.classifier.bayes.BayesModel;
+import org.apache.mahout.clustering.dirichlet.UncommonDistributions;
+import org.apache.mahout.clustering.kmeans.Cluster;
+import org.apache.mahout.clustering.kmeans.RandomSeedGenerator;
+import org.apache.mahout.common.Model;
+import org.apache.mahout.matrix.DenseVector;
+import org.apache.mahout.utils.EuclideanDistanceMeasure;
 import tienda.DAO.ArticuloDAO;
 import tienda.modelo.Articulo;
 
@@ -44,9 +54,9 @@ import tienda.modelo.Articulo;
  */
 public class RecommendationHelper {
 
-    public static final int USER_BASED = 0;
-    public static final int ITEM_BASED = 1;
-    
+    public static final int ITEM_BASED = 0;
+    public static final int USER_BASED = 1;
+    private static Map<String, String> map = MovieLensHelper.loadMovies(Properties.moviesFile);
     static FileDataModel dataModel = null;
 
     public static void printSomeThings(){
@@ -78,25 +88,38 @@ public class RecommendationHelper {
         return dataModel;
     }
 
-    public static List<Articulo> getItemBasedSimilarArticles(String codigoArticulo, int n) {
+    /**
+     * Recomendación item-based
+     * @param userId
+     * @param n numero de articulos a recomendar
+     * @return
+     */
+    public static List<Articulo> getRecommendedItemBasedArticles(Long userId, int n) {
 
         List<Articulo> similares = null;
         try {
+            System.out.println("1");
             ArticuloDAO dao = new ArticuloDAO();
             similares = new ArrayList<Articulo>();
-            Map<String, String> map = MovieLensHelper.loadMovies(Properties.moviesFile);
             //Create an ItemSimilarity
             ItemSimilarity itemSimilarity = new LogLikelihoodSimilarity(getFileDataModel());
+            System.out.println("2");
+
+
             //Create an Item Based Recommender
             ItemBasedRecommender recommender = new GenericItemBasedRecommender(getFileDataModel(), itemSimilarity);
             //Get the recommendations
-            List<RecommendedItem> recommendations = recommender.mostSimilarItems(new Long(codigoArticulo), n);
-            //            TasteUtils.printRecs(recommendations, map);
+            System.out.println("3");
+
+            // tarda moiiiiiiito!!!! ¿¿¿pORQUÉ???
+            List<RecommendedItem> recommendations = recommender.recommend(userId, n);
+
 
             if (recommendations.isEmpty()) {
-                System.out.println("(Item-Based) Non se atoparon recomendacións para " + codigoArticulo);
+                System.out.println("(Item-Based) Non se atoparon recomendacións");
             } else {
-                System.out.println("(Item-Based) Recomendacións para " + codigoArticulo + ":");
+                System.out.println("4");
+                System.out.println("(Item-Based) Recomendacións:");
                 for (RecommendedItem item : recommendations) {
                     Comparable<?> id = item.getItemID();
                     String title = map.get(id.toString());
@@ -120,28 +143,31 @@ public class RecommendationHelper {
         return similares;
     }
 
-    public static List<Articulo> getUserBasedSimilarArticles(Long userId, String codigoArticulo, int n) {
+    /**
+     * Recomendación user-based
+     * @param userId
+     * @param n numero de articulos a recomendar
+     * @return
+     */
+    public static List<Articulo> getRecommendedUserBasedArticles(Long userId, int n) {
 
         List<Articulo> similares = null;
         try {
             ArticuloDAO dao = new ArticuloDAO();
             similares = new ArrayList<Articulo>();
-            Map<String, String> map = MovieLensHelper.loadMovies(Properties.moviesFile);
-
             //Create an ItemSimilarity
             UserSimilarity userSimilarity = new PearsonCorrelationSimilarity(getFileDataModel());
-
             //Get a neighborhood of users
             UserNeighborhood neighborhood = new NearestNUserNeighborhood(5, userSimilarity, getFileDataModel());
-            //Create an Item Based Recommender
+            //Create an user Based Recommender
             UserBasedRecommender recommender = new GenericUserBasedRecommender(getFileDataModel(), neighborhood, userSimilarity);
             //Get the recommendations
             List<RecommendedItem> recommendations = recommender.recommend(userId, n);
 
             if (recommendations.isEmpty()) {
-                System.out.println("(User-Based) Non se atoparon recomendacións para usuario " +userId + ", articulo "+ codigoArticulo);
+                System.out.println("(User-Based) Non se atoparon recomendacións para usuario " +userId );
             } else {
-                System.out.println("(User-Based) Recomendacións para usuario " +userId + ", articulo "+ codigoArticulo + ":");
+                System.out.println("(User-Based) Recomendacións para usuario " +userId +":");
                 for (RecommendedItem item : recommendations) {
                     Comparable<?> id = item.getItemID();
                     String title = map.get(id.toString());
@@ -168,4 +194,53 @@ public class RecommendationHelper {
         }
         return similares;
     }
+
+    /**
+     * Articulos similares item-based
+     * @param userId
+     * @param n numero de articulos a obter
+     * @return
+     */
+     public static List<Articulo> getSimilarArticles(Long articleId, int n) {
+
+        List<Articulo> similares = null;
+        try {
+            ArticuloDAO dao = new ArticuloDAO();
+            similares = new ArrayList<Articulo>();
+            Map<String, String> map = MovieLensHelper.loadMovies(Properties.moviesFile);
+            //Create an ItemSimilarity
+            ItemSimilarity itemSimilarity = new LogLikelihoodSimilarity(getFileDataModel());
+            //Create an Item Based Recommender
+            ItemBasedRecommender recommender = new GenericItemBasedRecommender(getFileDataModel(), itemSimilarity);
+            //Get the recommendations
+            List<RecommendedItem> similarItems = recommender.mostSimilarItems(articleId, n);
+            //            TasteUtils.printRecs(recommendations, map);
+
+            if (similarItems.isEmpty()) {
+                System.out.println("(Item-Based) Non se atoparon items similares");
+            } else {
+                System.out.println("(Item-Based) Similares:");
+                for (RecommendedItem item : similarItems) {
+                    Comparable<?> id = item.getItemID();
+                    String title = map.get(id.toString());
+                    System.out.println("\tId: " + id.toString() + ", Title: " + title);
+                }
+            }
+            for (RecommendedItem item : similarItems) {
+                Comparable<?> id = item.getItemID();
+                String title = map.get(id.toString());
+                Articulo a = dao.findArticuloByIdPelicula(id.toString());
+                if (a != null) {
+                    similares.add(a);
+                } else {
+                    System.out.println("Non se atopou na base de datos a película '" + title + "' (id:" + id.toString() + ")");
+                }
+            }
+
+        } catch (TasteException ex) {
+            Logger.getLogger(RecommendationHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return similares;
+    }
+
 }

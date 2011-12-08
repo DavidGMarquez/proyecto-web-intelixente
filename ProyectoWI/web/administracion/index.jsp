@@ -27,6 +27,9 @@
             <li>
                 <a href="administracion/controladorAdmin?action=valoracionesIndex">Administrar valoraciones</a>
             </li>
+            <li>
+                <a href="administracion/controladorAdmin?action=settings">Configuración</a>
+            </li>
         </ul>
     </body>
 </html>

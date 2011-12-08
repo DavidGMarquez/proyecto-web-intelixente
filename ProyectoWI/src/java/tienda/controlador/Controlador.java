@@ -92,11 +92,15 @@ public class Controlador extends HttpServlet {
                 List<Articulo> recomendaciones = aDAO.findArticulosByCluster(articulo.getCluster(), articulo.getCodigoArticulo(), 2, true, null);
 
                 // TEST: Ver a consola cando se selecciona unha pelicula na tenda
-                String cod = articulo.getCodigoArticulo();
                 Integer idUsuario = usuario.getIdUsuario();
 
-                aDAO.findArticulosSimilares(null, cod, RecommendationHelper.ITEM_BASED);
-                aDAO.findArticulosSimilares(idUsuario, cod, RecommendationHelper.USER_BASED);
+                System.out.println(" ===== Rec user based =====");
+                RecommendationHelper.getRecommendedUserBasedArticles(new Long(idUsuario), 2);
+                // Este método tarda moitísimo
+//                System.out.println(" ===== Rec item based =====");
+//                RecommendationHelper.getRecommendedItemBasedArticles(new Long(idUsuario), 2);
+                System.out.println(" ===== Similares =====");
+                RecommendationHelper.getSimilarArticles(new Long(articulo.getPelicula().getId()), 2);  
 
 
                 session.setAttribute("recomendaciones", recomendaciones);

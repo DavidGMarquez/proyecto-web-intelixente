@@ -15,6 +15,7 @@ import tienda.modelo.Articulo;
 import tienda.modelo.Pedido;
 import tienda.modelo.Pelicula;
 import tienda.procesado.RecommendationHelper;
+import tienda.procesado.Settings;
 
 /**
  * En algunas consultas se usará la vista articulos_movies
@@ -147,15 +148,17 @@ public class ArticuloDAO {
         return null;
     }
 
-    public List<Articulo> findArticulosSimilares(Integer userId, String codigoArticulo, int strategy) {
-        Articulo a = findArticuloById(codigoArticulo);
-
-        if (strategy == RecommendationHelper.USER_BASED) {
-            return RecommendationHelper.getUserBasedSimilarArticles(new Long(userId), a.getPelicula().getId().toString(), 2);
+    public List<Articulo> getRecommendations(Long userId) {
+        System.out.println("Get recommendations: userid -> " +userId);
+        if (Settings.getSettings().getRecommendationStrategy() == RecommendationHelper.USER_BASED) {
+            return RecommendationHelper.getRecommendedUserBasedArticles(userId, 2);
+        } else {
+            return RecommendationHelper.getRecommendedItemBasedArticles(userId, 2);
         }
-        
-        return RecommendationHelper.getItemBasedSimilarArticles(a.getPelicula().getId().toString(), 2);
+    }
 
+    public List<Articulo> getSimilarArticles(Long articleId) {
+        return RecommendationHelper.getSimilarArticles(articleId, 2);
     }
 
     public List<Articulo> findArticulosFiltrados(String anho, Float precioMaximo,
