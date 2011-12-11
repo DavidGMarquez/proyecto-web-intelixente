@@ -49,13 +49,19 @@ public class ArticuloDAO {
                     + " a.idPelicula, idCluster, tipo, spanishTitle as titulo, "
                     + " imdbPictureURL as imagen, year as anho "
                     + " FROM `articulos` a,`movies` m "
-                    + " WHERE a.idPelicula = m.id ";
+                    + " WHERE a.idPelicula = m.id";
             if (filtrarActivos) {
                 query += " AND a.activo = 1 AND a.unidades > 0";
             }
             if (condicion != null) {
                 query += condicion;
             }
+
+            if(condicion.indexOf("LIMIT") < 0){
+                query += " LIMIT 0, 100";
+            }
+          
+            
             System.out.println("ArticuloDAO:" + query);
             ResultSet consulta = sentenciaSQL.executeQuery(query);
             while (consulta.next()) {
@@ -100,8 +106,11 @@ public class ArticuloDAO {
             condicion += " AND a.codigoArticulo NOT LIKE '" + codigoArticulo + "' ";
         }
         condicion += " ORDER BY rand() ";
+
         if (maxElementos != null && maxElementos > 0) {
             condicion += " LIMIT 0 , " + maxElementos;
+        } else{
+            condicion += " LIMIT 0, 100";
         }
         return findArticulos(filtrarActivos, condicion);
     }

@@ -28,5 +28,6 @@
         	<%@ include file="partes/busqueda.jsp" %>
         </c:if>
         <%@ include file="partes/cesta.jsp"%>
+        <%@ include file="partes/recomendacion.jsp"%>
     </body>
 </html>
