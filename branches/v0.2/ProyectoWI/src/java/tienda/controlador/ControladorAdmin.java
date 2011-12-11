@@ -255,15 +255,27 @@ public class ControladorAdmin extends HttpServlet {
 
                         String re = request.getParameter("recommendationStrategy");
                         String ce = request.getParameter("clusteringStrategy");
+                        String se = request.getParameter("similarity");
+                        String nr = request.getParameter("numRecommendations");
+                        int value;
                         try {
                             if (re != null && !re.isEmpty()) {
-                                int rei = Integer.parseInt(re);
-                                Settings.getSettings().setRecommendationStrategy(rei);
+                                value = Integer.parseInt(re);
+                                Settings.getSettings().setRecommendationStrategy(value);
                             }
                             if (ce != null && !ce.isEmpty()) {
-                                int cei = Integer.parseInt(ce);
-                                Settings.getSettings().setRecommendationStrategy(cei);
+                                value = Integer.parseInt(ce);
+                                Settings.getSettings().setClusteringStrategy(value);
                             }
+                            if (se != null && !se.isEmpty()) {
+                                value = Integer.parseInt(se);
+                                Settings.getSettings().setSimilarity(value);
+                            }
+                            if (nr != null && !nr.isEmpty()) {
+                                value = Integer.parseInt(nr) % 10;
+                                Settings.getSettings().setNumRecomendations(value);
+                            }
+
                             session.setAttribute("comentario", "Configuración actualizada correctamente.");
                         } catch (Exception ex) {
                             session.setAttribute("comentario", "No se pudo actualizar la configuración.");

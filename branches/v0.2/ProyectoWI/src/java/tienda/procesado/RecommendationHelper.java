@@ -16,14 +16,19 @@ import java.util.logging.Logger;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.impl.model.file.FileDataModel;
 import org.apache.mahout.cf.taste.impl.neighborhood.NearestNUserNeighborhood;
+import org.apache.mahout.cf.taste.impl.recommender.CachingRecommender;
 import org.apache.mahout.cf.taste.impl.recommender.GenericItemBasedRecommender;
 import org.apache.mahout.cf.taste.impl.recommender.GenericUserBasedRecommender;
 import org.apache.mahout.cf.taste.impl.recommender.knn.KnnItemBasedRecommender;
+import org.apache.mahout.cf.taste.impl.similarity.GenericUserSimilarity;
 import org.apache.mahout.cf.taste.impl.similarity.LogLikelihoodSimilarity;
 import org.apache.mahout.cf.taste.impl.similarity.PearsonCorrelationSimilarity;
+import org.apache.mahout.cf.taste.impl.similarity.SpearmanCorrelationSimilarity;
+import org.apache.mahout.cf.taste.impl.similarity.TanimotoCoefficientSimilarity;
 import org.apache.mahout.cf.taste.neighborhood.UserNeighborhood;
 import org.apache.mahout.cf.taste.recommender.ItemBasedRecommender;
 import org.apache.mahout.cf.taste.recommender.RecommendedItem;
+import org.apache.mahout.cf.taste.recommender.Recommender;
 import org.apache.mahout.cf.taste.recommender.UserBasedRecommender;
 import org.apache.mahout.cf.taste.similarity.ItemSimilarity;
 import org.apache.mahout.cf.taste.similarity.UserSimilarity;
@@ -58,8 +63,13 @@ public class RecommendationHelper {
     public static final int USER_BASED = 1;
     private static Map<String, String> map = MovieLensHelper.loadMovies(Properties.moviesFile);
     static FileDataModel dataModel = null;
+    private static UserSimilarity userSimilarity = null;
+    private static ItemSimilarity itemSimilarity = null;
+    private static Recommender userRecommender = null;
+    private static Recommender itemRecommender = null;
+    private static ArticuloDAO dao = new ArticuloDAO();
 
-    public static void printSomeThings(){
+    public static void printSomeThings() {
         try {
             FileDataModel f = getFileDataModel();
             System.out.println("Users:" + f.getNumUsers());
@@ -88,6 +98,17 @@ public class RecommendationHelper {
         return dataModel;
     }
 
+    public static List<Articulo> getRecommendedArticles(Integer userId, int n) {
+
+        if (Settings.getSettings().getRecommendationStrategy() == RecommendationHelper.USER_BASED) {
+            return RecommendationHelper.getRecommendedUserBasedArticles(new Long(userId), Settings.getSettings().getNumRecommendations());
+        } else if (Settings.getSettings().getRecommendationStrategy() == RecommendationHelper.ITEM_BASED) {
+            return RecommendationHelper.getRecommendedItemBasedArticles(new Long(new Long(userId)), Settings.getSettings().getNumRecommendations());
+        } else {
+            return RecommendationHelper.getRecommendedUserBasedArticles(new Long(new Long(userId)), Settings.getSettings().getNumRecommendations());
+        }
+    }
+
     /**
      * Recomendación item-based
      * @param userId
@@ -98,22 +119,18 @@ public class RecommendationHelper {
 
         List<Articulo> similares = null;
         try {
-            System.out.println("1");
-            ArticuloDAO dao = new ArticuloDAO();
+
+
             similares = new ArrayList<Articulo>();
-            //Create an ItemSimilarity
-            ItemSimilarity itemSimilarity = new LogLikelihoodSimilarity(getFileDataModel());
-            System.out.println("2");
 
-
-            //Create an Item Based Recommender
-            ItemBasedRecommender recommender = new GenericItemBasedRecommender(getFileDataModel(), itemSimilarity);
+            if (itemRecommender == null) {
+                //Create an Item Based Recommender
+                Recommender recommender = new GenericItemBasedRecommender(getFileDataModel(), getItemSimilarity());
+                itemRecommender = new CachingRecommender(recommender);
+            }
             //Get the recommendations
-            System.out.println("3");
-
             // tarda moiiiiiiito!!!! ¿¿¿pORQUÉ???
-            List<RecommendedItem> recommendations = recommender.recommend(userId, n);
-
+            List<RecommendedItem> recommendations = itemRecommender.recommend(userId, n);
 
             if (recommendations.isEmpty()) {
                 System.out.println("(Item-Based) Non se atoparon recomendacións");
@@ -155,19 +172,21 @@ public class RecommendationHelper {
         try {
             ArticuloDAO dao = new ArticuloDAO();
             similares = new ArrayList<Articulo>();
-            //Create an ItemSimilarity
-            UserSimilarity userSimilarity = new PearsonCorrelationSimilarity(getFileDataModel());
-            //Get a neighborhood of users
-            UserNeighborhood neighborhood = new NearestNUserNeighborhood(5, userSimilarity, getFileDataModel());
-            //Create an user Based Recommender
-            UserBasedRecommender recommender = new GenericUserBasedRecommender(getFileDataModel(), neighborhood, userSimilarity);
+
+            if (userRecommender == null) {
+                //Get a neighborhood of users
+                UserNeighborhood neighborhood = new NearestNUserNeighborhood(5, getUserSimilarity(), getFileDataModel());
+                //Create an user Based Recommender
+                UserBasedRecommender recommender = new GenericUserBasedRecommender(getFileDataModel(), neighborhood, userSimilarity);
+                userRecommender = new CachingRecommender(recommender);
+            }
             //Get the recommendations
-            List<RecommendedItem> recommendations = recommender.recommend(userId, n);
+            List<RecommendedItem> recommendations = userRecommender.recommend(userId, n);
 
             if (recommendations.isEmpty()) {
-                System.out.println("(User-Based) Non se atoparon recomendacións para usuario " +userId );
+                System.out.println("(User-Based) Non se atoparon recomendacións para usuario " + userId);
             } else {
-                System.out.println("(User-Based) Recomendacións para usuario " +userId +":");
+                System.out.println("(User-Based) Recomendacións para usuario " + userId + ":");
                 for (RecommendedItem item : recommendations) {
                     Comparable<?> id = item.getItemID();
                     String title = map.get(id.toString());
@@ -201,7 +220,7 @@ public class RecommendationHelper {
      * @param n numero de articulos a obter
      * @return
      */
-     public static List<Articulo> getSimilarArticles(Long articleId, int n) {
+    public static List<Articulo> getSimilarArticles(Long articleId, int n) {
 
         List<Articulo> similares = null;
         try {
@@ -209,7 +228,7 @@ public class RecommendationHelper {
             similares = new ArrayList<Articulo>();
             Map<String, String> map = MovieLensHelper.loadMovies(Properties.moviesFile);
             //Create an ItemSimilarity
-            ItemSimilarity itemSimilarity = new LogLikelihoodSimilarity(getFileDataModel());
+            ItemSimilarity itemSimilarity = getItemSimilarity();
             //Create an Item Based Recommender
             ItemBasedRecommender recommender = new GenericItemBasedRecommender(getFileDataModel(), itemSimilarity);
             //Get the recommendations
@@ -243,4 +262,44 @@ public class RecommendationHelper {
         return similares;
     }
 
+    private static UserSimilarity getUserSimilarity() throws TasteException {
+
+        if (Settings.getSettings().getSimilarity() == Similaritys.LogLikelihood) {
+            if (userSimilarity == null || !(userSimilarity instanceof LogLikelihoodSimilarity)) {
+                userSimilarity = new LogLikelihoodSimilarity(getFileDataModel());
+            }
+        } else if (Settings.getSettings().getSimilarity() == Similaritys.Tanamoto) {
+            if (userSimilarity == null || !(userSimilarity instanceof TanimotoCoefficientSimilarity)) {
+                userSimilarity = new TanimotoCoefficientSimilarity(getFileDataModel());
+            }
+        } else if (Settings.getSettings().getSimilarity() == Similaritys.SpearmanCorrelation) {
+            if (userSimilarity == null || !(userSimilarity instanceof SpearmanCorrelationSimilarity)) {
+                userSimilarity = new SpearmanCorrelationSimilarity(getFileDataModel());
+            }
+        } else {
+            if (userSimilarity == null || !(userSimilarity instanceof PearsonCorrelationSimilarity)) {
+                userSimilarity = new PearsonCorrelationSimilarity(getFileDataModel());
+            }
+        }
+        return userSimilarity;
+    }
+
+    private static ItemSimilarity getItemSimilarity() throws TasteException {
+
+        if (Settings.getSettings().getSimilarity() == Similaritys.LogLikelihood) {
+            if (itemSimilarity == null || !(itemSimilarity instanceof LogLikelihoodSimilarity)) {
+                itemSimilarity = new LogLikelihoodSimilarity(getFileDataModel());
+            }
+        } else if (Settings.getSettings().getSimilarity() == Similaritys.Tanamoto) {
+            if (itemSimilarity == null || !(itemSimilarity instanceof TanimotoCoefficientSimilarity)) {
+                itemSimilarity = new TanimotoCoefficientSimilarity(getFileDataModel());
+            }
+
+        } else {
+            if (itemSimilarity == null || !(itemSimilarity instanceof PearsonCorrelationSimilarity)) {
+                itemSimilarity = new PearsonCorrelationSimilarity(getFileDataModel());
+            }
+        }
+        return itemSimilarity;
+    }
 }

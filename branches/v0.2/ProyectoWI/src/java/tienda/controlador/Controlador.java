@@ -25,6 +25,7 @@ import tienda.modelo.Paquete3x2;
 import tienda.modelo.ShoppingCart;
 import tienda.modelo.Usuario;
 import tienda.procesado.RecommendationHelper;
+import tienda.procesado.Settings;
 
 public class Controlador extends HttpServlet {
 
@@ -196,7 +197,11 @@ public class Controlador extends HttpServlet {
                     catalogo = th.obtenerArticulos();
                 }
                 if(usuario!=null){
+                    if(Settings.getSettings().getRecommendationStrategy() == RecommendationHelper.USER_BASED){
                     session.setAttribute("recomendaciones", RecommendationHelper.getRecommendedUserBasedArticles(new Long(usuario.getIdUsuario()), 5));
+                    }else if(Settings.getSettings().getRecommendationStrategy() == RecommendationHelper.ITEM_BASED){
+                    session.setAttribute("recomendaciones", RecommendationHelper.getRecommendedItemBasedArticles(new Long(usuario.getIdUsuario()), 5));
+                    }
                 }
                 session.setAttribute("catalogo", catalogo);
                 dispatcher = getServletContext().getRequestDispatcher("/tienda.jsp");
