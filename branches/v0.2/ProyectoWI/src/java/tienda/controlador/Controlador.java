@@ -92,15 +92,15 @@ public class Controlador extends HttpServlet {
                 List<Articulo> recomendaciones = aDAO.findArticulosByCluster(articulo.getCluster(), articulo.getCodigoArticulo(), 2, true, null);
 
                 // TEST: Ver a consola cando se selecciona unha pelicula na tenda
-                Integer idUsuario = usuario.getIdUsuario();
+//                Integer idUsuario = usuario.getIdUsuario();
 
-                System.out.println(" ===== Rec user based =====");
-                RecommendationHelper.getRecommendedUserBasedArticles(new Long(idUsuario), 2);
+//                System.out.println(" ===== Rec user based =====");
+//                RecommendationHelper.getRecommendedUserBasedArticles(new Long(idUsuario), 5);
                 // Este método tarda moitísimo
 //                System.out.println(" ===== Rec item based =====");
-//                RecommendationHelper.getRecommendedItemBasedArticles(new Long(idUsuario), 2);
-                System.out.println(" ===== Similares =====");
-                RecommendationHelper.getSimilarArticles(new Long(articulo.getPelicula().getId()), 2);  
+//                RecommendationHelper.getRecommendedItemBasedArticles(new Long(idUsuario), 5);
+//                System.out.println(" ===== Similares =====");
+//                RecommendationHelper.getSimilarArticles(new Long(articulo.getPelicula().getId()), 2);
 
 
                 session.setAttribute("recomendaciones", recomendaciones);
@@ -194,6 +194,9 @@ public class Controlador extends HttpServlet {
                     catalogo = ah.filtrar(session, request);
                 }else{
                     catalogo = th.obtenerArticulos();
+                }
+                if(usuario!=null){
+                    session.setAttribute("recomendaciones", RecommendationHelper.getRecommendedUserBasedArticles(new Long(usuario.getIdUsuario()), 5));
                 }
                 session.setAttribute("catalogo", catalogo);
                 dispatcher = getServletContext().getRequestDispatcher("/tienda.jsp");

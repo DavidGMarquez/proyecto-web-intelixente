@@ -30,6 +30,44 @@
 					</div>
 				</c:forEach>
 			</div>
+                        <div class="contenido">
+                        <c:choose>
+                            <c:when test="${not empty recomendaciones}">
+                                <ul>
+                                    <c:forEach items="${recomendaciones}" var="i">
+                                        <li>
+                                        <c:choose>
+                                                <c:when test="${empty i.pelicula.imagen}">
+                                                        <img src="img/caratula.png" class="cover" name="${i.codigoArticulo}"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                        <img src="${i.pelicula.imagen}" class="cover" name="${i.codigoArticulo}"/>
+                                                </c:otherwise>
+                                        </c:choose>
+                                        <span class="title"><c:out value="${i.pelicula.titulo}"/></span>
+                                        </li>
+                                    </c:forEach>
+                                </ul>
+                                <div class="oferta">
+                                    <h4>Oferta especial 3x2</h4>
+                                    <p>Lleve tres y pague dos*</p>
+                                    <form>
+                                        <input type="hidden" name="action" value="oferta3x2" />
+                                        <input type="hidden" name="page" value="articulo" />
+                                        <input type="hidden" name="codigo" value="${articulo.codigoArticulo}" />
+                                        <%--<input type="hidden" name="articulo2" value="${recomendaciones[0].codigoArticulo}" />
+                                        <input type="hidden" name="articulo3" value="${recomendaciones[1].codigoArticulo}" />--%>
+                                        <input class="boton" type="submit" value="Comprar" />
+                                    </form>
+                                    <p class="nota">*La película gratuita será la de menor precio</p>
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <p>No hay recomendaciones</p>
+                            </c:otherwise>
+                        </c:choose>
+                        </div>
+
 		</c:otherwise>
 	</c:choose>
 </div>
