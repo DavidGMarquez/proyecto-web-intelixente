@@ -103,7 +103,7 @@ public class Controlador extends HttpServlet {
 //                RecommendationHelper.getSimilarArticles(new Long(articulo.getPelicula().getId()), 2);
 
 
-                session.setAttribute("recomendaciones", recomendaciones);
+                session.setAttribute("recomendaciones", RecommendationHelper.getSimilarArticles(new Long(articulo.getIdPelicula()), 2));
                 
                 if ("valorar".equalsIgnoreCase(action)) {
                     ValoracionesDAO vd = new ValoracionesDAO();
