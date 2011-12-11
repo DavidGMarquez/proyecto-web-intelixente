@@ -18,8 +18,8 @@
     <body>
         <div id="titulo">Administración: Configuración</div>
         <%@ include file="menu.jsp"%>
-<div id="comentario"><span><c:out value="${comentario}"/></span></div>
-<h2>Administración: Configuración </h2>
+        <div id="comentario"><span><c:out value="${comentario}"/></span></div>
+        <h2>Administración: Configuración </h2>
         <div class="lista">
             <div class="centrar" id="edit">
                 <div id="comentario"><span><c:out value=""/></span></div>
@@ -34,7 +34,12 @@
                                 </select> *
                             </td>
                         </tr>
-
+                        <tr>
+                            <td class="resaltarCelda cab">Número de recomendacións :</td>
+                            <td>
+                                <input type="text" name="numRecommendations" value="<c:out value="${settings.numRecommendations}"/>"/>
+                            </td>
+                        </tr>
                         <tr>
                             <td class="resaltarCelda cab">Algoritmo de clustering :</td>
                             <td>
@@ -44,11 +49,23 @@
                                 </select> *
                             </td>
                         </tr>
+
+                        <tr>
+                            <td class="resaltarCelda cab">Métrica de distancia:</td>
+                            <td>
+                                <select name="similarity">
+                                    <option value="0" <c:out value="${settings.similarity==0?'selected':''}"/>>LogLikelihood</option>
+                                    <option value="1" <c:out value="${settings.similarity==1?'selected':''}"/>>Tanamoto</option>
+                                    <option value="2" <c:out value="${settings.similarity==2?'selected':''}"/>>Spearman Correlation</option>
+                                    <option value="2" <c:out value="${settings.similarity==3?'selected':''}"/>>Pearson Correlation</option>
+                                </select> *
+                            </td>
+                        </tr>
                     </table>
                     <p class="footer">* Los campos marcados con asterisco son obligatorios.</p>
-                                        <div id="cntButons">
-                                            <input type="submit" value="Guardar">
-                                        </div>
+                    <div id="cntButons">
+                        <input type="submit" value="Guardar">
+                    </div>
                 </form>
             </div>
         </div>
