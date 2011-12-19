@@ -71,7 +71,7 @@ public class Settings {
     }
 
     public int getNumRecommendations() {
-        return getNumRecomendations();
+        return numRecomendations;
     }
 
     /**
