@@ -28,18 +28,74 @@ import tienda.procesado.Settings;
 public class ArticuloDAO {
 
     Connection conexion = null;
-    /*Statement sentenciaSQL = null;
-    ResultSet consulta = null;
-    String query;*/
     MySQLMetodos m = new MySQLMetodos();
 
-    //ACTUALIZADA
+    public Integer numArticulos(boolean filtrarActivos){
+        return numArticulos(filtrarActivos, null);
+    }
+    
+    public Integer numArticulos(boolean filtrarActivos, String condicion){
+        Integer num = null;
+        try {
+            conexion = m.obtenerConexionDAWA();
+            Statement sentenciaSQL = conexion.createStatement();
+            String query = "SELECT count(idArticulo) AS num FROM `articulos` a,`movies` m "
+                    + " WHERE a.idPelicula = m.id ";
+            if(condicion != null){
+                query += condicion;
+            }
+            if(filtrarActivos){
+                query += " AND activo = 1 AND unidades > 0 ";
+            }
+            System.out.println("ArticuloDAO:" + query);
+            ResultSet consulta = sentenciaSQL.executeQuery(query);
+            if(consulta.next()){
+                num = consulta.getInt("num");
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(ArticuloDAO.class.getName()).log(Level.SEVERE, null, ex);
+
+        } finally {
+            m.cerrarConexion(conexion);
+        }
+        return num;
+    }
+    
+    public Integer numArticulos(String anho, Float precioMaximo,
+            String titulo, Integer tipo){
+        String condicion = "";
+
+        if (anho != null && !anho.isEmpty()) {
+            condicion += " AND year=" + anho;
+        }
+
+        if (precioMaximo != null) {
+            condicion += " AND precio<=" + precioMaximo;
+        }
+
+        if (titulo != null && !titulo.isEmpty()) {
+            condicion += " AND spanishTitle like '%" + titulo + "%'";
+        }
+
+        if (tipo != null) {
+            condicion += " AND tipo =" + tipo.intValue();
+        }
+        return numArticulos(true, condicion);
+    }
+    
     /**
      * 
      * @param filtrarActivos
      * @param condicion - puede ser nula, si no lo es tiene que empezar por AND.
      * @return 
      */
+    public List<Articulo> findArticulos(boolean filtrarActivos, String condicion, 
+            int pagina, int numRegistros) {
+        if(condicion == null) condicion = "";
+        condicion += m.getCodigoLimit(pagina, numRegistros);
+        return findArticulos(filtrarActivos, condicion);
+    }
+    
     public List<Articulo> findArticulos(boolean filtrarActivos, String condicion) {
         List<Articulo> l = new ArrayList<Articulo>();
         try {
@@ -171,7 +227,7 @@ public class ArticuloDAO {
     }
 
     public List<Articulo> findArticulosFiltrados(String anho, Float precioMaximo,
-            String titulo, Integer tipo) {
+            String titulo, Integer tipo, int pagina, int numRegistros) {
         String condicion = "";
 
         if (anho != null && !anho.isEmpty()) {
@@ -190,11 +246,10 @@ public class ArticuloDAO {
             condicion += " AND tipo =" + tipo.intValue();
         }
 
-        return findArticulos(true, condicion);
+        return findArticulos(true, condicion, pagina, numRegistros);
 
     }
 
-    // actualizada
     public Boolean existeArticulo(Articulo a) {
         if (a.getCodigoArticulo() == null || a.getCodigoArticulo().isEmpty()) {
             return false;
@@ -219,7 +274,6 @@ public class ArticuloDAO {
         }
     }
 
-    //probado-actualizada
     // ten que ter o id da película
     public boolean insertarArticulo(Articulo a) {
         try {
@@ -240,7 +294,6 @@ public class ArticuloDAO {
         }
     }
 
-    //probada actualizada
     public boolean borrarArticulo(String codigoArticulo) {
         if (codigoArticulo == null || codigoArticulo.isEmpty()) {
             return false;
@@ -259,7 +312,6 @@ public class ArticuloDAO {
 
     }
 
-    // actualizada
     public boolean modificarArticulo(Articulo a) {
         if (a.getCodigoArticulo() == null || a.getCodigoArticulo().isEmpty()) {
             return false;
@@ -283,7 +335,6 @@ public class ArticuloDAO {
         }
     }
 
-    // actualizada
     public boolean activarArticulo(String idArticulo, Boolean activar) {
         if (activar == null || idArticulo == null || idArticulo.isEmpty()) {
             return false;
@@ -303,7 +354,6 @@ public class ArticuloDAO {
         }
     }
 
-    // actualizada
     public boolean modificarUnidades(Articulo a) {
         if (a.getUnidades() == null || a.getCodigoArticulo() == null || a.getCodigoArticulo().isEmpty()) {
             return false;
@@ -371,7 +421,6 @@ public class ArticuloDAO {
         }
     }
 
-    // actualizada
     public Boolean compruebaStock(Pedido a) {
         try {
             conexion = m.obtenerConexionDAWA();

@@ -61,4 +61,9 @@ public class MySQLMetodos {
             Logger.getLogger(MySQLMetodos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public String getCodigoLimit(int pagina, int numRegistros){
+        int limitInferior = (pagina - 1)*numRegistros;
+        return " LIMIT " + limitInferior + ", " + numRegistros;
+    }
 }

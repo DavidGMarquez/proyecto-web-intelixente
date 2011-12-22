@@ -18,16 +18,7 @@
         <h2>Lista de articulos</h2>
         <div class="lista">
             <div id="centrar">
-                <c:forEach var="p" begin="1" end="${paginas}" step="1">
-                    <c:choose>
-                        <c:when test="${p==pagina}">
-                            <c:out value="${p}"/> |
-                        </c:when>
-                        <c:otherwise>
-                            <a href="#" onclick="recuperaArticulos(<c:out value="${p}"/>)" ><c:out value="${p}"/></a> |
-                        </c:otherwise>
-                    </c:choose>
-                </c:forEach>
+                <%@ include file="paginacion.jsp"%>
                 <form action="controladorAdmin?action=insertarArticuloForm" method="post">
                     <input type="submit" name="insertar" value="Añadir nuevo articulo"/>
                 </form>

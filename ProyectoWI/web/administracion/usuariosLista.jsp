@@ -20,17 +20,7 @@
 
             <div id="centrar">
 
-            <c:forEach var="p" begin="1" end="${paginas}" step="1">
-                <c:choose>
-                    <c:when test="${p==pagina}">
-                        <c:out value="${p}"/> |
-                    </c:when>
-                    <c:otherwise>
-                        <!--a href="controladorAdmin?action=usuarios&pagina=${p}"><c:out value="${p}"/></a> |-->
-                        <a href="#" onclick="recuperaUsuarios(<c:out value="${p}"/>)" ><c:out value="${p}"/></a> |
-                    </c:otherwise>
-                </c:choose>
-            </c:forEach>
+            <%@ include file="paginacion.jsp"%>
 
                 <table>
                     <tr >

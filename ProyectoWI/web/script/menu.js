@@ -98,38 +98,38 @@ var validarRegistro = function()
     if(!validarLongitud($("#password"), 6))
     {
         b = false;
-        msg  = msg + "La contrase�a debe tener 6 o m�s caracteres.\n\n";
+        msg  = msg + "La contraseña debe tener 6 o mas caracteres.\n\n";
     }
 
     if(!validarLongitud($("#nombre"), 3))
     {
         b = false;
-        msg  = msg + "El nombre debe tener 3 o m�s caracteres.\n\n";
+        msg  = msg + "El nombre debe tener 3 o mas caracteres.\n\n";
     }
     if(!validarLongitud($("#telefono"),9) && !validarRango($("#telefono"), 0, 999999999))
         {
             b = false;
-            msg  = msg + "Introduzca un n�mero de tel�fono v�lido.\n\n";
+            msg  = msg + "Introduzca un numero de telefono valido.\n\n";
         }
     if(!validarLongitud($("#calle"), 5) && !$("#calle").val().lastIndexOf(",", 0) > 3)
         {
             b = false;
-            msg  = msg + "Introduzca una direcci�n con el formato 'Calle, n�.\n\n";
+            msg  = msg + "Introduzca una direccion con el formato 'Calle, numero.\n\n";
         }
     if(!validarLongitud($("#localidad"), 3))
     {
         b = false;
-        msg  = msg + "El nombre de la localidad debe tener 3 o m�s caracteres.\n\n";
+        msg  = msg + "El nombre de la localidad debe tener 3 o mas caracteres.\n\n";
     }
      if(!validarLongitud($("#provincia"), 3))
     {
         b = false;
-        msg  = msg + "El nombre de la provincia debe tener 3 o m�s caracteres.\n\n";
+        msg  = msg + "El nombre de la provincia debe tener 3 o mas caracteres.\n\n";
     }
     if(!validarLongitud($("#cp"), 5) && !validarRango($("#cp"), 1, 99999))
         {
             b = false;
-            msg  = msg + "El c�digo postal debe tener 5 d�gitos.\n\n";
+            msg  = msg + "El codigo postal debe tener 5 digitos.\n\n";
         }
 
     if(msg.length > 0)
@@ -203,8 +203,9 @@ var botones = function()
 
 $(document).ready(function(){
     botones();
-    if($("#catalogo").length)
+    /*if($("#catalogo").length){
     	$("#catalogo").jPaginate();
+     }*/
 });
 
 

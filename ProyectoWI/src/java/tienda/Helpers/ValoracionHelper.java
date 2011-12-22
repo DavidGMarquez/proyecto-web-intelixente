@@ -22,7 +22,7 @@ public class ValoracionHelper extends AbstractHelper {
         registros = 10;
     }
     
-    public HttpSession listaValoraciones(HttpSession session, HttpServletRequest request) {
+    public List<Valoracion> listaValoraciones(HttpSession session, HttpServletRequest request) {
         Integer idPelicula = null;
         try{
             idPelicula = Integer.parseInt(request.getParameter("idPelicula"));
@@ -36,21 +36,15 @@ public class ValoracionHelper extends AbstractHelper {
             idUsuario = null;
         }
         
-        List<Valoracion> l = dao.obtenerValoraciones(idPelicula, idUsuario);
-
-        Integer paginas = l.size() / registros;
-        if (l.size() % registros > 0) {
-            paginas = paginas + 1;
+        int numValoraciones = dao.getNumValoraciones(idPelicula, idUsuario);
+        Integer paginas = numValoraciones / registros;
+        if (numValoraciones % registros > 0) {
+            paginas++;
         }
-
-        String pagina = request.getParameter("pagina");
-        if (pagina == null) {
-            pagina = "1";
-        }
+        int pagina = this.construirPaginacion(session, request, paginas, registros);
+        
+        List<Valoracion> l = dao.obtenerValoraciones(idPelicula, idUsuario, pagina, registros);
         request.setAttribute("valoraciones", l);
-        request.setAttribute("paginas", paginas);
-        request.setAttribute("pagina", pagina);
-        request.setAttribute("registros", registros);
-        return session;
+        return l;
     }
 }

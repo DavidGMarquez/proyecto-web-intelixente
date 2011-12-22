@@ -11,7 +11,6 @@
         <title>Proyecto DAWA</title>
         <link href="css/default.css" media="screen" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="./script/jquery-1.5.1.js"></script>
-        <script type="text/javascript" src="./script/jpaginate.js"></script>
         <script type="text/javascript" src="./script/menu.js"></script>
         <script type="text/javascript">
             $(document).ready(function(){
@@ -23,7 +22,9 @@
 
     <body>
         <%@ include file="partes/menuTienda.jsp"%>
-        <%@ include file="partes/catalogo.jsp"%>
+        <div id="lista">
+            <%@ include file="partes/catalogo.jsp"%>
+        </div>
         <c:if test="${param.page == 'busca'}">
         	<%@ include file="partes/busqueda.jsp" %>
         </c:if>

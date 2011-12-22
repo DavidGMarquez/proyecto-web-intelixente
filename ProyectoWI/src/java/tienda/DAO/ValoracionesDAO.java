@@ -124,7 +124,7 @@ public class ValoracionesDAO
         return V;
     }
   
-    public ArrayList<Valoracion> obtenerValoraciones(Integer idPelicula, Integer idUsuario ){
+    public ArrayList<Valoracion> obtenerValoraciones(Integer idPelicula, Integer idUsuario, int pagina, int registros ){
         ArrayList<Valoracion> valoraciones = new ArrayList<Valoracion>();
         try
         {
@@ -148,7 +148,8 @@ public class ValoracionesDAO
                 + " (SELECT userID AS idUsuario, movieID, rating AS valoracion, titulo "
                 + " FROM user_ratedmovies NATURAL JOIN "
                     + "(SELECT spanishTitle AS titulo, id AS movieID FROM movies) AS mview"
-                    + condicion2 + ")";
+                    + condicion2 + ") "
+                + m.getCodigoLimit(pagina, registros);
             System.out.println("ValoracionesDAO: " + query);
             ResultSet consulta = sentenciaSQL.executeQuery(query);
             while (consulta.next())
@@ -172,15 +173,59 @@ public class ValoracionesDAO
         }
     }
     
-    public ArrayList<Valoracion> obtenerValoracionesPelicula(int idPelicula){
-        return obtenerValoraciones(idPelicula, null);
+    public ArrayList<Valoracion> obtenerValoracionesPelicula(int idPelicula, int pagina, int registros){
+        return obtenerValoraciones(idPelicula, null, pagina, registros);
     }
     
-    public ArrayList<Valoracion> obtenerValoracionesUsuario(int idUsuario){
-        return obtenerValoraciones(null, idUsuario);
+    public ArrayList<Valoracion> obtenerValoracionesUsuario(int idUsuario, int pagina, int registros){
+        return obtenerValoraciones(null, idUsuario, pagina, registros);
     }
     
-    public static void main(String[] args){
+    public Integer getNumValoraciones(Integer idPelicula, Integer idUsuario) {
+        Integer numValoraciones = null;
+        try
+        {
+            String condicion1 = "";
+            String condicion2 = "";
+            if(idUsuario != null){
+                condicion1 = " WHERE idUsuario = " + idUsuario;
+                condicion2 = " WHERE userID = " + idUsuario;
+            }
+            if(idPelicula != null){
+                condicion1 += ("".equals(condicion1)? " WHERE " : " AND ") + " movieID = " + idPelicula;
+                condicion2 += ("".equals(condicion2)? " WHERE " : " AND ") + " movieID = " + idPelicula;
+            }
+            conexion = m.obtenerConexionDAWA();
+            Statement sentenciaSQL = conexion.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            String query = "SELECT count(idUsuario) as num FROM ((SELECT idUsuario, movieID, valoracion, titulo "
+                + " FROM valoraciones NATURAL JOIN "
+                    + " (SELECT spanishTitle AS titulo, id AS movieID FROM movies) AS mview "
+                    + condicion1
+                + " ) UNION "
+                + " (SELECT userID AS idUsuario, movieID, rating AS valoracion, titulo "
+                + " FROM user_ratedmovies NATURAL JOIN "
+                    + "(SELECT spanishTitle AS titulo, id AS movieID FROM movies) AS mview"
+                    + condicion2 + ")) AS x";
+            System.out.println("ValoracionesDAO: " + query);
+            ResultSet consulta = sentenciaSQL.executeQuery(query);
+            if (consulta.next())
+            {
+                numValoraciones = consulta.getInt("num");
+            }
+            return numValoraciones;
+        }
+        catch (Exception ex)
+        {
+            Logger.getLogger(ValoracionesDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+        finally
+        {
+            m.cerrarConexion(conexion);
+        }
+    }
+    
+    /*public static void main(String[] args){
         pruebaObtenerValoraciones();
     }
     
@@ -189,5 +234,7 @@ public class ValoracionesDAO
         ArrayList<Valoracion> valoraciones = dao.obtenerValoraciones(null,null);
         dao.obtenerValoracionesPelicula(920);
         dao.obtenerValoracionesUsuario(78);
-    }
+    }*/
+
+    
 }
