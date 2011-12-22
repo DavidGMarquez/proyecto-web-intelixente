@@ -166,7 +166,7 @@ public class ControladorAdmin extends HttpServlet {
                         dispatcher = getServletContext().getRequestDispatcher("/administracion/articulosIndex.jsp");
                     } else if ("articulosLista".equalsIgnoreCase(action)) {
                         ArticuloHelper ah = new ArticuloHelper();
-                        session = ah.listaArticulos(session, request);
+                        ah.listaArticulos(session, request);
                         dispatcher = getServletContext().getRequestDispatcher("/administracion/articulosLista.jsp");
                     } else if ("activarArticulo".equalsIgnoreCase(action) && idArticulo != null) {
                         ArticuloHelper ah = new ArticuloHelper();
@@ -190,8 +190,7 @@ public class ControladorAdmin extends HttpServlet {
                         ArticuloHelper ah = new ArticuloHelper();
                         boolean result = ah.borrarArticulo(idArticulo);
                         if (result) {
-                            List<Articulo> lista = ah.findArticulos();
-                            session.setAttribute("articulos", lista);
+                            ah.findArticulos(session, request);
                             session.setAttribute("comentario", "El articulo ha sido borrado correctamente");
                             dispatcher = getServletContext().getRequestDispatcher("/administracion/articulosIndex.jsp");
                         } else {
@@ -221,8 +220,7 @@ public class ControladorAdmin extends HttpServlet {
                         ArticuloHelper ah = new ArticuloHelper();
                         session = ah.modificarArticulo(session, request, idArticulo);
                         if (session != null) {
-                            List<Articulo> lista = ah.findArticulos();
-                            session.setAttribute("articulos", lista);
+                            ah.findArticulos(session, request);
                             session.setAttribute("comentario", "El articulo ha sido modificado correctamente");
                             dispatcher = getServletContext().getRequestDispatcher("/administracion/articulosIndex.jsp");
                         } else {
@@ -235,8 +233,7 @@ public class ControladorAdmin extends HttpServlet {
                         ArticuloHelper ah = new ArticuloHelper();
                         Integer result = ah.insertarArticulo(request);
                         if (result == 1) {
-                            List<Articulo> lista = ah.findArticulos();
-                            session.setAttribute("articulos", lista);
+                            ah.findArticulos(session, request);
                             session.setAttribute("comentario", "El articulo ha sido insertado correctamente");
                             dispatcher = getServletContext().getRequestDispatcher("/administracion/articulosIndex.jsp");
                         } else if (result == -1) {
