@@ -88,6 +88,7 @@ form input[type=text], form input[type=password]
 .cuadro{
     position: relative;
     float: right;
+    clear: right;
     width: 320px;
     text-align: center;
     padding: 20px;
@@ -446,6 +447,29 @@ form input[type=text], form input[type=password]
     margin-top: 8px;
     height: 200px;
 }
+
+/* COMENTARIOS
+*********************************************/
+#recomendacionesUsuario img{
+    height: 40px;
+    clear: left;
+    cursor: pointer;
+}
+
+#recomendacionesUsuario img, #recomendacionesUsuario span.titulo{
+    float: left;
+    padding: 2px;
+    margin-right: 5px;
+}
+
+#recomendacionesUsuario li{
+    border-bottom: 2px dotted lightgrey;
+    margin: 3px 20px;
+    text-align: left;
+    overflow: hidden;
+    padding:5px;
+}
+
 
 /* COMENTARIOS
 *********************************************/
