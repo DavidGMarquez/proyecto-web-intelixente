@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
-import tienda.DAO.ArticuloDAO;
 import tienda.DAO.ComentariosDAO;
 import tienda.DAO.ValoracionesDAO;
 import tienda.Helpers.ArticuloHelper;
@@ -38,7 +37,7 @@ public class Controlador extends HttpServlet {
 	Usuario usuario;
 	ShoppingCart cart;
 	String page, action, codigo;
-	TiendaHelper th;
+	//TiendaHelper th;
 	List<Articulo> catalogo;
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -63,7 +62,17 @@ public class Controlador extends HttpServlet {
             action = request.getParameter("action");
             codigo = request.getParameter("codigo");
 
-            th = new TiendaHelper(session);
+            //th = new TiendaHelper(session);
+            
+            //Obtento el número de página
+            String paginaS = request.getParameter("pagina");
+            Integer pagina = null;
+            if (paginaS == null) {
+                pagina = 1;
+            } else {
+                pagina = Integer.parseInt(paginaS);
+            }
+            session.setAttribute("pagina", pagina);
 
             if ("salir".equalsIgnoreCase(action)) {
                 session.invalidate();
@@ -89,8 +98,8 @@ public class Controlador extends HttpServlet {
                 }
                 
                 // Obtener dos artículos parecidos
-                ArticuloDAO aDAO = new ArticuloDAO();
-                List<Articulo> recomendaciones = aDAO.findArticulosByCluster(articulo.getCluster(), articulo.getCodigoArticulo(), 2, true, null);
+                //ArticuloDAO aDAO = new ArticuloDAO();
+                //List<Articulo> recomendaciones = aDAO.findArticulosByCluster(articulo.getCluster(), articulo.getCodigoArticulo(), 2, true, null);
 
                 // TEST: Ver a consola cando se selecciona unha pelicula na tenda
 //                Integer idUsuario = usuario.getIdUsuario();
@@ -190,11 +199,16 @@ public class Controlador extends HttpServlet {
                 }
             }
             else if ("tienda".equalsIgnoreCase(page) || "busca".equalsIgnoreCase(page)) {
+                ArticuloHelper ah = new ArticuloHelper();
                 if("busca".equalsIgnoreCase(page)){
-                    ArticuloHelper ah = new ArticuloHelper();
                     catalogo = ah.filtrar(session, request);
                 }else{
-                    catalogo = th.obtenerArticulos();
+                    catalogo = ah.obtenerArticulos(session, request);
+                }
+                session.setAttribute("page", page);
+                if("ajax".equalsIgnoreCase(action)){
+                    dispatcher = getServletContext().getRequestDispatcher("/partes/catalogo.jsp");
+                    return;
                 }
                 if(usuario!=null){
                     if(Settings.getSettings().getRecommendationStrategy() == RecommendationHelper.USER_BASED){
@@ -203,10 +217,9 @@ public class Controlador extends HttpServlet {
                     session.setAttribute("recomendaciones", RecommendationHelper.getRecommendedItemBasedArticles(new Long(usuario.getIdUsuario()), 5));
                     }
                 }
-                session.setAttribute("catalogo", catalogo);
                 dispatcher = getServletContext().getRequestDispatcher("/tienda.jsp");
                 if ("pagar".equalsIgnoreCase(action)) {
-                    //TiendaHelper th = new TiendaHelper(session);
+                    TiendaHelper th = new TiendaHelper(session);
                     Direccion d = new Direccion();
                     d.setDireccion(request.getParameter("calle"));
                     d.setLocalidad(request.getParameter("localidad"));
