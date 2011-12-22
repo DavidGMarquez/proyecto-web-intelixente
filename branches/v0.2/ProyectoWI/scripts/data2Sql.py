@@ -77,7 +77,7 @@ def createStatement(filename,fields,example, encode="utf8"):
 # DIRECTORIO DOS FONTES
 path = 'hetrec2011-movielens-2k/'
 # FICHEIRO DE SAIDA
-outputscript = "./movies-data-prueba.sql"
+outputscript = "./movies-data.sql"
 # EXTENSION DOS ARQUIVOS
 ext  = '.dat'
 # LISTA  DE FICHEIROS
@@ -125,39 +125,6 @@ for filename in filelist:
                         out.write(";")
                         break
         f.close()
-
-
-############## PARA A TÁBOA ARTÍCULOS
-
-# Valores para as propiedades dos artículos
-prefixCodigo = "pel"
-precio = 30
-unidades = 10
-activo = 1
-
-f = open(path + "movies.dat","r")          # ficheiro de lectura
-f.readline()                               # lemos a linea dos campos
-print "Generating SQL truncate and insert for articulos"
-
-# Vacio la tabla
-out.write("\nTRUNCATE `articulos`;");
-# XERAMOS OS INSERTS
-i = 0
-for line in f:
-        if  i < limit or limit == 0:
-                if i % 100 == 0:
-						if i != 0:
-								out.write(";")
-						out.write("\nINSERT INTO `" + filename.upper().replace("-","_") + "` (" + ", ".join(headers) + ") values ")
-                elif i != 0:
-                    out.write(",")
-                i=i+1  
-                idMovie, sep, tail = line.rstrip("\r\n").partition("\t")
-                out.write("\n('" + prefixCodigo + str(i) + "', " + str(precio) + ", " + idMovie + ", " + str(unidades) + ", " + str(activo) + ")")
-        else:
-                out.write(";")
-                break
-f.close()
 
 #Pechamos o arquivo .sql
 out.close()
