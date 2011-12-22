@@ -77,7 +77,7 @@ def createStatement(filename,fields,example, encode="utf8"):
 # DIRECTORIO DOS FONTES
 path = 'hetrec2011-movielens-2k/'
 # FICHEIRO DE SAIDA
-outputscript = "./movies-data.sql"
+outputscript = "./movies-data-prueba.sql"
 # EXTENSION DOS ARQUIVOS
 ext  = '.dat'
 # LISTA  DE FICHEIROS
@@ -110,14 +110,17 @@ for filename in filelist:
        
         # XERAMOS OS INSERTS
         i = 0
-        out.write("\nINSERT INTO `" + filename.upper().replace("-","_") + "` (" + ", ".join(headers) + ") values ")
         for line in f:
                 if  i < limit or limit == 0:
-                        if i != 0:
-                            out.write(",")
-                        i=i+1  
-                        datos = map(quote, line.rstrip("\r\n").split("\t"))
-                        out.write("\n(" + ", ".join(datos) + ")")
+						if i % 500 == 0:
+								if i != 0:
+										out.write(";")
+								out.write("\nINSERT INTO `" + filename.upper().replace("-","_") + "` (" + ", ".join(headers) + ") values ")
+						elif i != 0:
+								out.write(",")
+						i=i+1
+						datos = map(quote, line.rstrip("\r\n").split("\t"))
+						out.write("\n(" + ", ".join(datos) + ")")
                 else:
                         out.write(";")
                         break
@@ -138,14 +141,15 @@ print "Generating SQL truncate and insert for articulos"
 
 # Vacio la tabla
 out.write("\nTRUNCATE `articulos`;");
-# Creo la cabecera del insert
-out.write("\nINSERT INTO `articulos`(`codigoArticulo`,`precio`, `idPelicula`, `unidades`, `activo`) VALUES ")
-
 # XERAMOS OS INSERTS
 i = 0
 for line in f:
         if  i < limit or limit == 0:
-                if i != 0:
+                if i % 100 == 0:
+						if i != 0:
+								out.write(";")
+						out.write("\nINSERT INTO `" + filename.upper().replace("-","_") + "` (" + ", ".join(headers) + ") values ")
+                elif i != 0:
                     out.write(",")
                 i=i+1  
                 idMovie, sep, tail = line.rstrip("\r\n").partition("\t")
@@ -155,7 +159,7 @@ for line in f:
                 break
 f.close()
 
-
+#Pechamos o arquivo .sql
 out.close()
 
 
