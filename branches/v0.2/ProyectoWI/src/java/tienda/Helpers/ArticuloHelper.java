@@ -7,8 +7,6 @@ package tienda.Helpers;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-//import java.util.logging.Level;
-//import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
@@ -24,33 +22,80 @@ import tienda.modelo.Pelicula;
  * @author Vanesa
  */
 public class ArticuloHelper extends AbstractHelper {
-
+    
     ArticuloDAO aDAO = new ArticuloDAO();
     PeliculasDAO pDAO = new PeliculasDAO();
 
-    public List<Articulo> findArticulos() {
-        return aDAO.findArticulos(false,"");
+    public List<Articulo> findArticulos(HttpSession session, HttpServletRequest request) {
+        Integer numArticulos = aDAO.numArticulos(false);
+        Integer paginas = numArticulos / registros;
+        if (numArticulos % registros > 0) {
+            paginas++;
+        }
+        int pagina = this.construirPaginacion(session, request, paginas, registros);
+        List l= aDAO.findArticulos(false,"", pagina, registros);
+        session.setAttribute("articulos", l);
+        return l;
+    }
+    
+    public List<Articulo> obtenerArticulos(HttpSession session, HttpServletRequest request) {
+        Integer numArticulos = aDAO.numArticulos(true);
+        Integer paginas = numArticulos / registros;
+        if (numArticulos % registros > 0) {
+            paginas++;
+        }
+        int pagina = this.construirPaginacion(session, request, paginas, registros);
+        List<Articulo> l = new ArrayList<Articulo>();
+        try {
+            l = aDAO.findArticulos(true,"", pagina, registros);
+        } catch (Exception ex) {
+            Logger.getLogger(TiendaHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        session.setAttribute("catalogo", l);
+        return l;
     }
 
-    public HttpSession listaArticulos(HttpSession session, HttpServletRequest request) {
-        List<Articulo> l = aDAO.findArticulos(false,"");
+    public List<Articulo> listaArticulos(HttpSession session, HttpServletRequest request) {
+        Integer numArticulos = aDAO.numArticulos(false);
+        Integer paginas = numArticulos / registros;
+        if (numArticulos % registros > 0) {
+            paginas++;
+        }
+        int pagina = this.construirPaginacion(session, request, paginas, registros);
+        List<Articulo> l = aDAO.findArticulos(false,"", pagina, registros);
         session.setAttribute("Articulos", l);
-
-        //Calculos para la paginaci�n
-        Integer paginas = l.size() / registros;
-        if (l.size() % registros > 0) {
+        session.setAttribute("articulos", l);
+        return l;
+    }
+    
+    public List<Articulo> filtrar(HttpSession session, HttpServletRequest request) {
+    	String anho = request.getParameter("anho");
+        String titulo = request.getParameter("titulo");
+        Float precioMaximo=null;
+        try{
+            precioMaximo=Float.parseFloat(request.getParameter("precioMaximo"));
+        }catch(Exception e){
+            Logger.getLogger(ArticuloHelper.class.getName()).log(Level.ALL, "Error parseando precio",e);
+        }
+        Integer tipo = null;
+        if(request.getParameter("tipo")!=null &&  !request.getParameter("tipo").isEmpty()){
+            tipo = new Integer(request.getParameter("tipo"));
+        }
+        session.setAttribute("anho", anho);
+        session.setAttribute("titulo", titulo);
+        session.setAttribute("precioMaximo", precioMaximo);
+        
+        Integer numArticulos = aDAO.numArticulos(anho, precioMaximo, titulo, tipo);
+        System.out.println("Num articulos: " + numArticulos);
+        
+        Integer paginas = numArticulos / registros;
+        if (numArticulos % registros > 0) {
             paginas = paginas + 1;
         }
-
-        String pagina = request.getParameter("pagina");
-        if (pagina == null) {
-            pagina = "1";
-        }
-        session.setAttribute("articulos", l);
-        session.setAttribute("paginas", paginas);
-        session.setAttribute("pagina", pagina);
-        session.setAttribute("registros", registros);
-        return session;
+        int pagina = this.construirPaginacion(session, request, paginas, registros);
+        List<Articulo> l = aDAO.findArticulosFiltrados(anho, precioMaximo, titulo, tipo, pagina, registros);
+        session.setAttribute("catalogo", l);
+        return l;
     }
 
     public boolean activarArticulo(String idArticulo, Boolean activar) {
@@ -160,22 +205,5 @@ public class ArticuloHelper extends AbstractHelper {
         return aDAO.borrarArticulo(codigoArticulo);
     }
 
-    public List<Articulo> filtrar(HttpSession session, HttpServletRequest request) {
-    	String anho = request.getParameter("anho");
-        String titulo = request.getParameter("titulo");
-        Float precioMaximo=null;
-        try{
-            precioMaximo=Float.parseFloat(request.getParameter("precioMaximo"));
-        }catch(Exception e){
-            Logger.getLogger(ArticuloHelper.class.getName()).log(Level.ALL, "Error parseando precio",e);
-        }
-        Integer tipo = null;
-        if(request.getParameter("tipo")!=null &&  !request.getParameter("tipo").isEmpty()){
-            tipo = new Integer(request.getParameter("tipo"));
-        }
-        session.setAttribute("anho", anho);
-        session.setAttribute("titulo", titulo);
-        session.setAttribute("precioMaximo", precioMaximo);
-        return aDAO.findArticulosFiltrados(anho, precioMaximo, titulo, tipo);
-    }
+    
 }

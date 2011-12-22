@@ -15,7 +15,7 @@ function funcionCallback(){
 	}
 }
 
-function recuperaArticulos(pagina){
+function recuperaElementos(pagina){
 	// Creamos el control XMLHttpRequest segun el navegador en el que estemos
 	if( window.XMLHttpRequest )
 		ajax = new XMLHttpRequest(); // No Internet Explorer

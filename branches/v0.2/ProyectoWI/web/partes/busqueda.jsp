@@ -6,20 +6,20 @@
         <ul>
         <li>
             <label for="precioMaximo">Precio máximo: </label>
-            <input name="precioMaximo" type="text" value="${precioMaximo}"/>
+            <input name="precioMaximo" type="text" id="txtPrecioMaximo" value="${precioMaximo}"/>
         </li>
         <li>
             <label for="titulo">Título:</label>
-            <input name="titulo" type="text" value="${titulo}"/>
+            <input name="titulo" type="text" id="txtTitulo" value="${titulo}"/>
         </li>
         <li>
             <label for="anho">Año exacto:</label>
-            <input name="anho" type="text" value="${anho}"/>
+            <input name="anho" type="text" id="txtAnho" value="${anho}"/>
         </li>
         <li class="cntTipo">
             <p>
             <input type="radio" name="tipo" id="rdComercial" value="<%=Articulo.COMERCIAL%>" />
-            <label class="radioLabel" fclass="radioLabel" or="rdComercial">Comercial</label>
+            <label class="radioLabel" for="rdComercial">Comercial</label>
             <input type="radio" name="tipo" id="rdAlternativa" value="<%=Articulo.ALTERNATIVA%>"/>
             <label class="radioLabel" for="rdAlternativa">Alternativa</label>
             <input type="radio" name="tipo" id="rdAmbas" checked value=""/>

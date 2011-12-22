@@ -6,7 +6,6 @@ package tienda.Helpers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpSession;
@@ -31,21 +30,10 @@ public class TiendaHelper extends AbstractHelper {
 
     HttpSession session;
     ArticuloDAO articuloDAO;
-    List<Articulo> listaArticulos;
 
     public TiendaHelper(HttpSession session) {
         this.session = session;
         articuloDAO = new ArticuloDAO();
-        listaArticulos = new ArrayList<Articulo>();
-    }
-
-    public List<Articulo> obtenerArticulos() {
-        try {
-            listaArticulos = articuloDAO.findArticulos(true, "");
-        } catch (Exception ex) {
-            Logger.getLogger(TiendaHelper.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return listaArticulos;
     }
 
     public boolean pagar(Direccion d) {
