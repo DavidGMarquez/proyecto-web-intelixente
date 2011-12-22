@@ -1,15 +1,42 @@
-Datos de conexión a la bd:
+########################################
+# Datos de conexión a la bd            #
+########################################
 
    host="127.0.0.1:3306"
    bd="dawa"
    usuario="dawa"
    pass="dawa"
 
-Usuarios de la aplicación:
+Se se quisiesen modificar estos datos podría hacerse en la clase MySQLMetodos 
+del paquete tienda.DAO.
+
+########################################
+# Usuarios de la aplicación            #
+########################################
+
    Usuario administrador:
       log:admin@tiendadawa.com   pass: admin1
+
    Otros usuarios:   
       log: proba@proba.com  pass: proba1
       log: vanesa@vanesa.com	pass:12345678
+
+########################################
+# Creación de la base de datos         #
+########################################
+
+1. Crear la base de datos "dawa"
+2. Subir el script bd.sql
+3. Subir el script peliculas.sql
+4. Subir el script articulos.sql
+5. Crear usuario "dawa" con contraseña "dawa" y darle permisos sobre la anterior
+BD.
+
+########################################
+# Otras notas                          #
+########################################
+
+Una vez descargado el proyecto puede ser necesario indicarle al IDE las 
+librerías que están en web/WEB-INF/lib.
 
 
