@@ -40,18 +40,7 @@ CREATE TABLE IF NOT EXISTS `articulos` (
   UNIQUE KEY `idPelicula` (`idPelicula`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
---
--- Volcado de datos para la tabla `articulos`
---
 
-INSERT INTO `articulos` (`idArticulo`, `codigoArticulo`, `precio`, `unidades`, `activo`, `idPelicula`) VALUES
-(1, 'pel103d', 25.30, 23, 1, 2),
-(2, 'pel2bc', 32.10, 32, 1, 3),
-(3, 'pel4bc', 32.10, 32, 1, 4),
-(4, 'pel5bc', 32.10, 32, 1, 5),
-(5, 'pel6bc', 32.10, 32, 1, 6),
-(6, 'pel7bc', 36.10, 32, 1, 7),
-(7, 'pel8bc', 32.17, 32, 1, 8);
 
 -- --------------------------------------------------------
 
